@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>vuex入门 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>vuex入门</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>官方文档: <a target="_blank" rel="noopener" href="https://vuex.vuejs.org/zh/">https://vuex.vuejs.org/zh/</a></p>
+<span id="more"></span>
+
+<h1 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h1><p>安装</p>
+<p><code>npm install vuex --save</code></p>
+<p>按照惯例，在 <em>src&#x2F;</em> 目录新建文件夹 store，然后新建文件 index.js，在其中编写关于状态相关的代码。</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Vue</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Vuex</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vuex&quot;</span>
+
+<span class="hljs-title class_">Vue</span>.<span class="hljs-title function_">use</span>(<span class="hljs-title class_">Vuex</span>);
+
+<span class="hljs-keyword">const</span> store = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vuex</span>.<span class="hljs-title class_">Store</span>(&#123;
+    <span class="hljs-comment">// 状态</span>
+    <span class="hljs-attr">state</span>: &#123;
+        <span class="hljs-attr">count</span>: <span class="hljs-number">1</span>,
+    &#125;,
+	
+    <span class="hljs-comment">// 获取状态以及处理后的状态</span>
+    <span class="hljs-attr">getters</span>: &#123;
+        <span class="hljs-attr">count</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> &#123;
+            <span class="hljs-keyword">return</span> state.<span class="hljs-property">count</span>;
+        &#125;
+    &#125;,
+	
+    <span class="hljs-comment">// 直接设置状态(同步操作)</span>
+    <span class="hljs-attr">mutations</span>: &#123;
+        <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">state,payload</span>) =&gt;</span> &#123;
+            state.<span class="hljs-property">count</span>+=payload.<span class="hljs-property">amount</span>;
+        &#125;
+    &#125;,
+	
+    <span class="hljs-comment">// 通过mutation间接设置状态(支持异步操作)</span>
+    <span class="hljs-attr">actions</span>: &#123;
+		<span class="hljs-attr">incrementAsync</span>: <span class="hljs-function">(<span class="hljs-params">context</span>) =&gt;</span> &#123;
+            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;
+                context.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;increment&#x27;</span>,&#123;
+                    <span class="hljs-attr">amount</span>: <span class="hljs-number">2</span>
+                &#125;);
+            &#125;,<span class="hljs-number">100</span>);
+        &#125;
+    &#125;
+&#125;);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store;</code></pre>
+
+<p>然后，在Vue中全局注入store，方便在组件中使用 <code>this.$store</code> 获取到 store 对象</p>
+<blockquote>
+<p>在组件中，千万不要在箭头函数中使用this！！</p>
+</blockquote>
+<pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Vue</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span>;
+
+<span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>(&#123;
+  <span class="hljs-attr">store</span>: store,
+  <span class="hljs-attr">render</span>: <span class="hljs-function">(<span class="hljs-params">h</span>) =&gt;</span> <span class="hljs-title function_">h</span>(<span class="hljs-title class_">App</span>),
+&#125;).$mount(<span class="hljs-string">&quot;#app&quot;</span>);</code></pre>
+
+<p>获取可以直接通过<code>state</code>获取状态，但不能直接设置状态的值</p>
+<pre><code class="hljs js"><span class="hljs-keyword">let</span> count = <span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-property">state</span>.<span class="hljs-property">count</span>;</code></pre>
+
+<p>推荐使用<code>getters</code>中的方法获取状态(或处理后的状态)</p>
+<pre><code class="hljs js"><span class="hljs-keyword">let</span> count = <span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-property">getters</span>.<span class="hljs-property">count</span>;</code></pre>
+
+<p>使用<code>mutations</code>中的方法直接设置状态，仅支持同步操作</p>
+<pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;increment&#x27;</span>);
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;increment&#x27;</span>,&#123;
+    <span class="hljs-attr">amount</span>: <span class="hljs-number">2</span>
+&#125;);</code></pre>
+
+<p>使用<code>actions</code>中的方法，通过提交<code>mutations</code>中的方法，间接设置状态，支持异步操作</p>
+<pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">store</span>.<span class="hljs-title function_">dispatch</span>(<span class="hljs-string">&#x27;incrementAsync&#x27;</span>);</code></pre>
+
+
+
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><p><strong>页面刷新后，vuex状态重置的问题</strong></p>
+<p>可以将需要保持的数据进行本地缓存(Cookie，LocalStorage等)</p>
+<pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Vue</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Vuex</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vuex&quot;</span>
+
+<span class="hljs-keyword">import</span> &#123;requestConfigData&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/api/nginx.js&#x27;</span>
+
+<span class="hljs-title class_">Vue</span>.<span class="hljs-title function_">use</span>(<span class="hljs-title class_">Vuex</span>);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vuex</span>.<span class="hljs-title class_">Store</span>(&#123;
+    <span class="hljs-attr">state</span>: &#123;
+        <span class="hljs-attr">notes</span>: [],
+    &#125;,
+
+    <span class="hljs-attr">getters</span>: &#123;
+        <span class="hljs-attr">notes</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> &#123;
+            <span class="hljs-keyword">if</span>(state.<span class="hljs-property">notes</span>.<span class="hljs-property">length</span>==<span class="hljs-number">0</span>)&#123;
+                <span class="hljs-keyword">return</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(sessionStorage.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&quot;notes&quot;</span>));
+            &#125;<span class="hljs-keyword">else</span>&#123;
+                <span class="hljs-keyword">return</span> state.<span class="hljs-property">notes</span>;
+            &#125;
+        &#125;,
+    &#125;,
+
+    <span class="hljs-attr">mutations</span>: &#123;
+        <span class="hljs-attr">setNotes</span>: <span class="hljs-function">(<span class="hljs-params">state,payload</span>) =&gt;</span> &#123;
+            state.<span class="hljs-property">notes</span>=payload.<span class="hljs-property">notes</span>;
+        &#125;,
+    &#125;,
+
+    <span class="hljs-attr">actions</span>: &#123;
+        <span class="hljs-attr">loadNotesAsync</span>: <span class="hljs-function">(<span class="hljs-params">context</span>) =&gt;</span> &#123;
+            <span class="hljs-title function_">requestConfigData</span>(<span class="hljs-string">&#x27;note.json&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">data</span>=&gt;</span>&#123;
+                <span class="hljs-comment">// 缓存到本地</span>
+                sessionStorage.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">&quot;notes&quot;</span>,<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(data));
+                <span class="hljs-comment">// 保存到vuex中</span>
+                context.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;setNotes&#x27;</span>,&#123;
+                    <span class="hljs-attr">notes</span>: data
+                &#125;);
+            &#125;);
+        &#125;,
+    &#125;
+&#125;)</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

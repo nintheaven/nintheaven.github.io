@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>springboot常用配置 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>springboot常用配置</h1>
+
+    <div>
+        
+        <a href="/notes/#SpringBoot">SpringBoot</a>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>application.yml 示例</p>
+<pre><code class="hljs yml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">address:</span> <span class="hljs-string">localhost</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span>
+
+<span class="hljs-attr">debug:</span> <span class="hljs-literal">false</span>
+
+<span class="hljs-attr">logging:</span>
+  <span class="hljs-attr">level:</span>
+    <span class="hljs-attr">root:</span> <span class="hljs-string">WARN</span>
+    <span class="hljs-attr">org.springframework.security:</span> <span class="hljs-string">DEBUG</span>
+  <span class="hljs-attr">file:</span>
+    <span class="hljs-attr">path:</span> <span class="hljs-string">/var/logs/</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">spring-boot.log</span>
+  <span class="hljs-attr">config:</span> <span class="hljs-string">classpath:logging-config.xml</span>
+
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">main:</span>
+    <span class="hljs-attr">banner-mode:</span> <span class="hljs-string">console</span>
+
+  <span class="hljs-attr">datasource:</span>
+    <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:mysql://localhost:3306/test2</span>
+    <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">com.mysql.cj.jdbc.Driver</span>
+    <span class="hljs-attr">username:</span> <span class="hljs-string">root</span>
+    <span class="hljs-attr">password:</span> <span class="hljs-string">root</span>
+
+  <span class="hljs-attr">thymeleaf:</span>
+    <span class="hljs-attr">cache:</span> <span class="hljs-literal">false</span>
+
+  <span class="hljs-attr">freemarker:</span>
+    <span class="hljs-attr">cache:</span> <span class="hljs-literal">false</span>
+
+  <span class="hljs-attr">flyway:</span>
+    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span>
+    <span class="hljs-attr">encoding:</span> <span class="hljs-string">UTF-8</span>
+    <span class="hljs-attr">sql-migration-prefix:</span> <span class="hljs-string">V</span>
+    <span class="hljs-attr">sql-migration-separator:</span> <span class="hljs-string">__</span>
+    <span class="hljs-attr">sql-migration-suffixes:</span> <span class="hljs-string">.sql</span>
+    <span class="hljs-attr">locations:</span> <span class="hljs-string">classpath:db/migration</span></code></pre>
+
+<p><strong>在代码中使用配置属性</strong></p>
+<p>有如下自定义配置</p>
+<pre><code class="hljs yml"><span class="hljs-attr">amazon:</span>
+  <span class="hljs-attr">associateId:</span> <span class="hljs-string">lyp001</span></code></pre>
+
+<p>在Java代码中，使用注解<code>@ConfigurationProperties</code>开启配置属性</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-meta">@ConfigurationProperties(prefix=&quot;amazon&quot;)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AmazonProperties</span>
+&#123;
+    <span class="hljs-keyword">private</span> String associateId;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getAssociateId</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> associateId;
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAssociateId</span><span class="hljs-params">(String associateId)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.associateId=associateId;
+    &#125;
+&#125;</code></pre>
+
+<p>只需要在需要使用该配置属性的地方，将这个 <code>AmazonProperties</code> 注入即可</p>
+<p><strong>使用Profile配置</strong></p>
+<p><code>@Profile</code></p>
+<p>被该注解标记的配置类，将在特定profile激活时生效</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Profile(value=&#123;&quot;dev&quot;,&quot;test&quot;&#125;)</span>
+<span class="hljs-meta">@Configuration</span>
+<span class="hljs-meta">@EnableWebSecurity</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SecurityConfig</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">WebSecurityConfigurerAdapter</span>
+&#123;
+
+&#125;</code></pre>
+
+<p>配置文件命名</p>
+<ul>
+<li><em>application-{profile}.properties</em></li>
+<li><em>application-{profile}.yml</em></li>
+</ul>
+<p>激活配置文件,在默认配置文件中激活</p>
+<pre><code class="hljs yml"><span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">profiles:</span>
+    <span class="hljs-attr">active:</span> <span class="hljs-string">dev</span></code></pre>
+
+<p><strong>定制错误页面</strong></p>
+<p>spring-boot自动配置的默认错误处理器会查找名为error的视图.</p>
+<p>只需要根据模板引擎创建 <em>error.xxx</em> 的模板即可</p>
+<ul>
+<li>thymeleaf - html</li>
+<li>freemaker - ftl</li>
+<li>velocity - vm</li>
+<li>jsp - jsp</li>
+</ul>
+<p>spring-boot会为错误视图提供如下错误属性</p>
+<ul>
+<li>timestamp - 时间点</li>
+<li>status - http状态码</li>
+<li>path - url路径</li>
+<li>error - 错误原因</li>
+<li>message - 异常消息</li>
+<li>exception</li>
+<li>errors</li>
+<li>trace</li>
+</ul>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>MySQL编程篇-数据库和表 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>MySQL编程篇-数据库和表</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h2 id="操作数据库"><a href="#操作数据库" class="headerlink" title="操作数据库"></a>操作数据库</h2><p><strong>创建数据库</strong></p>
+<pre><code class="hljs sql"><span class="hljs-comment">-- 创建数据库，如果已存在同名的数据库，报错</span>
+<span class="hljs-keyword">CREATE</span> DATABASE example;
+<span class="hljs-comment">-- 创建数据库，如果已存在同名的数据库，忽略此条SQL语句</span>
+<span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> example;</code></pre>
+
+<p><strong>切换(使用)数据库</strong></p>
+<pre><code class="hljs sql">USE example;</code></pre>
+
+<p><strong>查看数据库</strong></p>
+<pre><code class="hljs sql"><span class="hljs-comment">-- 列出全部数据库</span>
+<span class="hljs-keyword">SHOW</span> DATABASES;
+<span class="hljs-comment">-- 查看当前使用的是哪一个数据库，使用 DATABASE() 函数</span>
+<span class="hljs-keyword">SELECT</span> DATABASE();</code></pre>
+
+<p>查看创建数据库的SQL语句</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">CREATE</span> DATABASE example;</code></pre>
+
+<p><strong>删除数据库</strong></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> DATABASE example;
+<span class="hljs-keyword">DROP</span> DATABASE IF <span class="hljs-keyword">EXISTS</span> example;</code></pre>
+
+<p><strong>数据库编码</strong></p>
+<p>在创建数据库时，MySQL默认使用配置文件（my.conf 或 my.ini）中设置的编码。</p>
+<p>查看数据库默认编码</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;%character_set_database%&#x27;</span>;</code></pre>
+
+<p>也可以在创建数据库时，显式的设置编码，覆盖默认的配置</p>
+<blockquote>
+<p>注意：utf8和utf8mb4是不同的编码格式，推荐使用后者。</p>
+</blockquote>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE example <span class="hljs-keyword">DEFAULT</span> <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4;</code></pre>
+
+<p>还可以在数据库创建后，再修改编码</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE example <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8;</code></pre>
+
+<hr>
+<h2 id="数据库设计3大范式"><a href="#数据库设计3大范式" class="headerlink" title="数据库设计3大范式"></a>数据库设计3大范式</h2><p>设计数据库（表）时，推荐遵循一定的规则，这些规则称为范式(NF, Normal Form)。</p>
+<p>一共有6种范式，它们是层层递进的，一般只需要遵循前3个范式就可以了，这3个范式称为3大范式。</p>
+<ul>
+<li>第1范式（1NF）：要求表中的每列都是不可再分的数据单元。</li>
+<li>第2范式（2NF）：在满足第1范式的基础上，要求表中每列都与主键相关，保证实体的唯一性。</li>
+<li>第3范式（3NF）：在满足第2范式的基础上，要求表中的每列都与主键<strong>直接相关</strong>，避免列的冗余。</li>
+</ul>
+<hr>
+<h2 id="SQL约束"><a href="#SQL约束" class="headerlink" title="SQL约束"></a>SQL约束</h2><p>在定义数据表的时候，可以为其设置约束（Constraints）。</p>
+<p><strong>NOT NULL</strong></p>
+<p>非空约束，限制列数据不能为NULL。</p>
+<p><strong>UNIQUE</strong></p>
+<p>唯一约束，限制列数据唯一。</p>
+<p><strong>PRIMARY KEY</strong></p>
+<p>主键约束，设置列为主键。可以使用一列或多列（联合主键）充当主键，主键列或联合主键列的组合必须<strong>非空且唯一</strong>。</p>
+<p><strong>FOREIGN KEY</strong></p>
+<p>外键约束，设置某列关联另一张表中的一条记录。</p>
+<p><strong>DEFAULT</strong></p>
+<p>默认值约束，设置列的默认值。</p>
+<p><strong>CHECK</strong></p>
+<p>CHECK约束用于限制列的取值范围。</p>
+<hr>
+<h2 id="操作数据表"><a href="#操作数据表" class="headerlink" title="操作数据表"></a>操作数据表</h2><p>操作数据表的SQL语句属于DDL语句，支持表的创建、修改、删除等操作。</p>
+<p>这里以一个简易的员工信息管理系统为例进行说明。</p>
+<p>员工信息管理系统包括公司部门表、职位表、员工表、工资表、项目表。E-R图如下</p>
+<p><img src="/images/001.png"></p>
+<p>其中，</p>
+<ul>
+<li>一个部门中可以有多个职位，其关系为：1-N</li>
+<li>一个职位可以有多个员工，其关系为：1-N</li>
+<li>一个员工只能有一个工资记录，其关系为：1-1</li>
+<li>一个项目中包括多个员工，一个员工也可以参与多个项目，其关系为：M-N</li>
+</ul>
+<h3 id="创建数据表"><a href="#创建数据表" class="headerlink" title="创建数据表"></a>创建数据表</h3><p>创建数据表使用 <code>CREATE TABLE</code> 语句，其格式如下</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span>
+(
+    <span class="hljs-operator">&lt;</span>列名<span class="hljs-number">1</span><span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>数据类型<span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>列约束<span class="hljs-operator">&gt;</span>,
+    <span class="hljs-operator">&lt;</span>列名<span class="hljs-number">2</span><span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>数据类型<span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>列约束<span class="hljs-operator">&gt;</span>,
+    <span class="hljs-operator">&lt;</span>列名<span class="hljs-number">3</span><span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>数据类型<span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>列约束<span class="hljs-operator">&gt;</span>,
+    ...
+    <span class="hljs-operator">&lt;</span>表约束<span class="hljs-number">1</span><span class="hljs-operator">&gt;</span>,
+    <span class="hljs-operator">&lt;</span>表约束<span class="hljs-number">2</span><span class="hljs-operator">&gt;</span>,
+    ...
+);</code></pre>
+
+<p>对于关系表，可以使用外键（<code>FOREIGN KEY</code>）进行关联：</p>
+<ul>
+<li><p>1-N关系中，在N的表中定义外键，指向1的表中的主键</p>
+</li>
+<li><p>1-1关系中，在任意一个表中定义唯一（<code>UNIQUE</code>）外键，指向另一张表中的主键</p>
+</li>
+<li><p>M-N关系中，需要引入第3张表（关系表），在其中定义2个外键，分别指向2张表中的主键</p>
+</li>
+</ul>
+<p>员工管理信息系统的数据表定义SQL语句如下</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE example;
+USE example;
+
+<span class="hljs-comment">/*部门表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Department
+(
+    id   <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;部门编号&#x27;</span>,
+    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">16</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;部门名称&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id)
+);
+
+<span class="hljs-comment">/*职位表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-built_in">Position</span>
+(
+    id      <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;职位编号&#x27;</span>,
+    dept_id <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)     <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;所属部门编号&#x27;</span>,
+    name    <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;职位名称&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id),
+    <span class="hljs-keyword">FOREIGN</span> KEY (dept_id) <span class="hljs-keyword">REFERENCES</span> Department (id)
+);
+
+<span class="hljs-comment">/*员工表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Employee
+(
+    id           <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;员工编号&#x27;</span>,
+    position_id  <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;所属职位编号&#x27;</span>,
+    first_name   <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">16</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;员工名字&#x27;</span>,
+    last_name    <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">16</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;员工姓氏&#x27;</span>,
+    age          <span class="hljs-type">INTEGER</span>     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">0</span> COMMENT <span class="hljs-string">&#x27;员工年龄&#x27;</span>,
+    sex          <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">7</span>)  <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;unknown&#x27;</span> COMMENT <span class="hljs-string">&#x27;性别：male,female,unknown&#x27;</span>,
+    id_number    <span class="hljs-type">CHAR</span>(<span class="hljs-number">18</span>)    <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;身份证号码&#x27;</span>,
+    phone_number <span class="hljs-type">CHAR</span>(<span class="hljs-number">11</span>)    <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;手机号码&#x27;</span>,
+    email        <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;邮箱&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id),
+    <span class="hljs-keyword">FOREIGN</span> KEY (position_id) <span class="hljs-keyword">REFERENCES</span> <span class="hljs-built_in">Position</span> (id)
+);
+
+<span class="hljs-comment">/*工资表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Salary
+(
+    id     <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)       <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;工资编号&#x27;</span>,
+    emp_id <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)       <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;所属员工编号&#x27;</span>, <span class="hljs-comment">-- 唯一外键</span>
+    basic  <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">8</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">0</span> COMMENT <span class="hljs-string">&#x27;基础工资&#x27;</span>,
+    bonus  <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">8</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NULL</span>     <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">0</span> COMMENT <span class="hljs-string">&#x27;奖金&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id),
+    <span class="hljs-keyword">FOREIGN</span> KEY (emp_id) <span class="hljs-keyword">REFERENCES</span> Employee (id)
+);
+
+<span class="hljs-comment">/*项目表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Project
+(
+    id       <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>)     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">UNIQUE</span> COMMENT <span class="hljs-string">&#x27;项目编号&#x27;</span>,
+    name     <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;项目名称&#x27;</span>,
+    start_at <span class="hljs-type">DATE</span>        <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;项目开始日期&#x27;</span>,
+    end_at   <span class="hljs-type">DATE</span>        <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;项目结束日期&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id)
+);
+
+<span class="hljs-comment">/*员工-项目表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Project_Employee
+(
+    project_id <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;项目编号&#x27;</span>,
+    emp_id     <span class="hljs-type">CHAR</span>(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;员工编号&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (project_id, emp_id),
+    <span class="hljs-keyword">FOREIGN</span> KEY (project_id) <span class="hljs-keyword">REFERENCES</span> Project (id),
+    <span class="hljs-keyword">FOREIGN</span> KEY (emp_id) <span class="hljs-keyword">REFERENCES</span> Employee (id)
+);</code></pre>
+
+<p>执行以上SQL语句后，使用 <code>SHOW TABLES</code> 查看当前数据库中的所有表</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SHOW</span> TABLES;
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------------+</span>
+<span class="hljs-operator">|</span> Tables_in_example <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------------+</span>
+<span class="hljs-operator">|</span> department        <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> employee          <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> position          <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> project           <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> project_employee  <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> salary            <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------------+</span>
+<span class="hljs-number">6</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)</code></pre>
+
+<p>使用 <code>DESCRIBE 表名</code>  或其简写形式 <code>DESC 表名</code> 查看某张表的结构</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">DESC</span> Employee;
+<span class="hljs-operator">+</span><span class="hljs-comment">--------------+-------------+------+-----+---------+-------+</span>
+<span class="hljs-operator">|</span> Field        <span class="hljs-operator">|</span> Type        <span class="hljs-operator">|</span> <span class="hljs-keyword">Null</span> <span class="hljs-operator">|</span> Key <span class="hljs-operator">|</span> <span class="hljs-keyword">Default</span> <span class="hljs-operator">|</span> Extra <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">--------------+-------------+------+-----+---------+-------+</span>
+<span class="hljs-operator">|</span> id           <span class="hljs-operator">|</span> <span class="hljs-type">char</span>(<span class="hljs-number">4</span>)     <span class="hljs-operator">|</span> <span class="hljs-keyword">NO</span>   <span class="hljs-operator">|</span> PRI <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> position_id  <span class="hljs-operator">|</span> <span class="hljs-type">char</span>(<span class="hljs-number">4</span>)     <span class="hljs-operator">|</span> <span class="hljs-keyword">NO</span>   <span class="hljs-operator">|</span> MUL <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> first_name   <span class="hljs-operator">|</span> <span class="hljs-type">varchar</span>(<span class="hljs-number">16</span>) <span class="hljs-operator">|</span> <span class="hljs-keyword">NO</span>   <span class="hljs-operator">|</span>     <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> last_name    <span class="hljs-operator">|</span> <span class="hljs-type">varchar</span>(<span class="hljs-number">16</span>) <span class="hljs-operator">|</span> <span class="hljs-keyword">NO</span>   <span class="hljs-operator">|</span>     <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> age          <span class="hljs-operator">|</span> <span class="hljs-type">int</span>(<span class="hljs-number">11</span>)     <span class="hljs-operator">|</span> <span class="hljs-keyword">NO</span>   <span class="hljs-operator">|</span>     <span class="hljs-operator">|</span> <span class="hljs-number">0</span>       <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> sex          <span class="hljs-operator">|</span> <span class="hljs-type">varchar</span>(<span class="hljs-number">7</span>)  <span class="hljs-operator">|</span> <span class="hljs-keyword">NO</span>   <span class="hljs-operator">|</span>     <span class="hljs-operator">|</span> <span class="hljs-literal">unknown</span> <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> id_number    <span class="hljs-operator">|</span> <span class="hljs-type">char</span>(<span class="hljs-number">18</span>)    <span class="hljs-operator">|</span> YES  <span class="hljs-operator">|</span> UNI <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> phone_number <span class="hljs-operator">|</span> <span class="hljs-type">char</span>(<span class="hljs-number">11</span>)    <span class="hljs-operator">|</span> YES  <span class="hljs-operator">|</span> UNI <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> email        <span class="hljs-operator">|</span> <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-operator">|</span> YES  <span class="hljs-operator">|</span> UNI <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span>       <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">--------------+-------------+------+-----+---------+-------+</span>
+<span class="hljs-number">9</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.01</span> sec)</code></pre>
+
+<p>使用 <code>SHOW CREATE TABLE 表名</code> 可以查看创建表的SQL语句。</p>
+<h3 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h3><p>修改表使用 <code>ALTER TABLE</code> 语句，可以在已存在的表的基础上，修改表名称、为其添加列、修改列、删除列。</p>
+<p>修改表名称：将员工表重命名为 <em>Emp</em></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> Employee RENAME <span class="hljs-keyword">TO</span> Emp;</code></pre>
+
+<p>添加列：给员工表添加一个列，表示入职日期</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> Employee <span class="hljs-keyword">ADD</span> <span class="hljs-keyword">COLUMN</span> hiredayy DATETIME;</code></pre>
+
+<p>修改列名称：入职日期列名多写了一个y，修改为 <em>hireday</em></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> Employee CHANGE hiredayy hireday DATETIME;</code></pre>
+
+<p>修改列数据类型：修改入职日期列数据类型为 <code>DATE</code></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> Employee MODIFY <span class="hljs-keyword">COLUMN</span> hireday <span class="hljs-type">DATE</span>;</code></pre>
+
+<p>删除列：删除入职日期列</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> Employee <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">COLUMN</span> hireday;</code></pre>
+
+<h3 id="删除数据表"><a href="#删除数据表" class="headerlink" title="删除数据表"></a>删除数据表</h3><p>删除数据表使用 <code>DROP TABLE</code> 语句。</p>
+<blockquote>
+<p>注意：此操作不可逆！</p>
+</blockquote>
+<pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> Employee_Copy;</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

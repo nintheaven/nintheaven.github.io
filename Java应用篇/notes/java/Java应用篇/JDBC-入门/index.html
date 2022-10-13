@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>JDBC-入门 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>JDBC-入门</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>0.引入驱动jar包</p>
+<p>使用jdbc进行具体操作前，需要引入相关数据库的jar包, 或者使用mave管理依赖</p>
+<pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>mysql<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mysql-connector-java<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>8.0.23<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.xerial<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>sqlite-jdbc<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.34.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<p>1.加载驱动</p>
+<pre><code class="hljs java">Class.forName(DRIVER);</code></pre>
+
+<p>2.获取数据库连接对象</p>
+<pre><code class="hljs java">Connection conn=DriverManager.getConnection(URL);</code></pre>
+
+<p>3.创建(预处理)语句对象</p>
+<p>普通语句对象</p>
+<pre><code class="hljs java">Statement stmt=conn.createStatement();</code></pre>
+
+<p>预处理语句对象</p>
+<pre><code class="hljs java">PreparedStatement pstmt=conn.prepareStatement(sql);
+pstmt.setXxx(<span class="hljs-type">int</span> parameterIndex, Xxx x); <span class="hljs-comment">// 参数索引从1开始</span></code></pre>
+
+<p>4.执行sql语句</p>
+<p>普通语句对象执行sql</p>
+<pre><code class="hljs java"><span class="hljs-type">boolean</span> b=stmt.execute(sql);
+<span class="hljs-type">int</span> i=stmt.executeUpdate(sql);
+ResultSet resultSet=stmt.executeQuery(sql);</code></pre>
+
+<p>预处理语句对象执行sql</p>
+<pre><code class="hljs java"><span class="hljs-type">int</span> i=pstmt.executeUpdate();
+ResultSet resultSet=pstmt.executeQuery();</code></pre>
+
+<p>5.处理结果集</p>
+<pre><code class="hljs java"><span class="hljs-keyword">while</span>(resultSet.next())
+&#123;
+    <span class="hljs-type">int</span> id=resultSet.getInt(<span class="hljs-string">&quot;id&quot;</span>);
+    String name=resultSet.getString(<span class="hljs-string">&quot;name&quot;</span>);
+&#125;</code></pre>
+
+<p>6.关闭结果集,语句,连接</p>
+<pre><code class="hljs java">resultSet.close();
+stmt.close();
+conn.close();</code></pre>
+
+<p><strong>jdbc工具类封装</strong></p>
+<p>在类路径下创建配置文件</p>
+<p><em>mysql.properties</em></p>
+<pre><code class="hljs plaintext">DRIVER=com.mysql.cj.jdbc.Driver
+URL=jdbc:mysql://localhost:3306/test
+USER=root
+PASSWORD=root</code></pre>
+
+<p><em>DBUtil.java</em></p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DBUtil</span>
+&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String URL;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String USER;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String PASSWORD;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-title function_">DBUtil</span><span class="hljs-params">()</span>&#123;&#125;
+
+    <span class="hljs-keyword">static</span>
+    &#123;
+        <span class="hljs-comment">// 从properties文件中加载配置信息</span>
+        ResourceBundle bundle=ResourceBundle.getBundle(<span class="hljs-string">&quot;mysql&quot;</span>);
+        String DRIVER=bundle.getString(<span class="hljs-string">&quot;DRIVER&quot;</span>);
+        URL=bundle.getString(<span class="hljs-string">&quot;URL&quot;</span>);
+        USER=bundle.getString(<span class="hljs-string">&quot;USER&quot;</span>);
+        PASSWORD=bundle.getString(<span class="hljs-string">&quot;PASSWORD&quot;</span>);
+
+        <span class="hljs-keyword">try</span>
+        &#123;
+            Class.forName(DRIVER);
+        &#125;
+        <span class="hljs-keyword">catch</span>(ClassNotFoundException e)
+        &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Connection <span class="hljs-title function_">getConnection</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException
+    &#123;
+        <span class="hljs-keyword">return</span> DriverManager.getConnection(URL,USER,PASSWORD);
+    &#125;
+&#125;</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

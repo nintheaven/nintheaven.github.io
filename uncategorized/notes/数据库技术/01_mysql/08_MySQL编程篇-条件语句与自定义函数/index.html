@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>MySQL编程篇-条件语句与自定义函数 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>MySQL编程篇-条件语句与自定义函数</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h2 id="CASE表达式"><a href="#CASE表达式" class="headerlink" title="CASE表达式"></a>CASE表达式</h2><h3 id="简单CASE表达式"><a href="#简单CASE表达式" class="headerlink" title="简单CASE表达式"></a>简单CASE表达式</h3><p>语法</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CASE</span> 表达式
+	<span class="hljs-keyword">WHEN</span> 表达式 <span class="hljs-keyword">THEN</span> 表达式
+	<span class="hljs-keyword">WHEN</span> 表达式 <span class="hljs-keyword">THEN</span> 表达式
+	<span class="hljs-keyword">WHEN</span> 表达式 <span class="hljs-keyword">THEN</span> 表达式
+	 .
+	 .
+	 .
+	<span class="hljs-keyword">ELSE</span> 表达式
+<span class="hljs-keyword">END</span></code></pre>
+
+<p>简单CASE表达式类似编程语言中的switch语句，只能进行相等判断，不够灵活。</p>
+<h3 id="搜索CASE表达式"><a href="#搜索CASE表达式" class="headerlink" title="搜索CASE表达式"></a>搜索CASE表达式</h3><p>语法</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> 条件表达式<span class="hljs-number">1</span> <span class="hljs-keyword">THEN</span> 求值表达式<span class="hljs-number">1</span>
+	 <span class="hljs-keyword">WHEN</span> 条件表达式<span class="hljs-number">2</span> <span class="hljs-keyword">THEN</span> 求值表达式<span class="hljs-number">2</span>
+     <span class="hljs-keyword">WHEN</span> 条件表达式<span class="hljs-number">3</span> <span class="hljs-keyword">THEN</span> 求值表达式<span class="hljs-number">2</span>
+     .
+     .
+     .
+     <span class="hljs-keyword">ELSE</span> 求值表达式
+<span class="hljs-keyword">END</span></code></pre>
+
+<p>条件表达式的结果为TRUE 或 FALSE，求值表达式的结果为1个具体的值。</p>
+<p>例如，查询员工的名字与性别，要求男员工性别为1，女员工性别为0，未知性别为-1</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> concat(last_name, first_name), 
+			  <span class="hljs-keyword">case</span> <span class="hljs-keyword">when</span> sex<span class="hljs-operator">=</span><span class="hljs-string">&#x27;male&#x27;</span> <span class="hljs-keyword">then</span> <span class="hljs-number">1</span> 
+			  	   <span class="hljs-keyword">when</span> sex<span class="hljs-operator">=</span><span class="hljs-string">&#x27;female&#x27;</span> <span class="hljs-keyword">then</span> <span class="hljs-number">0</span>
+			  	   <span class="hljs-keyword">else</span> <span class="hljs-number">-1</span>
+			  <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> sex
+	   <span class="hljs-keyword">from</span> employee;
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------------------------+-----+</span>
+<span class="hljs-operator">|</span> concat(last_name, first_name) <span class="hljs-operator">|</span> sex <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------------------------+-----+</span>
+<span class="hljs-operator">|</span> 赵小龙                        <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 赵强                          <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 钱小钱                        <span class="hljs-operator">|</span>  <span class="hljs-number">-1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 孙倩                          <span class="hljs-operator">|</span>   <span class="hljs-number">0</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 李阳                          <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 李刚                          <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 周建                          <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 吴悠                          <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 郑成功                        <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 王楠                          <span class="hljs-operator">|</span>   <span class="hljs-number">0</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 冯晨晨                        <span class="hljs-operator">|</span>   <span class="hljs-number">0</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 陈三季                        <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> 诸葛亮                        <span class="hljs-operator">|</span>   <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------------------------+-----+</span>
+<span class="hljs-number">13</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.01</span> sec)</code></pre>
+
+<h3 id="CASE表达式方言"><a href="#CASE表达式方言" class="headerlink" title="CASE表达式方言"></a>CASE表达式方言</h3><p>Oracle中的 <code>decode()</code> 函数，MySQL中的 <code>if()</code> 函数，可以实现 <code>CASE</code> 表达式同样的功能。但是只能用在特定的DBMS中，不推荐使用。</p>
+<h2 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h2></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

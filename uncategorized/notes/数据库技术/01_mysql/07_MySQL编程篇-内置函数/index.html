@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>MySQL编程篇-内置函数 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>MySQL编程篇-内置函数</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h2 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h2><h3 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h3><p>聚合函数用于汇总表中的数据。</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COUNT()</td>
+<td>返回记录（行）数</td>
+<td>COUNT(*)，COUNT(列名)</td>
+</tr>
+<tr>
+<td>AVG()</td>
+<td>计算列的平均值</td>
+<td></td>
+</tr>
+<tr>
+<td>SUM()</td>
+<td>计算列的合计值</td>
+<td></td>
+</tr>
+<tr>
+<td>MAX()</td>
+<td>获取列中的最大值</td>
+<td></td>
+</tr>
+<tr>
+<td>MIN()</td>
+<td>获取列中的最小值</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><code>COUNT()</code> 函数的结果根据参数的不同而不同。参数为星号（*）时，结果包含NULL的数据行；参数为列名时，结果不包含NULL的数据行。</p>
+<p>查询员工数量</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>),<span class="hljs-built_in">COUNT</span>(last_name) <span class="hljs-keyword">FROM</span> Employee;
+<span class="hljs-operator">+</span><span class="hljs-comment">----------+------------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-operator">|</span> <span class="hljs-built_in">COUNT</span>(last_name) <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">----------+------------------+</span>
+<span class="hljs-operator">|</span>       <span class="hljs-number">13</span> <span class="hljs-operator">|</span>               <span class="hljs-number">13</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">----------+------------------+</span></code></pre>
+
+<p><code>AVG()</code> 和 <code>SUM()</code> 函数会先排除掉NULL的数据行，然后再进行汇总计算。</p>
+<p>计算员工基础工资平均值、总和</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">AVG</span>(basic),<span class="hljs-built_in">SUM</span>(basic) <span class="hljs-keyword">FROM</span> Salary;
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-built_in">AVG</span>(basic)  <span class="hljs-operator">|</span> <span class="hljs-built_in">SUM</span>(basic) <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">5015.538462</span> <span class="hljs-operator">|</span>   <span class="hljs-number">65202.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+</span></code></pre>
+
+<p>获取员工基础工资的最大值、最小值</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">MAX</span>(basic),<span class="hljs-built_in">MIN</span>(basic) <span class="hljs-keyword">FROM</span> Salary;
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-built_in">MAX</span>(basic) <span class="hljs-operator">|</span> <span class="hljs-built_in">MIN</span>(basic) <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+------------+</span>
+<span class="hljs-operator">|</span>    <span class="hljs-number">9000.00</span> <span class="hljs-operator">|</span>       <span class="hljs-number">1.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+------------+</span></code></pre>
+
+<p>在使用聚合函数时，可以在函数的参数前使用 <code>DISTINCT</code> 关键字，去除重复的数据。</p>
+<p>返回员工性别的种类</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">COUNT</span>(sex),<span class="hljs-built_in">COUNT</span>(<span class="hljs-keyword">DISTINCT</span> sex) <span class="hljs-keyword">FROM</span> Employee;
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+---------------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-built_in">COUNT</span>(sex) <span class="hljs-operator">|</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-keyword">DISTINCT</span> sex) <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+---------------------+</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">13</span> <span class="hljs-operator">|</span>                   <span class="hljs-number">3</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+---------------------+</span></code></pre>
+
+<h3 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h3><p>对数值的处理，除了使用算术运算符以外，还支持使用函数。</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ABS()</td>
+<td>求绝对值</td>
+<td>ABS(-10)</td>
+</tr>
+<tr>
+<td>MOD()</td>
+<td>取模</td>
+<td>MOD(10,3)</td>
+</tr>
+<tr>
+<td>CEIL()</td>
+<td>返回不小给定值得最小整数</td>
+<td>CEIL(10.3)</td>
+</tr>
+<tr>
+<td>FLOOR()</td>
+<td>返回不大于给定值的最大整数</td>
+<td>FLOOR(10.3)</td>
+</tr>
+<tr>
+<td>POW()</td>
+<td>幂运算</td>
+<td>POW(10,3)</td>
+</tr>
+<tr>
+<td>RAND()</td>
+<td>返回一个随机数，0 &lt;&#x3D; x &lt; 1.0</td>
+<td>RAND()</td>
+</tr>
+<tr>
+<td>ROUND()</td>
+<td>四舍五入</td>
+<td>ROUND(10.3)</td>
+</tr>
+</tbody></table>
+<h3 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONCAT()</td>
+<td>拼接字符串</td>
+<td>CONCAT(‘李’,’阳’)</td>
+</tr>
+<tr>
+<td>LENGTH()</td>
+<td><strong>以字节为单位</strong>返回字符串的长度</td>
+<td>LENGTH(‘李阳’)</td>
+</tr>
+<tr>
+<td>CHAR_LENGTH()</td>
+<td><strong>以字符为单位</strong>返回字符串的长度</td>
+<td></td>
+</tr>
+<tr>
+<td>LOWER()</td>
+<td>返回字符串的小写形式</td>
+<td></td>
+</tr>
+<tr>
+<td>UPPER()</td>
+<td>返回字符串的大写形式</td>
+<td></td>
+</tr>
+<tr>
+<td>REPLACE()</td>
+<td>替换字符串子串</td>
+<td>REPLACE(‘abcdab’,’ab’,’AB’); &#x2F;&#x2F; ‘ABcdAB’</td>
+</tr>
+<tr>
+<td>SUBSTRING</td>
+<td>截取子串</td>
+<td>SUBSTRING(‘12345’ FROM 2 FOR 3); &#x2F;&#x2F; ‘234’</td>
+</tr>
+<tr>
+<td>TRIM()</td>
+<td>去除字符串两端的空白字符</td>
+<td></td>
+</tr>
+<tr>
+<td>LTRIM()</td>
+<td>去除字符串左端的空白字符</td>
+<td></td>
+</tr>
+<tr>
+<td>RTRIM()</td>
+<td>去除字符串右端的空白字符</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NOW() 或 CURRENT_TIMESTAMP()</td>
+<td>返回当前日期与时间</td>
+<td></td>
+</tr>
+<tr>
+<td>CURDATE() 或 CURRENT_DATE()</td>
+<td>返回当前日期</td>
+<td></td>
+</tr>
+<tr>
+<td>CURTIME() 或 CURRENT_TIME()</td>
+<td>返回当前时间</td>
+<td></td>
+</tr>
+<tr>
+<td>DATE()</td>
+<td>提取日期或日期时间表达式的日期部分</td>
+<td><code>DATE(&#39;2021-08-30 01:54:32&#39;)</code></td>
+</tr>
+<tr>
+<td>TIME()</td>
+<td>提取时间或日期时间表达式的时间部分</td>
+<td><code>TIME(&#39;2021-08-30 01:54:32&#39;)</code></td>
+</tr>
+<tr>
+<td>YEAR()</td>
+<td>提取日期或日期时间表达式的年份部分</td>
+<td></td>
+</tr>
+<tr>
+<td>MONTH()</td>
+<td>提取日期或日期时间表达式的月份部分</td>
+<td></td>
+</tr>
+<tr>
+<td>DAY()</td>
+<td>提取日期或日期时间表达式的日部分</td>
+<td></td>
+</tr>
+<tr>
+<td>HOUR()</td>
+<td>提取时间或日期时间表达式的小时部分</td>
+<td></td>
+</tr>
+<tr>
+<td>MINUTE()</td>
+<td>提取时间或日期时间表达式的分钟部分</td>
+<td></td>
+</tr>
+<tr>
+<td>SECOND()</td>
+<td>提取时间或日期时间表达式的秒部分</td>
+<td></td>
+</tr>
+<tr>
+<td>EXTRACT()</td>
+<td>提取日期中的一部分(year, month, day ,hour, minute, second)</td>
+<td><code>SELECT EXTRACT(YEAR FROM NOW()), EXTRACT(MONTH FROM NOW());</code></td>
+</tr>
+</tbody></table>
+<h3 id="转换函数"><a href="#转换函数" class="headerlink" title="转换函数"></a>转换函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAST()</td>
+<td>将给定值转换其它数据类型</td>
+<td><code>CAST(&#39;2021-10-08&#39; AS DATE);</code>  <code>CAST(&#39;-0001&#39; AS SIGNED INTEGER);</code></td>
+</tr>
+<tr>
+<td>CONVERT()</td>
+<td>转换字符串编码格式</td>
+<td><code>CONVERT(&#39;abc&#39; USING utf8mb4)</code> 或 <code>CONVERT(&#39;abc&#39;, CHAR CHARACTER SET utf8mb4)</code></td>
+</tr>
+</tbody></table>
+<p>例如，将字符串转换为日期类型</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">CAST</span>(<span class="hljs-string">&#x27;2021-10-08&#x27;</span> <span class="hljs-keyword">AS</span> <span class="hljs-type">DATE</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;日期&#x27;</span>;
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+</span>
+<span class="hljs-operator">|</span> 日期       <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">2021</span><span class="hljs-number">-10</span><span class="hljs-number">-08</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+</span></code></pre>
+
+<p>转换字符串字符集为 utf8mb4</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">CONVERT</span>(<span class="hljs-string">&#x27;abc&#x27;</span> <span class="hljs-keyword">USING</span> utf8mb4);
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-keyword">CONVERT</span>(<span class="hljs-string">&#x27;abc&#x27;</span> <span class="hljs-keyword">USING</span> utf8mb4) <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------------------+</span>
+<span class="hljs-operator">|</span> abc                          <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------------------+</span></code></pre>
+
+<h3 id="系统信息函数"><a href="#系统信息函数" class="headerlink" title="系统信息函数"></a>系统信息函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h2></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

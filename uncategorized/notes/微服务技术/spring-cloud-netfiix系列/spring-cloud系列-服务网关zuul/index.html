@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,16 +75,25 @@
     
 </header>
 
-    <main><h1>spring-cloud系列-服务网关zuul</h1>
+    <main><div class="post">
+    <h1>spring-cloud系列-服务网关zuul</h1>
 
-<span>2022-10-11</span>
-<div><p>服务网关位于客户端和各个服务的调用之间，因此，可以在服务网关中实现<strong>路由</strong>与<strong>过滤</strong>的逻辑，用以实现对所有流经网关的服务调用实现一致的功能，例如安全、日志、服务调用跟踪等。</p>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>服务网关位于客户端和各个服务的调用之间，因此，可以在服务网关中实现<strong>路由</strong>与<strong>过滤</strong>的逻辑，用以实现对所有流经网关的服务调用实现一致的功能，例如安全、日志、服务调用跟踪等。</p>
 <p>Spring官方文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-netflix/docs/2.2.10.RELEASE/reference/html/#router-and-filter-zuul">https://docs.spring.io/spring-cloud-netflix/docs/2.2.10.RELEASE/reference/html/#router-and-filter-zuul</a></p>
 <span id="more"></span>
 
 <h2 id="创建Zuul服务器"><a href="#创建Zuul服务器" class="headerlink" title="创建Zuul服务器"></a>创建Zuul服务器</h2><p>SpringCloud集成了NetFlix开源的Zuul服务网关。</p>
 <p>首先，创建一个zuul服务器springboot项目(zuul-server)，并添加 <code>spring-cloud-starter-netflix-zuul</code> 依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-zuul<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-zuul<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>然后，创建启动引导类，使用注解 <code>@EnableZuulProxy</code> 将其声明为Zuul服务</p>
 <blockquote>
@@ -88,19 +101,40 @@
 <p><code>@EnableZuulServer</code> 注解将应用程序设置为一个基础的Zuul服务器，而不具备任何的反向代理功能。可以通过 <code>ZuulProperties</code> 手动配置Zuul服务器路由；</p>
 <p><code>@EnableZuulProxy</code> 注解除了将应用设置为一个基础的Zuul服务器外，还自动安装了一些反向代理过滤器，用于将请求转发到后端服务器。后端服务可以通过配置或服务发现客户端手动注册到Zuul服务器。</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableZuulProxy</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ZuulServerApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ZuulServerApp.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-meta">@EnableZuulProxy</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ZuulServerApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(ZuulServerApp.class,args);
+    &#125;
+&#125;</code></pre>
 
 <p>最后，在配置文件(application.yml)中，配置以下基本信息</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">7001</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">zuul-server</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">7001</span>
+
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">zuul-server</span></code></pre>
 
 <p>至此，Zuul服务器应用已创建完毕。但是还没有配置任何路由规则。</p>
 <h2 id="Zuul与Eureka集成"><a href="#Zuul与Eureka集成" class="headerlink" title="Zuul与Eureka集成"></a>Zuul与Eureka集成</h2><p>作为netflix微服务技术栈中的一员，Zuul自动使用服务ID来通过Eureka查找服务，使用Ribbon进行客户端负载均衡。</p>
 <p>将zuul服务器作为eureka服务器的一个客户端，注册到eureka服务器。这样，Zuul服务器就可以与Eureka服务器进行通信了，从Eureka服务器获取全部的微服务及其实例信息。</p>
 <p>添加 <code>spring-cloud-starter-netflix-eureka-client</code> 依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>配置Eureka服务发现URL</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">instance:</span></span><br><span class="line">    <span class="attr">prefer-ip-address:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="attr">register-with-eureka:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">fetch-registry:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">service-url:</span></span><br><span class="line">      <span class="attr">defaultZone:</span> <span class="string">http://localhost:8761/eureka/</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">eureka:</span>
+  <span class="hljs-attr">instance:</span>
+    <span class="hljs-attr">prefer-ip-address:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">client:</span>
+    <span class="hljs-attr">register-with-eureka:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">fetch-registry:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">service-url:</span>
+      <span class="hljs-attr">defaultZone:</span> <span class="hljs-string">http://localhost:8761/eureka/</span></code></pre>
 
 <h2 id="配置Zuul路由规则"><a href="#配置Zuul路由规则" class="headerlink" title="配置Zuul路由规则"></a>配置Zuul路由规则</h2><p>Zuul本质上是一个<strong>反向代理服务器</strong>。</p>
 <blockquote>
@@ -115,47 +149,127 @@
 </ul>
 <h3 id="通过服务发现手动添加路由"><a href="#通过服务发现手动添加路由" class="headerlink" title="通过服务发现手动添加路由"></a>通过服务发现手动添加路由</h3><p>Zuul通过服务发现手动添加路由，只需要在配置文件(application.yml)中定义简单的路由映射规则即可。</p>
 <p>例如，定义用户、产品以及订单服务的路由规则如下，通过配置项 <code>zuul.routes.&lt;microservice-id&gt;</code> 指定对应服务相对于Zuul服务器的路径</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">routes:</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">/user/**</span></span><br><span class="line">    <span class="attr">product:</span> <span class="string">/product/**</span></span><br><span class="line">    <span class="attr">order:</span> <span class="string">/order/**</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">routes:</span>
+    <span class="hljs-attr">user:</span> <span class="hljs-string">/user/**</span>
+    <span class="hljs-attr">product:</span> <span class="hljs-string">/product/**</span>
+    <span class="hljs-attr">order:</span> <span class="hljs-string">/order/**</span></code></pre>
 
 <p>这样配置之后，不需要直接调用远程服务，而是通过Zuul代理，请求Zuul所在的服务器：<a target="_blank" rel="noopener" href="http://localhost:7001/">http://localhost:7001</a> ，根据URL中的请求路径：&#x2F;user&#x2F;user&#x2F;1，在路由表中得到对应的服务ID：user，然后将请求转发到远程用户服务中。这样，请求用户服务获取用户信息的URL就成了：<a target="_blank" rel="noopener" href="http://localhost:7001/user/user/1">http://localhost:7001/user/user/1</a> ，对于客户端来说，好像用户服务不存在一样，与其打交道的就只剩下Zuul服务网关了。</p>
 <p>另外，路径是可以自定义的，只要不同路由规则不会冲突即可。例如，如果觉得user不符合自己的审美，定义其路由规则时，可以配置如下</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">routes:</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">/a/**</span>      </span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">routes:</span>
+    <span class="hljs-attr">user:</span> <span class="hljs-string">/a/**</span></code></pre>
 
 <p>这样访问用户服务时，URL为：<a target="_blank" rel="noopener" href="http://localhost:7001/a/user/1">http://localhost:7001/a/user/1</a> 。</p>
 <h3 id="通过服务发现自动添加路由"><a href="#通过服务发现自动添加路由" class="headerlink" title="通过服务发现自动添加路由"></a>通过服务发现自动添加路由</h3><p>Zuul集成了Eureka后，默认会自动通过服务发现添加路由。</p>
 <p>例如，Eureka服务器中注册的用户(user)、产品(product)和订单(order)微服务，Zuul服务器会自动添加以下路由</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">routes:</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">/user/**</span></span><br><span class="line">    <span class="attr">product:</span> <span class="string">/product/**</span></span><br><span class="line">    <span class="attr">order:</span> <span class="string">/order/**</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">routes:</span>
+    <span class="hljs-attr">user:</span> <span class="hljs-string">/user/**</span>
+    <span class="hljs-attr">product:</span> <span class="hljs-string">/product/**</span>
+    <span class="hljs-attr">order:</span> <span class="hljs-string">/order/**</span></code></pre>
 
 <p>通过Zuul调用注册到Eureka服务器的微服务的URL格式如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://&lt;zuul-server-ip&gt;:&lt;zuul-server-port&gt;/&lt;microservice-id&gt;/&lt;path&gt;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">http://&lt;zuul-server-ip&gt;:&lt;zuul-server-port&gt;/&lt;microservice-id&gt;/&lt;path&gt;</code></pre>
 
 <p>自动添加路由的一个小缺点是，不能自定义请求服务的URL路径，只能是服务ID。</p>
 <p>要想在自动添加时忽略某些服务，只需要使用配置项 <code>zuul.ignored-services</code> 设置要忽略的服务ID即可，忽略全部使用星号 <code>*</code></p>
 <blockquote>
 <p>注意：如果在服务ID上使用单引号，不允许这样：<code>&#39;user‘, ’product&#39;</code> ，而是应该这样 <code>&#39;user, product&#39;</code></p>
 </blockquote>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">ignored-services:</span> <span class="string">user,</span> <span class="string">product</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">ignored-services:</span> <span class="hljs-string">user,</span> <span class="hljs-string">product</span></code></pre>
 
 <h3 id="通过静态URL手动添加路由"><a href="#通过静态URL手动添加路由" class="headerlink" title="通过静态URL手动添加路由"></a>通过静态URL手动添加路由</h3><p>在Zuul反向代理服务器中，静态路由指的是没有通过服务发现服务器(Eureka)注册的服务，甚至可以是其它语言编写的项目，只要是通过HTTP访问即可。</p>
 <p>创建一个springboot项目，不使用Eureka注册，功能只有一个：访问 <a target="_blank" rel="noopener" href="http://localhost:8401/hello">http://localhost:8401/hello</a> 返回一个 “hello” 字符串。</p>
 <p>使用以下配置添加一个静态路由映射</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">routes:</span></span><br><span class="line">    <span class="comment"># Zuul内部用于识别服务的唯一key</span></span><br><span class="line">    <span class="attr">hello:</span></span><br><span class="line">      <span class="comment"># 服务在Zuul反向代理服务器中的逻辑路径</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/hello/**</span></span><br><span class="line">      <span class="comment"># 静态服务的实际URL</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://localhost:8401</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">routes:</span>
+    <span class="hljs-comment"># Zuul内部用于识别服务的唯一key</span>
+    <span class="hljs-attr">hello:</span>
+      <span class="hljs-comment"># 服务在Zuul反向代理服务器中的逻辑路径</span>
+      <span class="hljs-attr">path:</span> <span class="hljs-string">/hello/**</span>
+      <span class="hljs-comment"># 静态服务的实际URL</span>
+      <span class="hljs-attr">url:</span> <span class="hljs-string">http://localhost:8401</span></code></pre>
 
 <p>这样，对Zuul服务器中 &#x2F;hello&#x2F;** 路径的请求，会绕过Eureka，直接路由到 <a target="_blank" rel="noopener" href="http://localhost:8401/">http://localhost:8401</a> 。</p>
 <p>访问 <a target="_blank" rel="noopener" href="http://localhost:7001/hello/hello">http://localhost:7001/hello/hello</a> ，可以看到显示 “hello” 字符串的页面。</p>
 <h3 id="给Zuul路由映射添加前缀"><a href="#给Zuul路由映射添加前缀" class="headerlink" title="给Zuul路由映射添加前缀"></a>给Zuul路由映射添加前缀</h3><p>很多api服务都喜欢以 <em>&#x2F;api</em> 开头，Zuul支持为所有路由映射添加统一的前缀，只需要使用 <code>zuul.prefix</code> 配置项即可</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">ignored-services:</span> <span class="string">&#x27;*&#x27;</span></span><br><span class="line">  <span class="attr">prefix:</span> <span class="string">&#x27;/api&#x27;</span></span><br><span class="line">  <span class="attr">routes:</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">/user/**</span></span><br><span class="line">    <span class="attr">product:</span> <span class="string">/product/**</span></span><br><span class="line">    <span class="attr">order:</span> <span class="string">/order/**</span></span><br><span class="line">    <span class="comment"># Zuul内部用于识别服务的唯一key</span></span><br><span class="line">    <span class="attr">hello:</span></span><br><span class="line">      <span class="comment"># 服务在Zuul反向代理服务器中的逻辑路径</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/hello/**</span></span><br><span class="line">      <span class="comment"># 静态服务的实际URL</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://localhost:8401</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">ignored-services:</span> <span class="hljs-string">&#x27;*&#x27;</span>
+  <span class="hljs-attr">prefix:</span> <span class="hljs-string">&#x27;/api&#x27;</span>
+  <span class="hljs-attr">routes:</span>
+    <span class="hljs-attr">user:</span> <span class="hljs-string">/user/**</span>
+    <span class="hljs-attr">product:</span> <span class="hljs-string">/product/**</span>
+    <span class="hljs-attr">order:</span> <span class="hljs-string">/order/**</span>
+    <span class="hljs-comment"># Zuul内部用于识别服务的唯一key</span>
+    <span class="hljs-attr">hello:</span>
+      <span class="hljs-comment"># 服务在Zuul反向代理服务器中的逻辑路径</span>
+      <span class="hljs-attr">path:</span> <span class="hljs-string">/hello/**</span>
+      <span class="hljs-comment"># 静态服务的实际URL</span>
+      <span class="hljs-attr">url:</span> <span class="hljs-string">http://localhost:8401</span></code></pre>
 
 <p>这样，所有的路由映射都会被添加一个 &#x2F;api 前缀。</p>
 <p>例如，访问user服务时，URL为：<a target="_blank" rel="noopener" href="http://localhost:7001/api/user/user/1">http://localhost:7001/api/user/user/1</a> 。</p>
 <h3 id="查看Zuul中配置的路由规则"><a href="#查看Zuul中配置的路由规则" class="headerlink" title="查看Zuul中配置的路由规则"></a>查看Zuul中配置的路由规则</h3><p>确保在zuul-server中添加了 <code>spring-boot-starter-actuator</code> 依赖，并开启了actuator相关端点的访问权限</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management:</span></span><br><span class="line">  <span class="attr">endpoints:</span></span><br><span class="line">    <span class="attr">web:</span></span><br><span class="line">      <span class="attr">exposure:</span></span><br><span class="line">        <span class="attr">include:</span> <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">management:</span>
+  <span class="hljs-attr">endpoints:</span>
+    <span class="hljs-attr">web:</span>
+      <span class="hljs-attr">exposure:</span>
+        <span class="hljs-attr">include:</span> <span class="hljs-string">&quot;*&quot;</span></code></pre>
 
 <p>列出路由映射：<a target="_blank" rel="noopener" href="http://localhost:7001/actuator/routes">http://localhost:7001/actuator/routes</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;/api/user/**&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;/api/product/**&quot;</span><span class="punctuation">:</span> <span class="string">&quot;product&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;/api/order/**&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;/api/hello/**&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://localhost:8401&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+  <span class="hljs-attr">&quot;/api/user/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;/api/product/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;product&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;/api/order/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;order&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;/api/hello/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://localhost:8401&quot;</span>
+<span class="hljs-punctuation">&#125;</span></code></pre>
 
 <p>列出详细信息：<a target="_blank" rel="noopener" href="http://localhost:7001/actuator/routes/details">http://localhost:7001/actuator/routes/details</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;/api/user/**&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fullPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/user/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;location&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefix&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/user&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;retryable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;customSensitiveHeaders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefixStripped&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;/api/product/**&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;product&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fullPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/product/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;location&quot;</span><span class="punctuation">:</span> <span class="string">&quot;product&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefix&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/product&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;retryable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;customSensitiveHeaders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefixStripped&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;/api/order/**&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fullPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/order/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;location&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefix&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/order&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;retryable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;customSensitiveHeaders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefixStripped&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;/api/hello/**&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hello&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fullPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/hello/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;location&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://localhost:8401&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefix&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/api/hello&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;retryable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;customSensitiveHeaders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;prefixStripped&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+  <span class="hljs-attr">&quot;/api/user/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;fullPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/user/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;location&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/user&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;retryable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;customSensitiveHeaders&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefixStripped&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;/api/product/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;product&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;fullPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/product/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;location&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;product&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/product&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;retryable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;customSensitiveHeaders&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefixStripped&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;/api/order/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;order&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;fullPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/order/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;location&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;order&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/order&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;retryable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;customSensitiveHeaders&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefixStripped&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;/api/hello/**&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hello&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;fullPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/hello/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;location&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://localhost:8401&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/**&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/api/hello&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;retryable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;customSensitiveHeaders&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;prefixStripped&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">&#125;</span>
+<span class="hljs-punctuation">&#125;</span></code></pre>
 
 <h3 id="在Zuul服务网关中配置调用超时"><a href="#在Zuul服务网关中配置调用超时" class="headerlink" title="在Zuul服务网关中配置调用超时"></a>在Zuul服务网关中配置调用超时</h3><p>Zuul使用Hystrix和Ribbon防止长时间无响应的服务调用而影响到服务网关的性能。</p>
 <p><strong>在网关中配置Hystrix默认超时</strong></p>
@@ -163,12 +277,20 @@
 <blockquote>
 <p>因为方便测试，在订单服务(order)中，设置了有2&#x2F;3几率休眠3s，所以这里设置超时时间为3.5s</p>
 </blockquote>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">hystrix:</span></span><br><span class="line">  <span class="attr">command:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">execution:</span></span><br><span class="line">        <span class="attr">isolation:</span></span><br><span class="line">          <span class="attr">thread:</span></span><br><span class="line">            <span class="attr">timeoutInMilliseconds:</span> <span class="number">3500</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">hystrix:</span>
+  <span class="hljs-attr">command:</span>
+    <span class="hljs-attr">default:</span>
+      <span class="hljs-attr">execution:</span>
+        <span class="hljs-attr">isolation:</span>
+          <span class="hljs-attr">thread:</span>
+            <span class="hljs-attr">timeoutInMilliseconds:</span> <span class="hljs-number">3500</span></code></pre>
 
 <p>如果要设置特定服务的默认超时，只需将配置中的 <code>default</code> 改为服务ID即可。</p>
 <p><strong>在网关中配置Ribbon默认超时</strong></p>
 <p>Ribbon默认超过5s调用失败。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line">  <span class="attr">ReadTimeout:</span> <span class="number">5000</span></span><br><span class="line">  <span class="attr">SocketTimeout:</span> <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">ribbon:</span>
+  <span class="hljs-attr">ReadTimeout:</span> <span class="hljs-number">5000</span>
+  <span class="hljs-attr">SocketTimeout:</span> <span class="hljs-number">1000</span></code></pre>
 
 <h2 id="使用Zuul过滤器"><a href="#使用Zuul过滤器" class="headerlink" title="使用Zuul过滤器"></a>使用Zuul过滤器</h2><p>在Zuul服务网关中可以实现对每个服务请求都可以执行的自定义业务逻辑，<strong>即过滤器</strong>。</p>
 <p>Zuul过滤器可以分为4类：</p>
@@ -186,7 +308,39 @@
 <li>目标服务代码执行完毕后，后置过滤器被执行。</li>
 </ol>
 <h3 id="过滤器的基本结构"><a href="#过滤器的基本结构" class="headerlink" title="过滤器的基本结构"></a>过滤器的基本结构</h3><p>实现一个路由过滤器，都必须扩展 <code>ZuulFilter</code> 抽象类，然后使用 <code>@Component</code> 注解，过滤器自动生效</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyFilter</span> <span class="keyword">extends</span> <span class="title class_">ZuulFilter</span> &#123;</span><br><span class="line">    <span class="comment">/*过滤器的类型: pre | route | post | error*/</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">filterType</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 过滤器执行的顺序：从小到大</span></span><br><span class="line"><span class="comment">    * 多个过滤器如果顺序不重要的话，可以有相等的顺序值</span></span><br><span class="line"><span class="comment">    * 过滤器的顺序值可以是不连续的</span></span><br><span class="line"><span class="comment">    * */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">filterOrder</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*是否要执行过滤器的run()方法*/</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">shouldFilter</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 过滤器执行的核心逻辑代码</span></span><br><span class="line"><span class="comment">    * 目前版本中(spring-cloud Hoxton.SR12, zuul-core1.3.1)，没有用到返回值，被忽略，返回null即可</span></span><br><span class="line"><span class="comment">    * */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">run</span><span class="params">()</span> <span class="keyword">throws</span> ZuulException &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ZuulFilter</span> &#123;
+    <span class="hljs-comment">/*过滤器的类型: pre | route | post | error*/</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">filterType</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    &#125;
+
+    <span class="hljs-comment">/*</span>
+<span class="hljs-comment">    * 过滤器执行的顺序：从小到大</span>
+<span class="hljs-comment">    * 多个过滤器如果顺序不重要的话，可以有相等的顺序值</span>
+<span class="hljs-comment">    * 过滤器的顺序值可以是不连续的</span>
+<span class="hljs-comment">    * */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">filterOrder</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    &#125;
+
+    <span class="hljs-comment">/*是否要执行过滤器的run()方法*/</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">shouldFilter</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    &#125;
+
+    <span class="hljs-comment">/*</span>
+<span class="hljs-comment">    * 过滤器执行的核心逻辑代码</span>
+<span class="hljs-comment">    * 目前版本中(spring-cloud Hoxton.SR12, zuul-core1.3.1)，没有用到返回值，被忽略，返回null即可</span>
+<span class="hljs-comment">    * */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">run</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> ZuulException &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    &#125;
+&#125;</code></pre>
 
 <h3 id="实现过滤器的核心API"><a href="#实现过滤器的核心API" class="headerlink" title="实现过滤器的核心API"></a>实现过滤器的核心API</h3><p>Spring官方文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-netflix/docs/2.2.10.RELEASE/reference/html/#custom-zuul-filter-examples">https://docs.spring.io/spring-cloud-netflix/docs/2.2.10.RELEASE/reference/html/#custom-zuul-filter-examples</a></p>
 <p><strong><code>RequestContext</code></strong></p>
@@ -196,10 +350,11 @@
 <p>当然，spring-web 版本的 <code>RequestContext</code> 具有的方法，netflix-zuul 版本的 <code>RequestContext</code> 一样都有。</p>
 </blockquote>
 <p>获取 <code>RequestContext</code> 对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">RequestContext</span> <span class="variable">ctx</span> <span class="operator">=</span> RequestContext.getCurrentContext();</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-type">RequestContext</span> <span class="hljs-variable">ctx</span> <span class="hljs-operator">=</span> RequestContext.getCurrentContext();</code></pre>
 
 <p>在请求头或响应头中添加信息</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ctx.addZuulRequestHeader(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;value&quot;</span>);</span><br><span class="line">ctx.addZuulResponseHeader(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;value&quot;</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java">ctx.addZuulRequestHeader(<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-string">&quot;value&quot;</span>);
+ctx.addZuulResponseHeader(<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-string">&quot;value&quot;</span>);</code></pre>
 
 <p><strong><code>ProxyRequestHelper</code></strong></p>
 <p><code>ProxyRequestHelper</code> 是 netflix-zuul 中提供的一个工具类，有很多方便的方法用于构造HTTP请求或响应。</p>
@@ -207,26 +362,39 @@
 <p><code>spring-cloud-starter-netflix-zuul</code> starter依赖已经自动在spring容器中配置了一个 <code>ProxyRequestHelper</code> 对象</p>
 <blockquote>
 <p>注意：<code>ProxyRequestHelper</code> 的无参构造器已经被移除了，不能直接通过无参构造器new它了</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="comment">// TODO Remove in 2.1.x</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">ProxyRequestHelper</span><span class="params">()</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Deprecated</span>
+<span class="hljs-comment">// TODO Remove in 2.1.x</span>
+<span class="hljs-keyword">public</span> <span class="hljs-title function_">ProxyRequestHelper</span><span class="hljs-params">()</span> &#123;
+&#125;</code></pre>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> ProxyRequestHelper helper;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">private</span> ProxyRequestHelper helper;</code></pre>
 
 <p>构造请求相关信息</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpServletRequest</span> <span class="variable">request</span> <span class="operator">=</span> ctx.getRequest();</span><br><span class="line"><span class="type">String</span> <span class="variable">uri</span> <span class="operator">=</span> helper.buildZuulRequestURI(request);</span><br><span class="line">MultiValueMap&lt;String, String&gt; params = helper.buildZuulRequestQueryParams(request);</span><br><span class="line">MultiValueMap&lt;String, String&gt; headers = helper.buildZuulRequestHeaders(request);</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-type">HttpServletRequest</span> <span class="hljs-variable">request</span> <span class="hljs-operator">=</span> ctx.getRequest();
+<span class="hljs-type">String</span> <span class="hljs-variable">uri</span> <span class="hljs-operator">=</span> helper.buildZuulRequestURI(request);
+MultiValueMap&lt;String, String&gt; params = helper.buildZuulRequestQueryParams(request);
+MultiValueMap&lt;String, String&gt; headers = helper.buildZuulRequestHeaders(request);</code></pre>
 
 <p>设置响应信息</p>
 <p>实现一个<strong>路由过滤器</strong>的思路是：将Servlet请求转换为HTTP请求，使用HTTP客户端（例如OkHttp3）发送请求，得到HTTP响应，然后再把HTTP响应转换为Servlet响应。</p>
 <p><code>ProxyRequestHelper</code> 可以使用 <code>setResponse()</code> 方法设置Servlet响应信息</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setResponse</span><span class="params">(<span class="type">int</span> status, InputStream entity,</span></span><br><span class="line"><span class="params">                        MultiValueMap&lt;String, String&gt; headers)</span> <span class="keyword">throws</span> IOException </span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setResponse</span><span class="hljs-params">(<span class="hljs-type">int</span> status, InputStream entity,</span>
+<span class="hljs-params">                        MultiValueMap&lt;String, String&gt; headers)</span> <span class="hljs-keyword">throws</span> IOException</code></pre>
 
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>git报错集合</h1>
+    <main><div class="post">
+    <h1>git报错集合</h1>
 
-<span>版本管理工具</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p><strong>修改hosts文件解决墙内无法访问github的问题</strong></p>
 <blockquote>
@@ -87,7 +95,7 @@
 <p>linux: <code>sudo vim /etc/hosts</code></p>
 <p>windows: <code>C:\Windows\System32\drivers\etc\hosts</code></p>
 <p>加入以下内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">复制的ip github.com</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">复制的ip github.com</code></pre>
 
 
 
@@ -95,7 +103,9 @@
 <p>报错原因是windows系统对行结束符号的脑残设计导致的，解决办法如下</p>
 <p>1.删除.git目录下的index.lock文件</p>
 <p>2.修改.git&#x2F;conf文件，在core项下添加以下配置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">    autocrlf = false</span><br><span class="line">    safecrlf = false</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">[core]
+    autocrlf = false
+    safecrlf = false</code></pre>
 
 
 
@@ -111,18 +121,25 @@
 <p><code>git commit -m &#39;commit&#39;</code> </p>
 <p><code>git push</code></p>
 <p><strong>git push报错</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">E:\Projects\algorithm&gt;git push gitee &quot;main&quot;</span><br><span class="line">error: src refspec main does not match any</span><br><span class="line">error: failed to push some refs to &#x27;gitee.com:lypzzzzz/algorithm.git&#x27;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">E:\Projects\algorithm&gt;git push gitee &quot;main&quot;
+error: src refspec main does not match any
+error: failed to push some refs to &#x27;gitee.com:lypzzzzz/algorithm.git&#x27;</code></pre>
 
 <p>是由于本地分支（master）与远程分支（main）名称不一致造成的，修改本地分支名称</p>
 <p><code>git branch -m master main</code></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

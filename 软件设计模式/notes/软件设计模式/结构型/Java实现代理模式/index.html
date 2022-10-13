@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>Java实现代理模式</h1>
+    <main><div class="post">
+    <h1>Java实现代理模式</h1>
 
-<span>软件设计模式</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="代理模式介绍"><a href="#代理模式介绍" class="headerlink" title="代理模式介绍"></a>代理模式介绍</h2><p>代理模式(Proxy Pattern) 指代理者代替被代理的主体进行一些操作的模式。</p>
 <p><strong>代理类</strong>和<strong>主体类</strong>（被代理者）拥有公用的<strong>主题</strong>（接口），主体类中可以有自己特有的方法。</p>
@@ -84,22 +92,58 @@
 <p>当创建一个对象需要耗费很多资源，而且不是立即需要它时，就可以使用代理模式，让代理类进行大部分操作，只有在代理类无能为力时，再创建主体类对象。</p>
 <h2 id="代理模式示例"><a href="#代理模式示例" class="headerlink" title="代理模式示例"></a>代理模式示例</h2><p>以海外代购为例，国内的人想买国外的东西，要么自己飞到国外，要么通过代购：代购代理买东西这件事，但是自己收货。</p>
 <p>定义购物接口，表示一个<strong>主题</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*主题：购物*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Shopping</span> &#123;</span><br><span class="line">    <span class="comment">/*购物*/</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">buying</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">/*收货*/</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">receiving</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*主题：购物*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Shopping</span> &#123;
+    <span class="hljs-comment">/*购物*/</span>
+    <span class="hljs-keyword">void</span> <span class="hljs-title function_">buying</span><span class="hljs-params">()</span>;
+    <span class="hljs-comment">/*收货*/</span>
+    <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiving</span><span class="hljs-params">()</span>;
+&#125;</code></pre>
 
 <p>定义一个表示人的类，实现购物接口，表示被代理的主体</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> <span class="keyword">implements</span> <span class="title class_">Shopping</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buying</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;亲自购买&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiving</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;亲自收货&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Shopping</span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">buying</span><span class="hljs-params">()</span> &#123;
+        System.out.println(<span class="hljs-string">&quot;亲自购买&quot;</span>);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiving</span><span class="hljs-params">()</span> &#123;
+        System.out.println(<span class="hljs-string">&quot;亲自收货&quot;</span>);
+    &#125;
+&#125;</code></pre>
 
 <p>定义代理类，实现与主体类一样的接口。<code>buying()</code> 方法中，代理类自己就可以处理了，但是 <code>receiving()</code> 方法，需要主体类（人）亲自收货</p>
 <blockquote>
 <p>注意：代理类内必须要有一个主体类的引用，而且要在需要的时候才进行初始化。</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Daigou</span> <span class="keyword">implements</span> <span class="title class_">Shopping</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Person person;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buying</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;代购帮买&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiving</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (person==<span class="literal">null</span>)&#123;</span><br><span class="line">            person = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        person.receiving();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Daigou</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Shopping</span>&#123;
+    <span class="hljs-keyword">private</span> Person person;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">buying</span><span class="hljs-params">()</span> &#123;
+        System.out.println(<span class="hljs-string">&quot;代购帮买&quot;</span>);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiving</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">if</span> (person==<span class="hljs-literal">null</span>)&#123;
+            person = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>();
+        &#125;
+        person.receiving();
+    &#125;
+&#125;</code></pre>
 
 <p>测试一下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Shopping</span> <span class="variable">shopping</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Daigou</span>();</span><br><span class="line">    shopping.buying();</span><br><span class="line">    shopping.receiving();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+    <span class="hljs-type">Shopping</span> <span class="hljs-variable">shopping</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Daigou</span>();
+    shopping.buying();
+    shopping.receiving();
+&#125;</code></pre>
 
 <p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">代购帮买</span><br><span class="line">亲自收货</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">代购帮买
+亲自收货</code></pre>
 
 <blockquote>
 <p>代理模式与对象适配器模式的区别？</p>
@@ -108,13 +152,18 @@
 </blockquote>
 <h2 id="代理模式类图"><a href="#代理模式类图" class="headerlink" title="代理模式类图"></a>代理模式类图</h2><p><img src="/images/proxy.png"></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

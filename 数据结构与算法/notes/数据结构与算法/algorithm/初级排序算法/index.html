@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>初级排序算法</h1>
+    <main><div class="post">
+    <h1>初级排序算法</h1>
 
-<span>数据结构与算法</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p><strong>算法描述</strong></p>
 <blockquote>
@@ -87,7 +95,27 @@
 <p>时间复杂度: O(n^2)</p>
 <p>空间复杂度: O(1)</p>
 <p><strong>算法实现</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(<span class="type">int</span>[] nums)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> N=nums.length;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> min=i;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=i+<span class="number">1</span>;j&lt;N;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 更新最小值索引</span></span><br><span class="line">            <span class="keyword">if</span>(nums[j]&lt;nums[min])</span><br><span class="line">            &#123;</span><br><span class="line">                min=j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 交换</span></span><br><span class="line">        <span class="type">int</span> temp=nums[min];</span><br><span class="line">        nums[min]=nums[i];</span><br><span class="line">        nums[i]=temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span>
+&#123;
+    <span class="hljs-type">int</span> N=nums.length;
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;N;i++)
+    &#123;
+        <span class="hljs-type">int</span> min=i;
+        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=i+<span class="hljs-number">1</span>;j&lt;N;j++)
+        &#123;
+            <span class="hljs-comment">// 更新最小值索引</span>
+            <span class="hljs-keyword">if</span>(nums[j]&lt;nums[min])
+            &#123;
+                min=j;
+            &#125;
+        &#125;
+        
+        <span class="hljs-comment">// 交换</span>
+        <span class="hljs-type">int</span> temp=nums[min];
+        nums[min]=nums[i];
+        nums[i]=temp;
+    &#125;
+&#125;</code></pre>
 
 <h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p><strong>算法描述</strong></p>
 <p>遍历元素，两两比较，并交换位置，将较大的往后移。</p>
@@ -96,7 +124,23 @@
 <p>时间复杂度: O(n^2)</p>
 <p>空间复杂度: O(1)</p>
 <p><strong>算法实现</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(<span class="type">int</span>[] nums)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> N=nums.length;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;N-i-<span class="number">1</span>;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[j]&gt;nums[j+<span class="number">1</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// 交换位置</span></span><br><span class="line">                <span class="type">int</span> temp=nums[j];</span><br><span class="line">                nums[j]=nums[j+<span class="number">1</span>];</span><br><span class="line">                nums[j+<span class="number">1</span>]=temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span>
+&#123;
+    <span class="hljs-type">int</span> N=nums.length;
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;N;i++)
+    &#123;
+        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">0</span>;j&lt;N-i-<span class="hljs-number">1</span>;j++)
+        &#123;
+            <span class="hljs-keyword">if</span>(nums[j]&gt;nums[j+<span class="hljs-number">1</span>])
+            &#123;
+                <span class="hljs-comment">// 交换位置</span>
+                <span class="hljs-type">int</span> temp=nums[j];
+                nums[j]=nums[j+<span class="hljs-number">1</span>];
+                nums[j+<span class="hljs-number">1</span>]=temp;
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
 
 <h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p><strong>算法描述</strong></p>
 <p>遍历元素，将每一个元素插入到其它已经有序的元素中的适当位置。</p>
@@ -104,14 +148,34 @@
 <p>时间复杂度: O(n^2)</p>
 <p>空间复杂度: O(1)</p>
 <p><strong>算法实现</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>  <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(<span class="type">int</span>[] nums)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> N=nums.length;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;N;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=i;j&gt;<span class="number">0</span>;j--)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[j]&lt;nums[j-<span class="number">1</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">int</span> temp=nums[j];</span><br><span class="line">                nums[j]=nums[j-<span class="number">1</span>];</span><br><span class="line">                nums[j-<span class="number">1</span>]=temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<div>END</div></main>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span>  <span class="hljs-keyword">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span>
+&#123;
+    <span class="hljs-type">int</span> N=nums.length;
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;N;i++)
+    &#123;
+        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=i;j&gt;<span class="hljs-number">0</span>;j--)
+        &#123;
+            <span class="hljs-keyword">if</span>(nums[j]&lt;nums[j-<span class="hljs-number">1</span>])
+            &#123;
+                <span class="hljs-type">int</span> temp=nums[j];
+                nums[j]=nums[j-<span class="hljs-number">1</span>];
+                nums[j-<span class="hljs-number">1</span>]=temp;
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>mysql安装-linux(unix)系统中使用二进制包安装mysql5.7 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>mysql安装-linux(unix)系统中使用二进制包安装mysql5.7</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>下载地址：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/5.7.html#downloads">https://dev.mysql.com/downloads/mysql/5.7.html#downloads</a></p>
+<p>参考文档：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/binary-installation.html">https://dev.mysql.com/doc/refman/5.7/en/binary-installation.html</a></p>
+<span id="more"></span>
+
+<p><strong>0.安装相关依赖库</strong></p>
+<blockquote>
+<p>官方文档中说需要安装以下依赖，但是这里因为找不到centos7的版本，没有安装libnuma 和 ibtinfo.so.5，并不影响mysql的安装。</p>
+</blockquote>
+<p>确保系统中安装了 以下依赖</p>
+<pre><code class="hljs plaintext">libaio
+libnuma
+ibtinfo.so.5</code></pre>
+
+<p>在centos中，使用rpm进行确认</p>
+<p><code>rpm -q libaio libnuma ibtinfo.so.5</code></p>
+<p><strong>1.解压tar包</strong></p>
+<pre><code class="hljs shell">su
+mkdir -p /usr/local/mysql
+tar -zxvf mysql-5.7.37-el7-x86_64.tar.gz -C /usr/local/mysql/
+cd /usr/local/mysql/mysql-5.7.37-el7-x86_64
+mv ./* ../
+rmdir mysql-5.7.37-el7-x86_64/</code></pre>
+
+<p>安装文件包括以下内容</p>
+<pre><code class="hljs plaintext">[root@localhost mysql]# tree ./ -L 1
+./
+├── bin
+├── docs
+├── include
+├── lib
+├── LICENSE
+├── man
+├── README
+├── share
+└── support-files</code></pre>
+
+<p><strong>2.创建mysql用户和组</strong></p>
+<pre><code class="hljs shell">groupadd mysql
+useradd -r -g mysql -s /bin/false mysql</code></pre>
+
+<p><strong>3.创建需要的目录</strong></p>
+<pre><code class="hljs shell">mkdir mysql-files
+chown mysql:mysql mysql-files
+chmod 750 mysql-files</code></pre>
+
+<p><strong>4.初始化mysql</strong></p>
+<pre><code class="hljs shell">bin/mysqld --initialize --user=mysql</code></pre>
+
+<p>注意，这里会生成root用户的默认密码，记好</p>
+<pre><code class="hljs plaintext">[Note] A temporary password is generated for root@localhost: /T7pE&amp;qX3P:u</code></pre>
+
+<p>然后运行命令</p>
+<pre><code class="hljs shell">bin/mysql_ssl_rsa_setup</code></pre>
+
+<p><strong>5.启动mysql服务</strong></p>
+<p>以安全模式启动</p>
+<pre><code class="hljs shell">bin/mysqld_safe --user=mysql &amp;</code></pre>
+
+<p>如果报错</p>
+<pre><code class="hljs plaintext">mysqld_safe error: log-error set to &#x27;/var/log/mariadb/mariadb.log&#x27;, however file don&#x27;t exists. Create writable for user &#x27;mysql&#x27;.</code></pre>
+
+<p>按照提示创建日志文件</p>
+<pre><code class="hljs shell">mkdir -p /var/log/mariadb
+touch /var/log/mariadb/mariadb.log
+chown mysql:mysql /var/log/mariadb/mariadb.log</code></pre>
+
+<p><strong>6.(可选，推荐)执行下面的命令，可以将mysql服务添加到系统服务管理中去</strong></p>
+<pre><code class="hljs shell">cp support-files/mysql.server /etc/init.d/mysql.server</code></pre>
+
+<p>这样，就可以这样使用了</p>
+<pre><code class="hljs shell">/etc/init.d/mysql.server status
+/etc/init.d/mysql.server start
+/etc/init.d/mysql.server stop
+/etc/init.d/mysql.server restart</code></pre>
+
+<p><strong>7.将bin目录添加到PATH环境变量</strong></p>
+<pre><code class="hljs shell">export PATH=$PATH:/usr/local/mysql/bin</code></pre>
+
+<p><strong>8.登录mysql，修改root密码</strong></p>
+<p>使用之前初始化mysql的时候生成的默认密码登录</p>
+<pre><code class="hljs shell">mysql -u root -p</code></pre>
+
+<p>如果报错</p>
+<pre><code class="hljs plaintext">ERROR 2002 (HY000): Can&#x27;t connect to local MySQL server through socket &#x27;/tmp/mysql.sock&#x27;</code></pre>
+
+<p>说明socket连接方式有问题，可以选择使用 tcp&#x2F;ip 连接</p>
+<pre><code class="hljs shell">mysql -h 127.0.0.1 -u root -p</code></pre>
+
+<p>要解决socket不能连接的问题，需要修改配置文件</p>
+<p><code>vi /etc/my.cnf</code></p>
+<p>默认的配置如下，服务端配置socket</p>
+<pre><code class="hljs plaintext">[mysqld]
+datadir=/var/lib/mysql
+# 服务端socket配置
+socket=/var/lib/mysql/mysql.sock
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+
+[mysqld_safe]
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/var/run/mariadb/mariadb.pid
+
+#
+# include all files from the config directory
+#
+!includedir /etc/my.cnf.d
+</code></pre>
+
+<p>添加客户端socket相的配置，与服务端保持一样</p>
+<pre><code class="hljs plaintext">[client]
+port=3306
+socket=/var/lib/mysql/mysql.sock</code></pre>
+
+<p>这样，就可以使用socket的方式进行连接了</p>
+<pre><code class="hljs shell">mysql -u root -p</code></pre>
+
+<p>修改root密码</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;root&#x27;</span>;</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

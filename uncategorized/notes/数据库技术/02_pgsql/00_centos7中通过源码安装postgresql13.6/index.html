@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>centos7中通过源码安装postgresql13.6 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>centos7中通过源码安装postgresql13.6</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>下载地址：<a target="_blank" rel="noopener" href="https://www.postgresql.org/ftp/source/">https://www.postgresql.org/ftp/source/</a></p>
+<span id="more"></span>
+
+<p><strong>0.安装相关依赖库</strong></p>
+<p>centos依赖包下载地址：<a target="_blank" rel="noopener" href="https://developer.aliyun.com/packageSearch">https://developer.aliyun.com/packageSearch</a></p>
+<p>确保安装了pgsql需要的依赖包</p>
+<pre><code class="hljs plaintext">rpm -q readline-devel zlib-devel</code></pre>
+
+<p>离线安装依赖包</p>
+<pre><code class="hljs shell">rpm -Uvh --force --nodeps *.rpm</code></pre>
+
+
+
+<p><strong>1.解压tar包</strong></p>
+<pre><code class="hljs shell">tar -zxvf postgresql-13.6.tar.gz -C /opt/</code></pre>
+
+<p><strong>2.编译安装</strong></p>
+<pre><code class="hljs shell">cd /opt/postgresql-13.6/
+<span class="hljs-meta prompt_"># </span><span class="language-bash">安装目录</span>
+./configure --prefix=/usr/local/pgsql
+make
+make install</code></pre>
+
+<p><strong>3.添加用户</strong></p>
+<pre><code class="hljs shell">adduser postgres
+<span class="hljs-meta prompt_"># </span><span class="language-bash">设置postgres用户密码</span>
+passwd postgres</code></pre>
+
+<p><strong>4.创建数据库目录</strong></p>
+<pre><code class="hljs shell">mkdir -p /usr/local/pgsql/data
+chown -R postgres:postgres /usr/local/pgsql/data</code></pre>
+
+<p><strong>5.使用postgres用户进行下面操作</strong></p>
+<pre><code class="hljs shell">su - postgres
+cd /usr/local/pgsql/bin/
+<span class="hljs-meta prompt_"># </span><span class="language-bash">初始化数据库默认数据</span>
+/imagesnitdb -D /usr/local/pgsql/data/
+<span class="hljs-meta prompt_"># </span><span class="language-bash">启动数据库服务（start,stop,restart,status）</span>
+./pg_ctl -D /usr/local/pgsql/data/ start
+<span class="hljs-meta prompt_"># </span><span class="language-bash">进入默认的postgres数据库</span>
+./psql postgres
+<span class="hljs-meta prompt_"># </span><span class="language-bash">创建一个新的数据库</span>
+./createdb test
+<span class="hljs-meta prompt_"># </span><span class="language-bash">进入数据库</span>
+./psql test</code></pre>
+
+<p><strong>6.设置postgre用户密码</strong></p>
+<pre><code class="hljs shell">./psql</code></pre>
+
+<p>执行以下sql</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> postgres password <span class="hljs-string">&#x27;postgres&#x27;</span>;</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

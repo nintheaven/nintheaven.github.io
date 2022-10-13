@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,10 +75,16 @@
     
 </header>
 
-    <main><h1>自动设置输入框内容前缀</h1>
+    <main><div class="post">
+    <h1>自动设置输入框内容前缀</h1>
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>前端展示一个表单，其中有一个输入框，其前缀要实现根据其它表单元素的内容自动进行设置。</p>
 <p>例如，一个用于输入表名称（tname）的input，还有一个用于选择表分类（category）的下拉框。当选择下拉框后，自动设置表名称输入框内容的前缀为表分类（categoryValue_tnameValue）。</p>
@@ -85,13 +95,18 @@
 <li>如果是，选择下拉框内容后，替换输入框内容的前缀为下拉框的当前值</li>
 </ul>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

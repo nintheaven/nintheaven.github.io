@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,21 +75,27 @@
     
 </header>
 
-    <main><h1>Windows CMD</h1>
+    <main><div class="post">
+    <h1>Windows CMD</h1>
 
-<span>Windows</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p><strong>查看端口占用情况</strong></p>
 <p><code>netstat -aon</code> 列出所有端口的使用情况</p>
 <p><code>netstat -aon | findstr &quot;8761&quot;</code> 查看包含字符串”8761”的记录行，例如8761端口被占用，使用该命令可以查看使用该端口的进程ID</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\WINDOWS\system32&gt;netstat -aon | findstr <span class="string">&quot;8761&quot;</span></span><br><span class="line">  TCP    192.168.2.15:8761      113.96.237.69:443      CLOSE_WAIT      18324</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs bash">C:\WINDOWS\system32&gt;netstat -aon | findstr <span class="hljs-string">&quot;8761&quot;</span>
+  TCP    192.168.2.15:8761      113.96.237.69:443      CLOSE_WAIT      18324</code></pre>
 
 <p><strong>查看指定进程ID的应用名</strong></p>
 <p><code>tasklist | findstr &quot;18324&quot;</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\WINDOWS\system32&gt;tasklist | findstr <span class="string">&quot;18324&quot;</span></span><br><span class="line">QQ.exe                       18324 Console                    4    144,160 K</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs bash">C:\WINDOWS\system32&gt;tasklist | findstr <span class="hljs-string">&quot;18324&quot;</span>
+QQ.exe                       18324 Console                    4    144,160 K</code></pre>
 
 <p><strong>删除顽固文件</strong></p>
 <p><code>DEL /F /A /Q \\?\%1</code></p>
@@ -99,13 +109,18 @@
 <p><strong>启动后台运行程序</strong></p>
 <p><code>start /b java -jar mms-api.jar</code></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Oracle数据库相关概念 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>Oracle数据库相关概念</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p><strong>数据库</strong></p>
+<p>物理文件。再oracle安装目录下的 <em>oradata&#x2F;</em> 文件夹中，每一个数据库都有一个单独的目录，其中存放本数据库相关的文件，主要有3中类型的文件：数据文件(dbf)、控制文件(ctl)、日志文件(log)。</p>
+<pre><code class="hljs shell">[oracle@oracledb oracle]$ pwd
+/opt/oracle
+[oracle@oracledb oracle]$ ls oradata/
+orcl
+[oracle@oracledb oracle]$ ls oradata/orcl/
+control01.ctl  redo01.log  redo02.log  redo03.log  sysaux01.dbf  system01.dbf  temp01.dbf  undotbs01.dbf  users01.dbf</code></pre>
+
+<p><strong>数据库实例</strong></p>
+<p>每个数据库实例对应一个数据库，用户通过数据库实例来操作数据库。</p>
+<p>数据库实例通过 <em>SID</em> (System Idetifier，系统标识符) 进行唯一标识，SID等于数据库实例名称，用户通过SID引用实例。</p>
+<p>Oracle中，一个数据库实例就是一个独立的服务。可以使用Oracle的监听程序 <em>lsnrctl</em> 进行查看</p>
+<pre><code class="hljs shell">[oracle@oracledb oracle]$ lsnrctl status
+
+LSNRCTL for Linux: Version 11.2.0.1.0 - Production on 05-3月 -2022 08:39:11
+
+Copyright (c) 1991, 2009, Oracle.  All rights reserved.
+
+正在连接到 (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=EXTPROC1521)))
+LISTENER 的 STATUS
+------------------------
+别名                      LISTENER
+版本                      TNSLSNR for Linux: Version 11.2.0.1.0 - Production
+启动日期                  04-3月 -2022 05:40:45
+正常运行时间              1 天 2 小时 58 分 26 秒
+跟踪级别                  off
+安全性                    ON: Local OS Authentication
+SNMP                      OFF
+监听程序参数文件          /opt/oracle/product/11gR2/network/admin/listener.ora
+监听程序日志文件          /opt/oracle/diag/tnslsnr/oracledb/listener/alert/log.xml
+监听端点概要...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=oracledb)(PORT=1521)))
+服务摘要..
+服务 &quot;orcl&quot; 包含 1 个实例。
+  实例 &quot;orcl&quot;, 状态 READY, 包含此服务的 1 个处理程序...
+服务 &quot;orclXDB&quot; 包含 1 个实例。
+  实例 &quot;orcl&quot;, 状态 READY, 包含此服务的 1 个处理程序...
+命令执行成功</code></pre>
+
+<p><strong>ORACLE_SID</strong></p>
+<p>ORACLE_SID是一个系统环境变量，当用户登录Oracle数据库时，没有显式指定要登录的数据库实例名，就登录到ORACLE_SID指定的数据库实例。默认为 <em>orcl</em> ，即安装Oracle时创建的数据库实例。</p>
+<p>例如，使用 sysdba 的身份登录Oracle，默认使用 <em>ORCL</em> 数据库，对应的实例名为 <em>orcl</em></p>
+<pre><code class="hljs shell">[oracle@oracledb oracle]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on 星期六 3月 5 08:08:21 2022
+
+Copyright (c) 1982, 2009, Oracle.  All rights reserved.
+
+
+连接到: 
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">SQL&gt; </span><span class="language-bash">SELECT name FROM v<span class="hljs-variable">$database</span>;</span>
+
+NAME
+---------
+ORCL
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">SQL&gt; </span><span class="language-bash">SELECT instance_name FROM v<span class="hljs-variable">$instance</span>;</span>
+
+INSTANCE_NAME
+----------------
+orcl</code></pre>
+
+<p>ORACLE_SID 是一个系统环境变量，可以手动设置为其它数据库实例名。</p>
+<p>当修改为其它实例名后，用户就会默认登录到设置的实例中。</p>
+<pre><code class="hljs shell">[oracle@oracledb oracle]$ env | grep &#x27;ORACLE_SID&#x27;
+ORACLE_SID=orcl
+
+[oracle@oracledb oracle]$ export ORACLE_SID=zxywb
+[oracle@oracledb oracle]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on 星期六 3月 5 10:32:38 2022
+
+Copyright (c) 1982, 2009, Oracle.  All rights reserved.
+
+
+连接到: 
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">SQL&gt; </span><span class="language-bash">select name from v<span class="hljs-variable">$database</span>;</span>
+
+NAME
+---------
+ZXYWB</code></pre>
+
+
+
+<p><strong>表空间</strong></p>
+<p>Oracle与其它数据库（MySQL）不同，数据表（Table）在逻辑上不是直接归属于数据库，而是增加了一层，即表空间（Table Space）。</p>
+<p>数据表属于表空间，表空间属于数据库。也就是说，在使用Oracle数据库时，步骤如下：</p>
+<ol>
+<li>创建数据库实例</li>
+<li>创建表空间</li>
+<li>创建数据表</li>
+</ol>
+<p><strong>表</strong></p>
+<p><strong>用户</strong></p>
+<p><strong>角色</strong></p>
+<p><strong>权限</strong></p>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

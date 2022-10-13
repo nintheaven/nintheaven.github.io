@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,19 +75,23 @@
     
 </header>
 
-    <main><h1>Java实现原型模式</h1>
+    <main><div class="post">
+    <h1>Java实现原型模式</h1>
 
-<span>软件设计模式</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="原型模式介绍"><a href="#原型模式介绍" class="headerlink" title="原型模式介绍"></a>原型模式介绍</h2><p>维基百科：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F">原型模式</a></p>
 <p><strong>原型模式</strong>是創建型模式的一种，其特点在于通过“复制”一个已经存在的实例来返回新的实例,而不是新建实例。被复制的实例就是我们所称的“原型”，这个原型是可定制的。</p>
 <p>原型模式多用于创建复杂的或者耗时的实例，因为这种情况下，复制一个已经存在的实例使程序运行更高效；或者创建值相等，只是命名不一样的同类数据。</p>
 <p>原型模式要求定义一个<strong>原型接口</strong>，其中定义一个 <code>clone()</code> 方法，让具体的原型类实现它。</p>
 <p>在Java中，<code>Cloneable</code> 接口天然的可以充当原型接口这个角色。不过，<code>Cloneable</code> 接口是一个标记接口（marker interface），它本身是没有定义任何方法的，而是需要使用 <code>Object</code> 中定义的 <code>clone()</code> 方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">native</span> Object <span class="title function_">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">native</span> Object <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException;</code></pre>
 
 <p>此方法默认为 <code>protected</code> 的，在重写时，需要将其改为 <code>public</code> 、</p>
 <h2 id="原型模式示例"><a href="#原型模式示例" class="headerlink" title="原型模式示例"></a>原型模式示例</h2><p>以Linux操作系统镜像为例，Linux某个发行版的镜像(iso文件)就相当于是原型，而通过这个镜像安装在具体某一台计算机上的Linux系统，就是这个原型的副本。</p>
@@ -91,23 +99,59 @@
 <blockquote>
 <p>注意，这里将 <code>clone()</code> 方法设置为 <code>public</code> 修饰</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*原型接口：Linux镜像*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">LinuxImage</span> <span class="keyword">extends</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line">    Object <span class="title function_">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*原型接口：Linux镜像*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">LinuxImage</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Cloneable</span> &#123;
+    Object <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException;
+&#125;</code></pre>
 
 <p>在具体的原型类中实现原型接口中的 <code>clone()</code> 方法，返回自身类型的对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*具体的原型类*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PCSystem</span> <span class="keyword">implements</span> <span class="title class_">LinuxImage</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String cpu;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PCSystem</span><span class="params">(String cpu)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.cpu = cpu;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getCpu</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> cpu;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> PCSystem <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">PCSystem</span> <span class="variable">cloned</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cloned = (PCSystem) <span class="built_in">super</span>.clone();</span><br><span class="line">            cloned.cpu = cpu;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (CloneNotSupportedException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cloned;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*具体的原型类*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PCSystem</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">LinuxImage</span> &#123;
+    <span class="hljs-keyword">private</span> String cpu;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">PCSystem</span><span class="hljs-params">(String cpu)</span>&#123;
+        <span class="hljs-built_in">this</span>.cpu = cpu;
+    &#125;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getCpu</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> cpu;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> PCSystem <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-type">PCSystem</span> <span class="hljs-variable">cloned</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">try</span> &#123;
+            cloned = (PCSystem) <span class="hljs-built_in">super</span>.clone();
+            cloned.cpu = cpu;
+        &#125;<span class="hljs-keyword">catch</span> (CloneNotSupportedException e)&#123;
+            e.printStackTrace();
+        &#125;
+        <span class="hljs-keyword">return</span> cloned;
+    &#125;
+&#125;</code></pre>
 
 <p>这样，当需要具体原型类的对象时，只需要clone最初的原型对象即可获取一个全新的对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">PCSystem</span> <span class="variable">pc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PCSystem</span>(<span class="string">&quot;AMD&quot;</span>);</span><br><span class="line">    <span class="type">PCSystem</span> <span class="variable">cloned</span> <span class="operator">=</span> pc.clone();</span><br><span class="line">    System.out.println(pc == cloned); <span class="comment">// false</span></span><br><span class="line">    System.out.println(cloned.getCpu());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+    <span class="hljs-type">PCSystem</span> <span class="hljs-variable">pc</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PCSystem</span>(<span class="hljs-string">&quot;AMD&quot;</span>);
+    <span class="hljs-type">PCSystem</span> <span class="hljs-variable">cloned</span> <span class="hljs-operator">=</span> pc.clone();
+    System.out.println(pc == cloned); <span class="hljs-comment">// false</span>
+    System.out.println(cloned.getCpu());
+&#125;</code></pre>
 
 <h2 id="原型模式类图"><a href="#原型模式类图" class="headerlink" title="原型模式类图"></a>原型模式类图</h2><p><img src="/images/prototype.png"></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

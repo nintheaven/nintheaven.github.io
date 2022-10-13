@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>element-plus | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>element-plus</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>安装</p>
+<p><code>npm install element-plus --save</code></p>
+<p>引入</p>
+<p>在main.js中</p>
+<pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; createApp &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>
+
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">ElementPlus</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;element-plus&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;element-plus/lib/theme-chalk/index.css&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>)
+app.<span class="hljs-title function_">use</span>(<span class="hljs-title class_">ElementPlus</span>)
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>)</code></pre>
+
+<hr>
+<p><strong>文件上传</strong></p>
+<p>手动上传</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-upload</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/admin/image&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;upload&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">list-type</span>=<span class="hljs-string">&quot;picture-card&quot;</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">:auto-upload</span>=<span class="hljs-string">&quot;false&quot;</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">:before-upload</span>=<span class="hljs-string">&quot;beforeUpload&quot;</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">:http-request</span>=<span class="hljs-string">&quot;onUpload&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">trigger</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;small&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span>&gt;</span>选取图片<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">tip</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;el-upload__tip&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">small</span>&gt;</span>只能上传jpg/png文件,且不超过1MB<span class="hljs-tag">&lt;/<span class="hljs-name">small</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;margin: 10px 0 0 10px;&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;small&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;success&quot;</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;submitUpload&quot;</span>&gt;</span>上传到服务器<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-upload</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span>
+<span class="language-javascript"><span class="hljs-keyword">import</span> http <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/static/js/http&#x27;</span></span>
+<span class="language-javascript"><span class="hljs-keyword">import</span> &#123;successMsg,errorMsg&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/static/js/ui&#x27;</span></span>
+<span class="language-javascript"></span>
+<span class="language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Title</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/components/Title.vue&#x27;</span></span>
+<span class="language-javascript"></span>
+<span class="language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span>
+<span class="language-javascript">    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Image&#x27;</span>,</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">    <span class="hljs-attr">components</span>:&#123;</span>
+<span class="language-javascript">        </span>
+<span class="language-javascript">    &#125;,</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">    <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;</span>
+<span class="language-javascript">        <span class="hljs-keyword">return</span> &#123;</span>
+<span class="language-javascript">            </span>
+<span class="language-javascript">        &#125;;</span>
+<span class="language-javascript">    &#125;,</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">    <span class="hljs-attr">methods</span>: &#123;</span>
+<span class="language-javascript">        <span class="hljs-comment">// 上传之前的相关处理逻辑</span></span>
+<span class="language-javascript">        <span class="hljs-title function_">beforeUpload</span>(<span class="hljs-params">file</span>) &#123;</span>
+<span class="language-javascript">            <span class="hljs-keyword">const</span> isImage = (file.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;image/jpeg&#x27;</span>) || (file.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;image/png&#x27;</span>);</span>
+<span class="language-javascript">            <span class="hljs-keyword">const</span> isLt2M = file.<span class="hljs-property">size</span> / <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span> &lt;= <span class="hljs-number">1</span>;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            <span class="hljs-keyword">if</span> (!isImage) &#123;</span>
+<span class="language-javascript">                <span class="hljs-title function_">errorMsg</span>(<span class="hljs-string">&#x27;上传头像图片只能是JPG/PNG格式!&#x27;</span>);</span>
+<span class="language-javascript">            &#125;</span>
+<span class="language-javascript">            <span class="hljs-keyword">if</span> (!isLt2M) &#123;</span>
+<span class="language-javascript">                <span class="hljs-title function_">errorMsg</span>(<span class="hljs-string">&#x27;上传头像图片大小不能超过1MB!&#x27;</span>);</span>
+<span class="language-javascript">            &#125;</span>
+<span class="language-javascript">            <span class="hljs-keyword">return</span> isImage &amp;&amp; isLt2M;</span>
+<span class="language-javascript">        &#125;,</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">        <span class="hljs-comment">// 上传图片</span></span>
+<span class="language-javascript">        <span class="hljs-title function_">onUpload</span>(<span class="hljs-params">input</span>)&#123;</span>
+<span class="language-javascript">            <span class="hljs-keyword">let</span> url=input.<span class="hljs-property">action</span>;</span>
+<span class="language-javascript">            <span class="hljs-keyword">let</span> body=<span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="language-javascript">            body.<span class="hljs-title function_">append</span>(<span class="hljs-string">&#x27;file&#x27;</span>,input.<span class="hljs-property">file</span>);</span>
+<span class="language-javascript">            <span class="hljs-keyword">let</span> config=&#123;</span>
+<span class="language-javascript">                <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;multipart/form-data&#x27;</span></span>
+<span class="language-javascript">            &#125;;</span>
+<span class="language-javascript">            http.<span class="hljs-title function_">post</span>(url,body,config).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">response</span>=&gt;</span>&#123;</span>
+<span class="language-javascript">                <span class="hljs-keyword">let</span> result=response.<span class="hljs-property">data</span>;</span>
+<span class="language-javascript">                <span class="hljs-keyword">if</span> (result.<span class="hljs-property">ok</span>) &#123;</span>
+<span class="language-javascript">                    <span class="hljs-title function_">successMsg</span>(result.<span class="hljs-property">message</span>);</span>
+<span class="language-javascript">                &#125;</span>
+<span class="language-javascript">            &#125;);</span>
+<span class="language-javascript">        &#125;,</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">        <span class="hljs-title function_">submitUpload</span>(<span class="hljs-params"></span>) &#123;</span>
+<span class="language-javascript">            <span class="hljs-variable language_">this</span>.<span class="hljs-property">$refs</span>.<span class="hljs-property">upload</span>.<span class="hljs-title function_">submit</span>();</span>
+<span class="language-javascript">        &#125;,</span>
+<span class="language-javascript">    &#125;</span>
+<span class="language-javascript">&#125;</span>
+<span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+<hr>
+<p><strong>el-switch开关的用法</strong></p>
+<p>现在要实现的功能是，在数据列表中，每条数据都需要有至少一个开关，switch状态发生变化时的回调函数<code>@change</code>,除了开关状态外，还要当前行数据的信息，例如id。</p>
+<p><code>@change</code>回调函数默认只有表示开关状态的一个参数，要想给回调函数添加其它参数，需要使用<code>$event</code>获取开关状态，再添加其它参数即可。</p>
+<p>实现方式如下</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-table</span> <span class="hljs-attr">:data</span>=<span class="hljs-string">&quot;page.items&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 100%&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;80vh&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;medium&quot;</span> <span class="hljs-attr">fit</span> <span class="hljs-attr">stripe</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;公开&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">default</span>=<span class="hljs-string">&quot;scope&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">el-switch</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;scope.row.enabled&quot;</span> @<span class="hljs-attr">change</span>=<span class="hljs-string">&quot;onEnabledChanged($event,scope.row.id)&quot;</span></span>
+<span class="hljs-tag">                    <span class="hljs-attr">active-color</span>=<span class="hljs-string">&quot;#13ce66&quot;</span> <span class="hljs-attr">inactive-color</span>=<span class="hljs-string">&quot;#dcdfe6&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-table</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span>
+<span class="language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span>
+<span class="language-javascript">    <span class="hljs-attr">methods</span>: &#123;</span>
+<span class="language-javascript">        <span class="hljs-comment">// 设置是否公开</span></span>
+<span class="language-javascript">        <span class="hljs-title function_">onEnabledChanged</span>(<span class="hljs-params">enabled,articleId</span>)&#123;</span>
+<span class="language-javascript">            <span class="hljs-comment">// ...</span></span>
+<span class="language-javascript">        &#125;,</span>
+<span class="language-javascript">    &#125;</span>
+<span class="language-javascript">&#125;</span>
+<span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+<p><strong>el-form报错问题</strong></p>
+<p>只要在表单中使用任何form-item，都会疯狂报错，代码如下</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">el-form</span> <span class="hljs-attr">:model</span>=<span class="hljs-string">&quot;addTagForm&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;mini&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-form-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;名称&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;addTagForm.name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-form-item</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-form</span>&gt;</span></code></pre>
+
+<p>报错</p>
+<pre><code class="hljs plaintext">index.esm.js?3fd4:1 ElementPlusError: [Util] binding value must be a string or number</code></pre>
+
+<p>解决</p>
+<p>MLGB,是element-plus版本 1.0.2-beta.55 中的bug,回退版本</p>
+<p><code>npm uninstall element-plus</code></p>
+<p><code>npm install -s  element-plus@^1.0.2-beta.54</code></p>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

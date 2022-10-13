@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>centos用户与权限</h1>
+    <main><div class="post">
+    <h1>centos用户与权限</h1>
 
-<span>Linux</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p><strong>创建用户</strong></p>
 <p>useadd命令使用 <em>-m</em> 选项，自动创建home目录，并将 <em>&#x2F;etc&#x2F;skel&#x2F;</em> 中的文件复制进来</p>
@@ -88,25 +96,37 @@
 <p><strong>修改密码</strong></p>
 <p><code>passwd</code></p>
 <p>密码过于简单时，会修改失败</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BAD PASSWORD: The password is shorter than 8 characters</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">BAD PASSWORD: The password is shorter than 8 characters</code></pre>
 
 <p>使用下面的命令即可</p>
 <p><code>echo &lt;username&gt; | passwd --stdin &lt;newPassword&gt;</code></p>
 <p><strong>非root用户执行sudo命令时报错</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yyds is not in the sudoers file.  This incident will be reported.</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">yyds is not in the sudoers file.  This incident will be reported.</code></pre>
 
 <p>原因是yyds用户不在 <em>&#x2F;etc&#x2F;sudoers</em> 配置文件中。只需要在此配置文件添加yyds用户或所属组即可。</p>
 <p>下面四种方式任选其一</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 添加yyds用户，sudo时需要输入密码</span><br><span class="line">yyds ALL=(ALL) ALL</span><br><span class="line"># 添加yyds用户，sudo时不需要输入密码</span><br><span class="line">yyds ALL=(ALL) NOPASSWD:ALL</span><br><span class="line"># 添加yyds用户组，sudo时需要密码</span><br><span class="line">%yyds ALL=(ALL) ALL</span><br><span class="line"># 添加yyds用户组，sudo时不需要密码</span><br><span class="line">%yyds ALL=(ALL) NOPASSWD:ALL</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext"># 添加yyds用户，sudo时需要输入密码
+yyds ALL=(ALL) ALL
+# 添加yyds用户，sudo时不需要输入密码
+yyds ALL=(ALL) NOPASSWD:ALL
+# 添加yyds用户组，sudo时需要密码
+%yyds ALL=(ALL) ALL
+# 添加yyds用户组，sudo时不需要密码
+%yyds ALL=(ALL) NOPASSWD:ALL</code></pre>
 
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

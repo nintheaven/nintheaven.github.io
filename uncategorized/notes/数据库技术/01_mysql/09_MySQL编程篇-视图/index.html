@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>MySQL编程篇-视图 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>MySQL编程篇-视图</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>视图（View）是虚拟的表，本身不保存实际数据，保存的是查询语句。</p>
+<blockquote>
+<p>子查询可以看做是一次性视图。</p>
+</blockquote>
+<p>使用视图时，基本上可以将其当做一张普通表（实际上会在内部创建一张临时表），可以进行简单查询、联结查询等操作。</p>
+<p>与普通表不同的是，进行添加、修改、删除操作时，有一些限制。另外，不能对视图创建索引，因为它是虚拟表，而索引需要存储在物理内存中。</p>
+<p>视图的作用：</p>
+<ul>
+<li><p>节省存储空间</p>
+</li>
+<li><p>复用SQL查询语句</p>
+</li>
+<li><p>简化查询操作</p>
+</li>
+<li><p>可以给视图设置访问权限，从而达到对表的部分列设置访问权限的效果</p>
+</li>
+</ul>
+<p>视图的限制：</p>
+<ul>
+<li><p>视图支持多重嵌套，但是会严重降低查询性能，不推荐使用！</p>
+</li>
+<li><p>创建视图时，标准SQL是不支持使用 <code>ORDER BY</code> 子句的，但是MySQL中却可以，不推荐在创建视图时使用 <code>ORDER BY</code> 子句！</p>
+</li>
+<li><p>使用视图进行插入、更新操作时，对创建视图的语句有一些限制（单张表，未使用 <code>DISTINCT</code>，未使用<code>GROUP BY</code>、<code>HAVING</code> 子句进行聚合计算）</p>
+</li>
+</ul>
+<h2 id="创建视图"><a href="#创建视图" class="headerlink" title="创建视图"></a>创建视图</h2><p>使用 <code>CREATE VIEW</code> 语句创建视图，语法如下</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">VIEW</span> 视图名称 (列<span class="hljs-number">1</span>,列<span class="hljs-number">2</span>,...)
+<span class="hljs-keyword">AS</span>
+<span class="hljs-keyword">SELECT</span>语句;</code></pre>
+
+<p>使用 <code>SHOW CREATE VIEW</code> 语句查看创建视图的语句</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">VIEW</span> 视图名称;</code></pre>
+
+<p>例如，查询员工编号为“0001”的员工信息，包括员工的部门名称与职位名称，需要使用联结查询</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> E.<span class="hljs-operator">*</span>,D.name <span class="hljs-keyword">AS</span> dept,P.name <span class="hljs-keyword">AS</span> position
+    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">FROM</span> Employee <span class="hljs-keyword">AS</span> E
+    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span>          <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> Position <span class="hljs-keyword">AS</span> P <span class="hljs-keyword">ON</span> E.position_id<span class="hljs-operator">=</span>P.id
+    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span>          <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> Department <span class="hljs-keyword">AS</span> D <span class="hljs-keyword">on</span> P.dept_id <span class="hljs-operator">=</span> D.id
+    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">WHERE</span> E.id<span class="hljs-operator">=</span><span class="hljs-string">&#x27;0001&#x27;</span>;
+<span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+------------+-----------+-----+------+--------------------+--------------+---------------------+-----------+---------------------+</span>
+<span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> position_id <span class="hljs-operator">|</span> first_name <span class="hljs-operator">|</span> last_name <span class="hljs-operator">|</span> age <span class="hljs-operator">|</span> sex  <span class="hljs-operator">|</span> id_number          <span class="hljs-operator">|</span> phone_number <span class="hljs-operator">|</span> email               <span class="hljs-operator">|</span> dept      <span class="hljs-operator">|</span> position            <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+------------+-----------+-----+------+--------------------+--------------+---------------------+-----------+---------------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0001</span> <span class="hljs-operator">|</span> <span class="hljs-number">0001</span>        <span class="hljs-operator">|</span> 小龙       <span class="hljs-operator">|</span> 赵        <span class="hljs-operator">|</span>  <span class="hljs-number">23</span> <span class="hljs-operator">|</span> male <span class="hljs-operator">|</span> <span class="hljs-number">000000000000000001</span> <span class="hljs-operator">|</span> <span class="hljs-number">13022220001</span>  <span class="hljs-operator">|</span> zhaoxiaolong<span class="hljs-variable">@xx</span>.com <span class="hljs-operator">|</span> 技术部    <span class="hljs-operator">|</span> Java开发工程师      <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+------------+-----------+-----+------+--------------------+--------------+---------------------+-----------+---------------------+</span></code></pre>
+
+<p>若要查询另一个员工的信息，需要重复编写上面的SQL语句，修改<code>WHERE</code> 条件子句。</p>
+<p>使用视图，可以简化此操作。</p>
+<p>创建一个表示员工信息的视图 <em>EmployeeInfo</em>，包含部门和职位信息</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">VIEW</span> EmployeeInfo (id,position_id,first_name,last_name,age,sex,id_number,phone_number,email,dept,position)
+<span class="hljs-keyword">AS</span>
+<span class="hljs-keyword">SELECT</span> E.<span class="hljs-operator">*</span>,D.name,P.name
+    <span class="hljs-keyword">FROM</span> Employee <span class="hljs-keyword">AS</span> E
+        <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> Position <span class="hljs-keyword">AS</span> P <span class="hljs-keyword">ON</span> E.position_id<span class="hljs-operator">=</span>P.id
+        <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> Department <span class="hljs-keyword">AS</span> D <span class="hljs-keyword">on</span> P.dept_id <span class="hljs-operator">=</span> D.id;</code></pre>
+
+<h2 id="使用视图"><a href="#使用视图" class="headerlink" title="使用视图"></a>使用视图</h2><p><strong>查询记录</strong></p>
+<p>使用视图进行查询操作，与使用普通表是一样的。</p>
+<p>例如，查询员工编号为“0001”的员工信息</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> EmployeeInfo <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-string">&#x27;0001&#x27;</span>;
+<span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+------------+-----------+-----+------+--------------------+--------------+---------------------+-----------+---------------------+</span>
+<span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> position_id <span class="hljs-operator">|</span> first_name <span class="hljs-operator">|</span> last_name <span class="hljs-operator">|</span> age <span class="hljs-operator">|</span> sex  <span class="hljs-operator">|</span> id_number          <span class="hljs-operator">|</span> phone_number <span class="hljs-operator">|</span> email               <span class="hljs-operator">|</span> dept      <span class="hljs-operator">|</span> position            <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+------------+-----------+-----+------+--------------------+--------------+---------------------+-----------+---------------------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0001</span> <span class="hljs-operator">|</span> <span class="hljs-number">0001</span>        <span class="hljs-operator">|</span> 小龙       <span class="hljs-operator">|</span> 赵        <span class="hljs-operator">|</span>  <span class="hljs-number">23</span> <span class="hljs-operator">|</span> male <span class="hljs-operator">|</span> <span class="hljs-number">000000000000000001</span> <span class="hljs-operator">|</span> <span class="hljs-number">13022220001</span>  <span class="hljs-operator">|</span> zhaoxiaolong<span class="hljs-variable">@xx</span>.com <span class="hljs-operator">|</span> 技术部    <span class="hljs-operator">|</span> Java开发工程师      <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+------------+-----------+-----+------+--------------------+--------------+---------------------+-----------+---------------------+</span></code></pre>
+
+<p><strong>添加、修改、删除记录</strong></p>
+<p>使用视图进行添加、修改、删除操作时，要求创建视图的语句满足一些条件：</p>
+<ul>
+<li>只允许使用1张表</li>
+<li><code>SELECT</code> 子句中没有使用 <code>DISTINCT</code> 关键字、计算字段</li>
+<li>没有使用 <code>GROUP BY</code>、<code>HAVING</code> 子句进行分组操作</li>
+</ul>
+<p>不推荐使用视图添加、更新数据！</p>
+<h2 id="更新视图"><a href="#更新视图" class="headerlink" title="更新视图"></a>更新视图</h2><p>更新视图，只需要先删除视图（<code>DROP VIEW</code>），然后重新创建视图（<code>CREATE VIEW</code>）；</p>
+<p>或者使用 <code>CREATE OR REPLACE VIEW</code> 语句，创建新的视图或替换已存在的视图。</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">OR</span> REPLACE <span class="hljs-keyword">VIEW</span> EmployeeInfo (id,position_id,first_name,last_name,age,sex,id_number,phone_number,email,dept,position)
+<span class="hljs-keyword">AS</span>
+<span class="hljs-keyword">SELECT</span> E.<span class="hljs-operator">*</span>,D.name,P.name
+    <span class="hljs-keyword">FROM</span> Employee <span class="hljs-keyword">AS</span> E
+        <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> Position <span class="hljs-keyword">AS</span> P <span class="hljs-keyword">ON</span> E.position_id<span class="hljs-operator">=</span>P.id
+        <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> Department <span class="hljs-keyword">AS</span> D <span class="hljs-keyword">on</span> P.dept_id <span class="hljs-operator">=</span> D.id;</code></pre>
+
+<h2 id="删除视图"><a href="#删除视图" class="headerlink" title="删除视图"></a>删除视图</h2><p>使用<code>DROP VIEW</code> 语句删除视图，语法如下</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">VIEW</span> 视图名称;</code></pre>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

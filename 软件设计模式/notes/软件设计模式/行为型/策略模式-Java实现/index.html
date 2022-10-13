@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>策略模式-Java实现</h1>
+    <main><div class="post">
+    <h1>策略模式-Java实现</h1>
 
-<span>软件设计模式</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <blockquote>
 <p>策略模式(Strategy)，将类中不确定的行为分离出去，单独创建行为类。</p>
@@ -85,32 +93,95 @@
 <p>科学家测试猴子的数学能力，一只猴子一次只做一种运算(加减乘除)</p>
 <p>1.首先，定义行为接口，及行为类</p>
 <p>运算行为接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Operation</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">double</span> <span class="title function_">calc</span><span class="params">(<span class="type">double</span> a,<span class="type">double</span> b)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Operation</span>
+&#123;
+    <span class="hljs-type">double</span> <span class="hljs-title function_">calc</span><span class="hljs-params">(<span class="hljs-type">double</span> a,<span class="hljs-type">double</span> b)</span>;
+&#125;</code></pre>
 
 <p>加法行为类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AddOperation</span> <span class="keyword">implements</span> <span class="title class_">Operation</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">calc</span><span class="params">(<span class="type">double</span> a,<span class="type">double</span> b)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> a+b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AddOperation</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Operation</span>
+&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">calc</span><span class="hljs-params">(<span class="hljs-type">double</span> a,<span class="hljs-type">double</span> b)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> a+b;
+    &#125;
+&#125;</code></pre>
 
 <p>减法行为类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SubtractOperation</span> <span class="keyword">implements</span> <span class="title class_">Operation</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">calc</span><span class="params">(<span class="type">double</span> a,<span class="type">double</span> b)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> a-b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SubtractOperation</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Operation</span>
+&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">calc</span><span class="hljs-params">(<span class="hljs-type">double</span> a,<span class="hljs-type">double</span> b)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> a-b;
+    &#125;
+&#125;
+</code></pre>
 
 <p>乘法行为类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiplyOperation</span> <span class="keyword">implements</span> <span class="title class_">Operation</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">calc</span><span class="params">(<span class="type">double</span> a,<span class="type">double</span> b)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> a*b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MultiplyOperation</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Operation</span>
+&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">calc</span><span class="hljs-params">(<span class="hljs-type">double</span> a,<span class="hljs-type">double</span> b)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> a*b;
+    &#125;
+&#125;</code></pre>
 
 <p>除法行为类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DivideOperation</span> <span class="keyword">implements</span> <span class="title class_">Operation</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">calc</span><span class="params">(<span class="type">double</span> a,<span class="type">double</span> b)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> a/b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DivideOperation</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Operation</span>
+&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">calc</span><span class="hljs-params">(<span class="hljs-type">double</span> a,<span class="hljs-type">double</span> b)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> a/b;
+    &#125;
+&#125;</code></pre>
 
 <p>2.然后，定义猴子类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Monkey</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Operation operation; <span class="comment">// 行为超类(接口)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Monkey</span><span class="params">(String name)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">this</span>.name=name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 动态设置具体行为类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOperation</span><span class="params">(Operation operation)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">this</span>.operation=operation;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">doCalc</span><span class="params">(<span class="type">double</span> a,<span class="type">double</span> b)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> operation.calc(a,b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Monkey</span>
+&#123;
+    <span class="hljs-keyword">private</span> String name;
+    <span class="hljs-keyword">private</span> Operation operation; <span class="hljs-comment">// 行为超类(接口)</span>
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Monkey</span><span class="hljs-params">(String name)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.name=name;
+    &#125;
+
+    <span class="hljs-comment">// 动态设置具体行为类</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setOperation</span><span class="hljs-params">(Operation operation)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.operation=operation;
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">doCalc</span><span class="hljs-params">(<span class="hljs-type">double</span> a,<span class="hljs-type">double</span> b)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> operation.calc(a,b);
+    &#125;
+&#125;
+</code></pre>
 
 <p>3.使用的时候，只需要动态的设置行为类即可</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Monkey monkey=<span class="keyword">new</span> <span class="title class_">Monkey</span>(<span class="string">&quot;孙悟空&quot;</span>);</span><br><span class="line">monkey.setOperation(<span class="keyword">new</span> <span class="title class_">AddOperation</span>());</span><br><span class="line">System.out.println(monkey.doCalc(<span class="number">1</span>,<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">monkey.setOperation(<span class="keyword">new</span> <span class="title class_">MultiplyOperation</span>());</span><br><span class="line">System.out.println(monkey.doCalc(<span class="number">2</span>,<span class="number">3</span>));</span><br></pre></td></tr></table></figure></div>
-<div>END</div></main>
+<pre><code class="hljs java">Monkey monkey=<span class="hljs-keyword">new</span> <span class="hljs-title class_">Monkey</span>(<span class="hljs-string">&quot;孙悟空&quot;</span>);
+monkey.setOperation(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AddOperation</span>());
+System.out.println(monkey.doCalc(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>));
+
+monkey.setOperation(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MultiplyOperation</span>());
+System.out.println(monkey.doCalc(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>));</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

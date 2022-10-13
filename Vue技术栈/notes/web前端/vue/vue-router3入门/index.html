@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>vue-router3入门 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>vue-router3入门</h1>
+
+    <div>
+        
+        <a href="/notes/#Vue技术栈">Vue技术栈</a>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>npm install vue-router --save</code></p>
+<p>现在默认安装的版本是4+，可以手动指定要安装的版本</p>
+<p>查看全部可用版本</p>
+<p><code>npm view vue-router versions</code></p>
+<p>指定要安装的版本</p>
+<p><code>npm install vue-router@3.5.3 --save</code></p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p><strong>导入Vue和VueRouter</strong></p>
+<p>在 src&#x2F; 目录下创建 router&#x2F;index.js，在Vue中注册vue-router</p>
+<p><em>router&#x2F;index.js</em></p>
+<pre><code class="hljs vue">import Vue from &#x27;vue&#x27;;
+import VueRouter from &#x27;vue-router&#x27;;
+
+Vue.use(VueRouter);</code></pre>
+
+<p><strong>创建(定义)组件</strong></p>
+<p>假如在 src&#x2F;views&#x2F; 中有 About.vue 组件</p>
+<pre><code class="hljs vue">&lt;template&gt;
+  &lt;div id=&quot;about&quot;&gt;
+    关于
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default &#123;
+  name: &quot;About&quot;
+&#125;
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+
+&lt;/style&gt;</code></pre>
+
+<p><strong>定义路由规则</strong></p>
+<p>接下来，定义路由规则，将 About.vue 组件映射到 &#x2F;about 路由</p>
+<p><em>router&#x2F;index.js</em></p>
+<pre><code class="hljs vue">// 导入About组件
+const About = ()=&gt;import(&#x27;@/views/About.vue&#x27;);
+
+// 定义路由规则
+const routes = [
+    &#123;
+        path: &#x27;/about&#x27;,
+        component: About
+    &#125;
+];</code></pre>
+
+<p><strong>创建VueRouter实例</strong></p>
+<pre><code class="hljs vue">// 创建VueRouter实例
+const router = new VueRouter(&#123;
+    routes: routes
+&#125;);
+// 导出
+export default router;</code></pre>
+
+<p><strong>在根Vue实例中注入路由</strong></p>
+<p>初始化Vue对象的时候，通过 <code>router</code> 属性把 <code>VueRouter</code> 实例传递进去</p>
+<p><em>main.js</em></p>
+<pre><code class="hljs vue">import router from &#x27;./router&#x27;
+
+new Vue(&#123;
+  router: router,
+  render: h =&gt; h(App),
+&#125;).$mount(&#x27;#app&#x27;)</code></pre>
+
+<p><strong>声明路由入口</strong></p>
+<p>在模板中，将 <code>&lt;router-view /&gt;</code> 放到任何想让路由所绑定的组件被显示的地方，告诉Vue Router在哪里渲染组件。一般放到 App.vue 中</p>
+<pre><code class="hljs vue">&lt;template&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;router-view&gt;&lt;/router-view&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+
+export default &#123;
+  name: &#x27;App&#x27;,
+  components: &#123;
+    
+  &#125;
+&#125;
+&lt;/script&gt;
+
+&lt;style&gt;
+#app &#123;
+
+&#125;
+&lt;/style&gt;
+</code></pre>
+
+<p>现在，访问 &#x2F;about 路径即可看到效果。</p>
+<h2 id="vue-router必知必会"><a href="#vue-router必知必会" class="headerlink" title="vue-router必知必会"></a>vue-router必知必会</h2><h3 id="router-link路由链接"><a href="#router-link路由链接" class="headerlink" title="router-link路由链接"></a>router-link路由链接</h3><pre><code class="hljs vue">&lt;router-link to=&quot;/home&quot;&gt;Home&lt;/router-link&gt;</code></pre>
+
+<h3 id="动态路由匹配"><a href="#动态路由匹配" class="headerlink" title="动态路由匹配"></a>动态路由匹配</h3><p>在定义路由规则时，可以在路由路劲中指定动态路径参数</p>
+<pre><code class="hljs vue">const routes = [
+    &#123;
+        path: &#x27;/user/:uid&#x27;,
+        component: User
+    &#125;,
+];</code></pre>
+
+<p>然后，在User组件中，可以在 <code>$route.params</code> 中获取到路径参数</p>
+<pre><code class="hljs vue">&lt;template&gt;
+    &lt;div class=&quot;user&quot;&gt;
+        &lt;span&gt;&#123;&#123; $route.params.uid &#125;&#125;&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+<p>router-link可以这么写</p>
+<pre><code class="hljs vue">&lt;router-link to=&quot;/user/1&quot;&gt;用户1&lt;/router-link&gt;
+&lt;router-link to=&quot;/user/2&quot;&gt;用户2&lt;/router-link&gt;
+&lt;router-link to=&quot;/user/3&quot;&gt;用户3&lt;/router-link&gt;</code></pre>
+
+<p>使用动态路径参数的情况下，切换页面会复用组件。</p>
+<p>如果要想响应路由的变化，可以监听 <code>$route</code> 对象，或者使用 <code>beforeRouteUpdate</code> 路由钩子函数。</p>
+<pre><code class="hljs js">&lt;script&gt;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;
+    <span class="hljs-comment">// eslint-disable-next-line vue/multi-word-component-names</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;User&quot;</span>,
+
+    <span class="hljs-attr">data</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+        <span class="hljs-keyword">return</span> &#123;&#125;
+    &#125;,
+
+    <span class="hljs-attr">watch</span>: &#123;
+        <span class="hljs-comment">/*通过侦听器，响应路由参数的变化*/</span>
+        <span class="hljs-comment">/*$route: function (to,from)&#123;</span>
+<span class="hljs-comment">            console.log(to);</span>
+<span class="hljs-comment">            console.log(from);</span>
+<span class="hljs-comment">        &#125;*/</span>
+    &#125;,
+
+    <span class="hljs-comment">/*路由钩子：路由更新前调用*/</span>
+    <span class="hljs-attr">beforeRouteUpdate</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">to,<span class="hljs-keyword">from</span>,next</span>)&#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(to);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">from</span>);
+        <span class="hljs-title function_">next</span>();
+    &#125;
+&#125;
+&lt;/script&gt;</code></pre>
+
+<p>使用通配符星号可以匹配任何路由路径</p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> routes = [
+    &#123;
+        <span class="hljs-attr">path</span>: <span class="hljs-string">&quot;*&quot;</span>,
+        <span class="hljs-attr">component</span>: <span class="hljs-title class_">PageNotFound</span>
+    &#125;
+];</code></pre>
+
+<h3 id="嵌套路由"><a href="#嵌套路由" class="headerlink" title="嵌套路由"></a>嵌套路由</h3><p>一个路由组件中也可包含自己嵌套的router-view。</p>
+<p>定义2个组件，分别表示用户信息页和用户文章列表页。</p>
+<p>在路由组件User中，定义一个router-view</p>
+<pre><code class="hljs vue">&lt;template&gt;
+    &lt;div class=&quot;user&quot;&gt;
+        &lt;span&gt;&#123;&#123; $route.params.uid &#125;&#125;&lt;/span&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;router-link to=&quot;profile&quot;&gt;Profile&lt;/router-link&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;router-link to=&quot;posts&quot;&gt;Posts&lt;/router-link&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;router-view&gt;&lt;/router-view&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+<p>在路由规则中，使用 <code>children</code> 属性，可以定义嵌套的路由规则</p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> routes = [
+    &#123;
+        <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/user/:uid&#x27;</span>,
+        <span class="hljs-attr">component</span>: <span class="hljs-title class_">User</span>,
+        <span class="hljs-attr">children</span>: [
+            <span class="hljs-comment">// 空的子路由，用于匹配 /user/:uid 路径</span>
+            &#123;
+                <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                <span class="hljs-attr">component</span>: <span class="hljs-title class_">UserHome</span>,
+            &#125;,
+            &#123;
+                <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;profile&#x27;</span>,
+                <span class="hljs-attr">component</span>: <span class="hljs-title class_">UserProfile</span>,
+            &#125;,
+            &#123;
+                <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;posts&#x27;</span>,
+                <span class="hljs-attr">component</span>: <span class="hljs-title class_">UserPosts</span>,
+            &#125;,
+        ]
+    &#125;
+];</code></pre>
+
+<h3 id="编程式导航"><a href="#编程式导航" class="headerlink" title="编程式导航"></a>编程式导航</h3><p>在路由组件内部，可以使用 <code>$router</code> 对象进行编程式导航。</p>
+<pre><code class="hljs js"><span class="hljs-title function_">push</span>(
+    <span class="hljs-attr">location</span>: <span class="hljs-title class_">RawLocation</span>,
+    onComplete?: <span class="hljs-title class_">Function</span>,
+    onAbort?: <span class="hljs-title class_">ErrorHandler</span>
+): <span class="hljs-keyword">void</span>
+
+<span class="hljs-title function_">replace</span>(
+    <span class="hljs-attr">location</span>: <span class="hljs-title class_">RawLocation</span>,
+    onComplete?: <span class="hljs-title class_">Function</span>,
+    onAbort?: <span class="hljs-title class_">ErrorHandler</span>
+): <span class="hljs-keyword">void</span>
+
+<span class="hljs-title function_">go</span>(<span class="hljs-attr">n</span>: number): <span class="hljs-keyword">void</span></code></pre>
+
+<h3 id="命名路由"><a href="#命名路由" class="headerlink" title="命名路由"></a>命名路由</h3><p>在定义路由规则时候，可以使用 <code>name</code> 属性指定一个路由规则的名称</p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> router = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VueRouter</span>(&#123;
+  <span class="hljs-attr">routes</span>: [
+    &#123;
+      <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/user/:uid&#x27;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;user&#x27;</span>,
+      <span class="hljs-attr">component</span>: <span class="hljs-title class_">User</span>
+    &#125;
+  ]
+&#125;)</code></pre>
+
+<p>这样，在使用 <code>router-link</code> 或 使用 <code>$router</code> 进行编程式导航的时候，可以使用路由名称替换字符串路径</p>
+<pre><code class="hljs vue">&lt;router-link :to=&quot;&#123; name: &#x27;user&#x27;, params: &#123; uid: 123 &#125;&#125;&quot;&gt;User&lt;/router-link&gt;</code></pre>
+
+<pre><code class="hljs vue">this.$router.push(&#123; name: &#x27;user&#x27;, params: &#123; uid: 123 &#125; &#125;)</code></pre>
+
+<h3 id="命名视图"><a href="#命名视图" class="headerlink" title="命名视图"></a>命名视图</h3><p>在同一级路由组件中，利用命名试图可以同时声明多个 <code>router-view</code>，使用 <code>name</code> 属性指定试图名称。</p>
+<p>在定义路由规则时，使用 <code>components</code> 属性，指定组件。</p>
+<h3 id="路由重定向和别名"><a href="#路由重定向和别名" class="headerlink" title="路由重定向和别名"></a>路由重定向和别名</h3><p><strong>重定向</strong></p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> router = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VueRouter</span>(&#123;
+  <span class="hljs-attr">routes</span>: [
+    &#123; <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/a&#x27;</span>, <span class="hljs-attr">redirect</span>: <span class="hljs-string">&#x27;/b&#x27;</span> &#125;
+  ]
+&#125;)</code></pre>
+
+<p>或者使用路由名称指定</p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> router = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VueRouter</span>(&#123;
+  <span class="hljs-attr">routes</span>: [
+    &#123; <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/a&#x27;</span>, <span class="hljs-attr">redirect</span>: &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;foo&#x27;</span> &#125;&#125;
+  ]
+&#125;)</code></pre>
+
+<p><strong>别名</strong></p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> router = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VueRouter</span>(&#123;
+  <span class="hljs-attr">routes</span>: [
+    &#123; <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/a&#x27;</span>, <span class="hljs-attr">component</span>: A, <span class="hljs-attr">alias</span>: <span class="hljs-string">&#x27;/b&#x27;</span> &#125;
+  ]
+&#125;)</code></pre>
+
+<h3 id="HTML5-History模式"><a href="#HTML5-History模式" class="headerlink" title="HTML5 History模式"></a>HTML5 History模式</h3><p>VueRouter默认使用 <code>hash</code> 模式，访问 &#x2F;about 路由时，需要在前面加上#，路由变为 &#x2F;#&#x2F;about。</p>
+<p>可以启用 HTML5 History API，将模式改为 <code>history</code></p>
+<pre><code class="hljs vue">const router = new VueRouter(&#123;
+    mode: &#x27;history&#x27;,
+    routes: routes
+&#125;);</code></pre>
+
+<p>这样，URL就是正常的了。</p>
+<p>由于Vue是单页应用，当在浏览器直接访问一个不存在的资源时，就会导致404。所以，需要在后台进行配置，要在服务端增加一个覆盖所有情况的候选资源：如果 URL 匹配不到任何静态资源，则应该返回同一个 <code>index.html</code> 页面，这个页面就是 app 依赖的页面</p>
+<p>nginx服务器</p>
+<pre><code class="hljs plaintext">location / &#123;
+  try_files $uri $uri/ /index.html;
+&#125;</code></pre>
+
+<p>此时，所有不存在的路径都会返回index.html，而404永远不会显示，所以，还需要在路由规则中增加404页面的配置</p>
+<pre><code class="hljs vue">const routes = [
+    &#123;
+        path: &#x27;*&#x27;, 
+        component: PageNotFound
+    &#125;
+];</code></pre>
+
+<h2 id="路由导航守卫"><a href="#路由导航守卫" class="headerlink" title="路由导航守卫"></a>路由导航守卫</h2><h3 id="全局守卫"><a href="#全局守卫" class="headerlink" title="全局守卫"></a>全局守卫</h3><h3 id="路由组件级守卫"><a href="#路由组件级守卫" class="headerlink" title="路由组件级守卫"></a>路由组件级守卫</h3><h3 id="路由独享守卫"><a href="#路由独享守卫" class="headerlink" title="路由独享守卫"></a>路由独享守卫</h3></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

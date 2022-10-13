@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>Docker数据卷技术</h1>
+    <main><div class="post">
+    <h1>Docker数据卷技术</h1>
 
-<span>Docker</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><p><a target="_blank" rel="noopener" href="https://docs.docker.com/storage/volumes/">https://docs.docker.com/storage/volumes/</a></p>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p><a target="_blank" rel="noopener" href="https://docs.docker.com/storage/volumes/">https://docs.docker.com/storage/volumes/</a></p>
 <span id="more"></span>
 
 <blockquote>
@@ -90,27 +98,34 @@
 <p><code>docker volume prune [OPTIONS]</code></p>
 <h1 id="使用-run-命令的-v-参数挂载数据卷"><a href="#使用-run-命令的-v-参数挂载数据卷" class="headerlink" title="使用 run 命令的 -v 参数挂载数据卷"></a>使用 <code>run</code> 命令的 <code>-v</code> 参数挂载数据卷</h1><p><code>docker run -v 宿主机文件路径:容器文件路径 [OPTIONS] IMAGE [COMMAND] [ARG...]</code></p>
 <p>例如，将容器中的mysql数据库文件与windows中的文件进行绑定</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name dev -d -p 3306:3306 -v E:\docker\volumes\etc\mysql\:/etc/mysql/ -v E:\docker\volumes\var\lib\mysql\:/var/lib/mysql/ -v E:\docker\volumes\var\lib\mysql-files\:/var/lib/mysql-files/ -v E:\docker\volumes\var\log\mysql\:/var/log/mysql/ -e MYSQL_ROOT_PASSWORD=root mysql:8.0.26</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs shell">docker run --name dev -d -p 3306:3306 -v E:\docker\volumes\etc\mysql\:/etc/mysql/ -v E:\docker\volumes\var\lib\mysql\:/var/lib/mysql/ -v E:\docker\volumes\var\lib\mysql-files\:/var/lib/mysql-files/ -v E:\docker\volumes\var\log\mysql\:/var/log/mysql/ -e MYSQL_ROOT_PASSWORD=root mysql:8.0.26</code></pre>
 
 <h1 id="使用Dockerfile中的-Volume-指令挂载数据卷"><a href="#使用Dockerfile中的-Volume-指令挂载数据卷" class="headerlink" title="使用Dockerfile中的 Volume 指令挂载数据卷"></a>使用Dockerfile中的 <code>Volume</code> 指令挂载数据卷</h1><p>Dockerfile中只能指定容器目录，不能指定宿主机目录(因为不确定主机目录是否可用)。</p>
 <blockquote>
 <p>如果在创建或运行容器时，不指定宿主机的挂载点，默认会在 <em>&#x2F;var&#x2F;lib&#x2F;docker&#x2F;volumes&#x2F;</em> 目录下创建挂载目录；</p>
 <p>除非使用了 <code>-v</code> 参数指定了宿主机挂载目录</p>
 </blockquote>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> mysql:<span class="number">8.0</span>.<span class="number">26</span></span><br><span class="line"><span class="keyword">VOLUME</span><span class="language-bash"> [<span class="string">&quot;/etc/mysql/&quot;</span>, <span class="string">&quot;/var/lib/mysql/&quot;</span>]</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">3306</span>/tcp</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> mysql:<span class="hljs-number">8.0</span>.<span class="hljs-number">26</span>
+<span class="hljs-keyword">VOLUME</span><span class="language-bash"> [<span class="hljs-string">&quot;/etc/mysql/&quot;</span>, <span class="hljs-string">&quot;/var/lib/mysql/&quot;</span>]</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">3306</span>/tcp</code></pre>
 
 <p>构建镜像</p>
 <p><code>docker build -t jifeet66/mysql:8.0.26 .</code></p>
 <p>创建并运行容器</p>
 <p><code>docker run --name dev -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root jifeet66/mysql:8.0.26</code></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

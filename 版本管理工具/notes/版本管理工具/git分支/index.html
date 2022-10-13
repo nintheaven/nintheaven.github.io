@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>git分支</h1>
+    <main><div class="post">
+    <h1>git分支</h1>
 
-<span>版本管理工具</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h1 id="分支基础操作"><a href="#分支基础操作" class="headerlink" title="分支基础操作"></a>分支基础操作</h1><h3 id="本地分支"><a href="#本地分支" class="headerlink" title="本地分支"></a>本地分支</h3><p>查看分支</p>
 <p><code>git branch</code></p>
@@ -102,24 +110,32 @@
 <p><strong>添加子模块</strong></p>
 <p><code>git submodule add git@github.com:next-theme/hexo-theme-next.git themes/next</code></p>
 <p>如果报错</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: &#x27;themes/next&#x27; already exists in the index</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">fatal: &#x27;themes/next&#x27; already exists in the index</code></pre>
 
 <p>执行以下命令</p>
 <p><code>git rm --cached themes/next</code></p>
 <p>如果报错</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">error: the following file has staged content different from both the</span><br><span class="line">file and the HEAD:</span><br><span class="line">    themes/next</span><br><span class="line">(use -f to force removal)</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">error: the following file has staged content different from both the
+file and the HEAD:
+    themes/next
+(use -f to force removal)</code></pre>
 
 <p>按照提示，添加 -f 选项</p>
 <p><code>git rm --cached -f themes/next</code></p>
 <p>然后重新运行添加子模块的命令即可。</p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

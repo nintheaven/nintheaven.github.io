@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>mysql安装-windows系统中安装mysql5.7 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>mysql安装-windows系统中安装mysql5.7</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>参考：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/installing.html">https://dev.mysql.com/doc/refman/5.7/en/installing.html</a></p>
+<p>下载：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/">https://dev.mysql.com/downloads/</a></p>
+<span id="more"></span>
+
+<h1 id="使用zip归档文件安装MySQL5-7"><a href="#使用zip归档文件安装MySQL5-7" class="headerlink" title="使用zip归档文件安装MySQL5.7"></a>使用zip归档文件安装MySQL5.7</h1><h2 id="1-下载zip文件"><a href="#1-下载zip文件" class="headerlink" title="1.下载zip文件"></a>1.下载zip文件</h2><h2 id="2-解压zip文件"><a href="#2-解压zip文件" class="headerlink" title="2.解压zip文件"></a>2.解压zip文件</h2><p>选择一个安装路径，将mysql解压到该处，这里使用 <em>D:\apps\dev</em> 目录。</p>
+<blockquote>
+<p>使用installer安装时，安装到 <em>C:\Program Files\MySQL</em> 目录下</p>
+</blockquote>
+<p>所以，最终mysql路径为 <em>D:\apps\dev\mysql-5.7.34</em></p>
+<p><img src="/images/mysql01.png"></p>
+<h2 id="3-创建配置文件"><a href="#3-创建配置文件" class="headerlink" title="3.创建配置文件"></a>3.创建配置文件</h2><p>在mysql安装目录下创建 my.ini 配置文件,</p>
+<pre><code class="hljs ini"><span class="hljs-section">[mysqld]</span>
+<span class="hljs-comment"># mysql安装路径</span>
+<span class="hljs-attr">basedir</span>=D:\\apps\dev\\mysql-<span class="hljs-number">5.7</span>.<span class="hljs-number">34</span>
+<span class="hljs-comment"># mysql数据存放路径</span>
+<span class="hljs-attr">datadir</span>=D:\\apps\\dev\\mysql-<span class="hljs-number">5.7</span>.<span class="hljs-number">34</span>\\data</code></pre>
+
+<h2 id="4-初始化data目录"><a href="#4-初始化data目录" class="headerlink" title="4.初始化data目录"></a>4.初始化data目录</h2><p>进入到mysq安装目录,执行命令(需要管理员权限)</p>
+<p><code>bin\mysqld --initialize --user=mysql --console</code></p>
+<p>如果报错</p>
+<p><img src="/images/mysql02.png"></p>
+<p>需要下载 <strong>Visual C++ Redistributable Packages for Visual Studio 2013</strong></p>
+<blockquote>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-CN/download/details.aspx?id=40784">https://www.microsoft.com/zh-CN/download/details.aspx?id=40784</a></p>
+</blockquote>
+<p>下载并安装后，重新运行上面的命令进行初始化data目录，结果如下</p>
+<blockquote>
+<p><strong>注意：此处要记一下root用户的临时密码，不然后面需要额外步骤！！！</strong></p>
+</blockquote>
+<p><img src="/images/mysql03.png"></p>
+<h2 id="5-将mysql的bin目录添加到PATH环境变量"><a href="#5-将mysql的bin目录添加到PATH环境变量" class="headerlink" title="5.将mysql的bin目录添加到PATH环境变量"></a>5.将mysql的bin目录添加到PATH环境变量</h2><h2 id="6-安装并启动mysql服务"><a href="#6-安装并启动mysql服务" class="headerlink" title="6.安装并启动mysql服务"></a>6.安装并启动mysql服务</h2><p>可以使用<code>mysqld --console</code>命令来启动服务，但是推荐使用另一种方式，将mysql服务安装到系统服务中。执行命令</p>
+<p><code>bin\mysqld --install MySQL --defaults-file=&quot;D:\apps\dev\mysql-5.7.34\my.ini&quot;</code></p>
+<blockquote>
+<p>–install MySQL，表示mysql服务名为MySQL</p>
+<p>–defaults-file 用于指定服务启动时默认加载的配置文件</p>
+</blockquote>
+<p>启动服务：<code>net start mysql</code></p>
+<p>停止服务：<code>net stop mysql</code></p>
+<h2 id="7-修改root用户密码"><a href="#7-修改root用户密码" class="headerlink" title="7.修改root用户密码"></a>7.修改root用户密码</h2><p>第4步生成的root用户密码复杂难记，先使用它登录mysql，再执行以下命令进行修改：</p>
+<p><code>use mysql</code></p>
+<p><code>alter user &#39;root&#39;@&#39;localhost&#39; identified by &#39;root&#39;;</code></p>
+<p>若忘记了第4步时的临时密码，需要进行以下操作：</p>
+<p>1)终止mysql服务：<code>net stop mysql</code></p>
+<p>2)进入mysql安全模式：<code>mysqld --skip-grant-tables</code></p>
+<p>3)打开一个新的cmd窗口，<code>mysql -u root -p</code>，此时，无需密码即可登录mysql</p>
+<p>4)刷新权限表：<code>flush privileges;</code></p>
+<p>5)修改root用户密码：<code>alter user &#39;root&#39;@&#39;localhost&#39; identified by &#39;root&#39;;</code></p>
+<p>6)再次刷新权限表：<code>flush privileges;</code></p>
+<p>7)修改成功，root用户的密码为root。重启mysql服务，即可使用新密码进行登录了。</p>
+<p><img src="/images/mysql04.png"></p>
+<h2 id="8-其它配置"><a href="#8-其它配置" class="headerlink" title="8.其它配置"></a>8.其它配置</h2><p>修改my.ini配置文件</p>
+<pre><code class="hljs ini"><span class="hljs-section">[mysql]</span>
+<span class="hljs-comment"># mysql客户端默认字符集</span>
+<span class="hljs-attr">default-character-set</span>=utf8mb4
+<span class="hljs-section">[mysqld]</span>
+<span class="hljs-comment"># mysql安装路径</span>
+<span class="hljs-attr">basedir</span>=D:\\apps\dev\\mysql-<span class="hljs-number">5.7</span>.<span class="hljs-number">34</span>
+<span class="hljs-comment"># mysql数据存放路径</span>
+<span class="hljs-attr">datadir</span>=D:\\apps\\dev\\mysql-<span class="hljs-number">5.7</span>.<span class="hljs-number">34</span>\\data
+<span class="hljs-attr">port</span>=<span class="hljs-number">3306</span>
+<span class="hljs-comment"># 允许的最大连接数</span>
+<span class="hljs-attr">max_connections</span>=<span class="hljs-number">200</span>
+<span class="hljs-comment"># 连接失败允许的最大重试次数</span>
+<span class="hljs-attr">max_connect_errors</span>=<span class="hljs-number">10</span>
+<span class="hljs-attr">character-set-server</span>=utf8mb4
+<span class="hljs-attr">default-storage-engine</span>=INNODB</code></pre>
+
+<h1 id="使用Installer安装MySQL5-7"><a href="#使用Installer安装MySQL5-7" class="headerlink" title="使用Installer安装MySQL5.7"></a>使用Installer安装MySQL5.7</h1><p>略</p>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

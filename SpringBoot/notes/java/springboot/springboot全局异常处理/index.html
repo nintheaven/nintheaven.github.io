@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>springboot全局异常处理 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>springboot全局异常处理</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>官方文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.servlet.spring-mvc.error-handling">https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.servlet.spring-mvc.error-handling</a></p>
+<span id="more"></span>
+
+<p>默认情况下，springboot提供了 <em>&#x2F;error</em> 映射相应所有的错误，当从浏览器发起请求时，返回的“Whitelabel” HTML页面，当从非浏览器请求时，返回Json格式的错误信息，类似下面这样(404错误)</p>
+<pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;timestamp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2021-08-09T02:57:46.576+00:00&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">404</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;error&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Not Found&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;No message available&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/&quot;</span>
+<span class="hljs-punctuation">&#125;</span></code></pre>
+
+<h2 id="自定义错误页"><a href="#自定义错误页" class="headerlink" title="自定义错误页"></a>自定义错误页</h2><p>如果想要给浏览器返回自定义的错误页，最简单的方式是在静态资源目录下创建一个 <em>error</em> 文件夹，在其中放入以HTTP状态码命名的html文件即可，也可以使用错误码的第一个数字开头，拼上<em>xx</em>，来匹配多个错误页面，例如 <em>4xx.html</em>、<em>5xx.html</em></p>
+<p><img src="/images/springboot001.png"></p>
+<p>或者，如果想要使用模板引擎创建错误页面，将 <em>error</em> 放到 <em>&#x2F;templates</em> 目录下。下面使用Freemarker模板引擎</p>
+<p><img src="/images/springboot002.png"></p>
+<h2 id="推荐-ControllerAdavice-和-ExceptionHandler"><a href="#推荐-ControllerAdavice-和-ExceptionHandler" class="headerlink" title="[推荐]@ControllerAdavice 和 @ExceptionHandler"></a>[推荐]<code>@ControllerAdavice</code> 和 <code>@ExceptionHandler</code></h2><p>结合 <code>@ControllerAdavice</code> 和 <code>@ExceptionHandler</code> 注解，可以统一处理控制器方法抛出的异常，返回错误页或者错误消息。</p>
+<blockquote>
+<p>Restfull API中，也可以使用 <code>@RestControllerAdvice</code>。</p>
+</blockquote>
+<p>推荐使用此种方式进行全局异常处理。例如，控制器中抛出 <code>SQLException</code> 异常</p>
+<pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/&quot;)</span>
+<span class="hljs-meta">@ResponseBody</span>
+<span class="hljs-keyword">public</span> String <span class="hljs-title function_">index</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(value = &quot;sql&quot;,required = false)</span>Integer sql)</span> <span class="hljs-keyword">throws</span> SQLException&#123;
+    <span class="hljs-keyword">if</span> (sql !=<span class="hljs-literal">null</span> &amp;&amp; sql == <span class="hljs-number">1</span>)&#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SQLException</span>(<span class="hljs-string">&quot;数据库操作异常!&quot;</span>);
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;首页&quot;</span>;
+&#125;</code></pre>
+
+<p>然后，定义全局异常处理器，分别处理每种异常</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Slf4j</span>
+<span class="hljs-meta">@ControllerAdvice</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GlobalExceptionHandler</span> &#123;
+    <span class="hljs-meta">@ExceptionHandler(value = &#123;SQLException.class&#125;)</span>
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;Object&gt; <span class="hljs-title function_">sqlExceptionHandler</span><span class="hljs-params">(HttpServletResponse resp, Throwable ex)</span>&#123;
+        log.error(<span class="hljs-string">&quot;=====&gt;&quot;</span>+ex.getMessage());
+        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();
+        map.put(<span class="hljs-string">&quot;code&quot;</span>,resp.getStatus());
+        map.put(<span class="hljs-string">&quot;msg&quot;</span>,ex.getMessage());
+        <span class="hljs-keyword">return</span> ResponseEntity.badRequest().body(map);
+    &#125;
+&#125;</code></pre>
+
+<h2 id="自定义异常上标注-ResponseStatus-注解"><a href="#自定义异常上标注-ResponseStatus-注解" class="headerlink" title="自定义异常上标注 @ResponseStatus 注解"></a>自定义异常上标注 <code>@ResponseStatus</code> 注解</h2><p>自定义异常，使用注解 <code>@ResponseStatus</code> 标注，使得抛出该异常的控制器方法，响应状态码和错误信息为注解中指定的值。没什么大作用，一般不用该种方式。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@ResponseStatus(HttpStatus.UNAUTHORIZED)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Exception</span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyException</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-built_in">super</span>();
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyException</span><span class="hljs-params">(String message)</span> &#123;
+        <span class="hljs-built_in">super</span>(message);
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyException</span><span class="hljs-params">(String message, Throwable cause)</span> &#123;
+        <span class="hljs-built_in">super</span>(message, cause);
+    &#125;
+&#125;</code></pre>
+
+<h2 id="自定义-HandlerExceptionResolver"><a href="#自定义-HandlerExceptionResolver" class="headerlink" title="自定义 HandlerExceptionResolver"></a>自定义 <code>HandlerExceptionResolver</code></h2><p>上面的几种异常处理方式，均利用了springboot内置的异常处理解析器机制。也可以自定义异常处理解析器。</p>
+<p>自定义的异常解析器默认最后执行，可以使用注解 <code>@Order</code> 设置其优先级，数字越小，优先级越高。</p>
+<p>如果一个异常解析器不能处理某个异常，应该返回 <code>null</code>，否则，返回 <code>ModelAndView</code>。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Slf4j</span>
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyHandlerExceptionResolver</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">HandlerExceptionResolver</span> &#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> ModelAndView <span class="hljs-title function_">resolveException</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> &#123;
+        log.error(getClass().getName());  
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    &#125;
+&#125;</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

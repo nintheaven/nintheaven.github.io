@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>mysql开启远程连接 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>mysql开启远程连接</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>首先，确保能ping通</p>
+<pre><code class="hljs shell">ping 192.168.122.1</code></pre>
+
+<p>其次，确保3306端口可以访问，没有被防火墙办了</p>
+<pre><code class="hljs plaintext">telnet 192.168.122.1 3306</code></pre>
+
+<p>如果3306端口被办了，需要在服务端配置防火墙，放开3306</p>
+<pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">查看放开了哪些端口</span>
+firewall-cmd --list-ports
+<span class="hljs-meta prompt_"># </span><span class="language-bash">放开3306端口，--permanent表示永久生效，避免重启失效</span>
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+<span class="hljs-meta prompt_"># </span><span class="language-bash">重新加载配置</span>
+firewall-cmd --reload</code></pre>
+
+<p>然后，检查mysql配置，确认3306端口没有被绑定到本地127.0.0.1</p>
+<pre><code class="hljs shell">netstat -apn | grep 3306</code></pre>
+
+<p>如果绑定到本地了，需要编辑配置文件（*&#x2F;etc&#x2F;my.cnf*），将相关的 <em>bind-address</em> 注释掉。</p>
+<p>接下来，可以选择新建用户和修改现有用户2种方式。</p>
+<p><strong>新建用户</strong></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> `root`@`<span class="hljs-operator">%</span>` identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;root&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> `root`@`<span class="hljs-operator">%</span>` <span class="hljs-keyword">with</span> <span class="hljs-keyword">grant</span> option;</code></pre>
+
+<p><strong>修改现有用户</strong></p>
+<p>修改用户的host字段为客户端主机名、IP、%通配符，或者IP与%通配符的结合。</p>
+<pre><code class="hljs sql">use mysql;
+<span class="hljs-keyword">update</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">set</span> host <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">user</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;root&#x27;</span>;</code></pre>
+
+<p><strong>刷新策略</strong></p>
+<pre><code class="hljs sql">flush privileges;</code></pre>
+
+<p><img src="/images/mysql05.png"></p>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

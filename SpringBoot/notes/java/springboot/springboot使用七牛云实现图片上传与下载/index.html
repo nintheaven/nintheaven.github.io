@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>springboot使用七牛云实现图片上传与下载 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>springboot使用七牛云实现图片上传与下载</h1>
+
+    <div>
+        
+        <a href="/notes/#SpringBoot">SpringBoot</a>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>文档 <a target="_blank" rel="noopener" href="https://developer.qiniu.com/sdk#official-sdk">https://developer.qiniu.com/sdk#official-sdk</a></p>
+<p>环境：spring-boot 2.5.1  七牛云sdk 7.7.0</p>
+<span id="more"></span>
+
+
+<h1 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h1><ul>
+<li>注册七牛云账号</li>
+<li>创建对象存储空间</li>
+<li>如果空间是公开的，访问文件时，不需要认证，直接get文件url即可</li>
+<li>如果空间是私有的，访问文件时，需要进行认证</li>
+</ul>
+<p>一般使用公开的空间，因为需要提供内容供用户访问。</p>
+<h1 id="开始集成"><a href="#开始集成" class="headerlink" title="开始集成"></a>开始集成</h1><p>添加依赖</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.qiniu<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>qiniu-java-sdk<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>7.7.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.code.gson<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>gson<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.8.6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<p>添加配置</p>
+<pre><code class="hljs yml"><span class="hljs-attr">oss:</span>
+  <span class="hljs-attr">qiniu:</span>
+    <span class="hljs-attr">domain:</span> <span class="hljs-string">xxxxxa7om.hn-bkt.clouddn.com</span> <span class="hljs-comment"># 访问域名(默认使用七牛云测试域名)</span>
+    <span class="hljs-attr">accessKey:</span> <span class="hljs-string">XiAbXQnW1DgH-MC6QVXds_etJcLim4cPZ52xxxxx</span> <span class="hljs-comment"># 公钥</span>
+    <span class="hljs-attr">secretKey:</span> <span class="hljs-string">iZ2daBzj5XgmIX1rJjcgLUY0QMiqphxZk_9xxxxx</span> <span class="hljs-comment"># 私钥</span>
+    <span class="hljs-attr">bucketName:</span> <span class="hljs-string">blog-lyp</span>  <span class="hljs-comment">#存储空间名称</span></code></pre>
+
+<p>创建配置属性类，方便获取配置信息</p>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> lombok.Data;
+<span class="hljs-keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;
+<span class="hljs-keyword">import</span> org.springframework.stereotype.Component;
+
+<span class="hljs-meta">@Component</span>
+<span class="hljs-meta">@ConfigurationProperties(prefix = &quot;oss.qiniu&quot;)</span>
+<span class="hljs-meta">@Data</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">QiniuProperties</span>
+&#123;
+    <span class="hljs-keyword">private</span> String domain; <span class="hljs-comment">// CDN域名</span>
+    <span class="hljs-keyword">private</span> String accessKey; <span class="hljs-comment">// ACCESS_KEY</span>
+    <span class="hljs-keyword">private</span> String secretKey; <span class="hljs-comment">// SECRET_KEY</span>
+    <span class="hljs-keyword">private</span> String bucketName; <span class="hljs-comment">// 空间名称</span>
+&#125;</code></pre>
+
+<p>创建TextUtils工具类，用于生成UUID格式的文件名称，或者从图片URL中提取Key</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TextUtils</span>
+&#123;
+    <span class="hljs-comment">// 根据文件名，生成UUID作为新的文件名</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">generateFileName</span><span class="hljs-params">(String filename)</span>
+    &#123;
+        Objects.requireNonNull(filename,<span class="hljs-string">&quot;文件名为null&quot;</span>);
+        <span class="hljs-type">int</span> index=filename.lastIndexOf(<span class="hljs-string">&#x27;.&#x27;</span>);
+        <span class="hljs-keyword">if</span>(filename.isBlank() || index==-<span class="hljs-number">1</span>)
+        &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;文件名不合法&quot;</span>);
+        &#125;
+        String suffix=filename.substring(index);
+        String uuid= UUID.randomUUID().toString().replaceAll(<span class="hljs-string">&quot;-&quot;</span>,<span class="hljs-string">&quot;&quot;</span>);
+        <span class="hljs-keyword">return</span> uuid+suffix;
+    &#125;
+
+    <span class="hljs-comment">// 从图片URL中提取Key</span>
+    <span class="hljs-comment">// http://quwf2a7om.hn-bkt.clouddn.com/xxx/11c85acc16f24361ba97999185fb0469.jpeg</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">getKey</span><span class="hljs-params">(String imageUrl)</span>
+    &#123;
+        <span class="hljs-keyword">if</span>(imageUrl==<span class="hljs-literal">null</span> || imageUrl.trim().isEmpty())
+        &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> imageUrl.substring(imageUrl.indexOf(<span class="hljs-string">&quot;.com&quot;</span>)+<span class="hljs-number">5</span>);
+    &#125;
+&#125;</code></pre>
+
+<h1 id="上传图片"><a href="#上传图片" class="headerlink" title="上传图片"></a>上传图片</h1><p>创建上传表单，表单提交时，form必须设置属性 <code>enctype=&quot;multipart/form-data&quot;</code></p>
+<p>创建七牛云Service接口</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">QiniuService</span>
+&#123;
+    String <span class="hljs-title function_">uploadImage2qiniu</span><span class="hljs-params">(InputStream in,String key)</span>;
+&#125;</code></pre>
+
+<p>Service实现类</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">QiniuServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">QiniuService</span>
+&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String domain;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String bucketName;
+
+    <span class="hljs-comment">// 七牛文件上传管理器</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Configuration cfg;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Auth auth;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">QiniuServiceImpl</span><span class="hljs-params">(QiniuProperties oss)</span>
+    &#123;
+        <span class="hljs-type">String</span> <span class="hljs-variable">ak</span> <span class="hljs-operator">=</span> oss.getAccessKey();
+        <span class="hljs-type">String</span> <span class="hljs-variable">sk</span> <span class="hljs-operator">=</span> oss.getSecretKey();
+        <span class="hljs-built_in">this</span>.domain = oss.getDomain(); <span class="hljs-comment">// CDN域名</span>
+        <span class="hljs-built_in">this</span>.bucketName = oss.getBucketName();
+
+        <span class="hljs-comment">// //构造一个带指定 Region 对象的配置类</span>
+        cfg = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Configuration</span>(Region.huanan());
+        auth = Auth.create(ak,sk);
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 上传图片到七牛云</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 图片url</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">uploadImage2qiniu</span><span class="hljs-params">(InputStream in,String key)</span>
+    &#123;
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-type">UploadManager</span> <span class="hljs-variable">uploadManager</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UploadManager</span>(cfg);
+            <span class="hljs-comment">// 根据命名空间生成的上传token</span>
+            <span class="hljs-type">String</span> <span class="hljs-variable">upToken</span> <span class="hljs-operator">=</span> auth.uploadToken(bucketName);
+            <span class="hljs-type">Response</span> <span class="hljs-variable">response</span> <span class="hljs-operator">=</span> uploadManager.put(in,key,upToken,<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);
+            <span class="hljs-comment">//解析上传成功的结果</span>
+            <span class="hljs-type">DefaultPutRet</span> <span class="hljs-variable">putRet</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Gson</span>().fromJson(response.bodyString(), DefaultPutRet.class);
+            <span class="hljs-comment">//System.out.println(putRet.key);</span>
+            <span class="hljs-comment">//System.out.println(putRet.hash);</span>
+            <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;http://%s/%s&quot;</span>,<span class="hljs-built_in">this</span>.domain,putRet.key);
+        &#125; <span class="hljs-keyword">catch</span> (QiniuException ex) &#123;
+            <span class="hljs-type">Response</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> ex.response;
+            System.err.println(r.toString());
+            <span class="hljs-keyword">try</span> &#123;
+                System.err.println(r.bodyString());
+            &#125; <span class="hljs-keyword">catch</span> (QiniuException ex2) &#123;
+                <span class="hljs-comment">//ignore</span>
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    &#125;
+&#125;</code></pre>
+
+<p>在Controller中调用Service中的方法,上传图片，成功后返回图片url</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Controller</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">QiniuController</span>
+&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> QiniuService qiniuService;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">QiniuController</span><span class="hljs-params">(QiniuService qiniuService)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.qiniuService = qiniuService;
+    &#125;
+
+    <span class="hljs-meta">@PostMapping(&quot;/image/upload&quot;)</span>
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">uploadImage</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;file&quot;)</span>MultipartFile file)</span> <span class="hljs-keyword">throws</span> IOException
+    &#123;
+        <span class="hljs-keyword">if</span>(!file.isEmpty())
+        &#123;
+            <span class="hljs-type">InputStream</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> file.getInputStream();
+            <span class="hljs-type">String</span> <span class="hljs-variable">filename</span> <span class="hljs-operator">=</span> file.getOriginalFilename();
+            <span class="hljs-keyword">try</span>
+            &#123;
+                <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;xxx/&quot;</span>+ TextUtils.generateFileName(filename);
+                <span class="hljs-type">String</span> <span class="hljs-variable">imageUrl</span> <span class="hljs-operator">=</span> qiniuService.uploadImage2qiniu(in,key);
+                <span class="hljs-keyword">if</span>(imageUrl!=<span class="hljs-literal">null</span>)
+                &#123;
+                    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;上传成功: &quot;</span>+imageUrl;
+                &#125;
+            &#125;
+            <span class="hljs-keyword">catch</span>(IllegalArgumentException e)
+            &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;上传失败&quot;</span>;
+    &#125;
+&#125;</code></pre>
+
+<h1 id="下载图片"><a href="#下载图片" class="headerlink" title="下载图片"></a>下载图片</h1><p>如果是公开空间的话，访问图片时，直接get上传图片时返回的url即可。</p>
+<p>如果是私有空间的话，需要使用相关API，提供身份认证信息进行访问。具体参考文档。</p>
+<h1 id="删除图片"><a href="#删除图片" class="headerlink" title="删除图片"></a>删除图片</h1><p>在Service接口中添加方法</p>
+<pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">deleteImageFromQiniu</span><span class="hljs-params">(String key)</span>;</code></pre>
+
+<p>在Service实现类中</p>
+<pre><code class="hljs java"><span class="hljs-comment">/**</span>
+<span class="hljs-comment">    * 删除图片</span>
+<span class="hljs-comment">    * */</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">deleteImageFromQiniu</span><span class="hljs-params">(String imageUrl)</span>
+&#123;
+    <span class="hljs-type">BucketManager</span> <span class="hljs-variable">bucketManager</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BucketManager</span>(auth, cfg);
+    <span class="hljs-keyword">try</span> &#123;
+        String key=TextUtils.getKey(imageUrl);
+        <span class="hljs-type">Response</span> <span class="hljs-variable">response</span> <span class="hljs-operator">=</span> bucketManager.delete(bucketName,key);
+        <span class="hljs-keyword">return</span> response.isOK();
+    &#125; <span class="hljs-keyword">catch</span> (QiniuException ex) &#123;
+        <span class="hljs-comment">//如果遇到异常，说明删除失败</span>
+        System.err.println(ex.code());
+        System.err.println(ex.response.toString());
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+&#125;</code></pre>
+
+<p>然后，在Controller中，调用删除方法</p>
+<pre><code class="hljs java"><span class="hljs-meta">@DeleteMapping(&quot;/image/delete&quot;)</span>
+<span class="hljs-meta">@ResponseBody</span>
+<span class="hljs-keyword">public</span> String <span class="hljs-title function_">deleteImage</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;image&quot;)</span>String imageUrl)</span>
+&#123;
+    <span class="hljs-type">boolean</span> <span class="hljs-variable">deleted</span> <span class="hljs-operator">=</span> qiniuService.deleteImageFromQiniu(imageUrl);
+    <span class="hljs-keyword">if</span>(deleted)
+    &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;删除成功&quot;</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;删除失败&quot;</span>;
+&#125;</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

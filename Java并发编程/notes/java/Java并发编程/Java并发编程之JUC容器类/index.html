@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java并发编程中的容器类 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>Java并发编程中的容器类</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p><strong>Vector</strong></p>
+<p><strong>HashTable</strong></p>
+<p>Vector是线程安全的ArrayList，HashTable是线程安全的HashMap。</p>
+<p>它门的原理是所有读写操作方法都是同步方法，保证了线程安全。</p>
+<p><strong>Collections</strong></p>
+<p>Collections中提供了静态的方法，用于将List，Set，Map转换为线程安全的容器类型，其原理是将读写操作放到静态代码块中。</p>
+<p>使用了装饰器设计模式。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Collections</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; List&lt;T&gt; <span class="hljs-title function_">synchronizedList</span><span class="hljs-params">(List&lt;T&gt; list)</span>&#123;
+        <span class="hljs-keyword">return</span> (list <span class="hljs-keyword">instanceof</span> RandomAccess ?
+                <span class="hljs-keyword">new</span> <span class="hljs-title class_">SynchronizedRandomAccessList</span>&lt;&gt;(list) :
+                <span class="hljs-keyword">new</span> <span class="hljs-title class_">SynchronizedList</span>&lt;&gt;(list));
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; Set&lt;T&gt; <span class="hljs-title function_">synchronizedSet</span><span class="hljs-params">(Set&lt;T&gt; s)</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SynchronizedSet</span>&lt;&gt;(s);
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;K,V&gt; Map&lt;K,V&gt; <span class="hljs-title function_">synchronizedMap</span><span class="hljs-params">(Map&lt;K,V&gt; m)</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SynchronizedMap</span>&lt;&gt;(m);
+    &#125;
+&#125;</code></pre>
+
+<p><strong>CopyOnWriteArrayList</strong></p>
+<p><strong>CopyOnWriteArraySet</strong></p>
+<p>写时复制技术。<br>读的时候不加锁，写的时候使用同步代码块加锁，并且复制原数组到一个新的数组，修改新数组，然后用新数组替换原来的数组。</p>
+<p>CopyOnWriteArraySet内部使用CopyOnWriteArrayList实现(装饰器设计模式)。</p>
+<p><strong>ArrayBlockingQueue</strong></p>
+<p><strong>LinkedBlockingQueue</strong></p>
+<p><strong>PriorityBlockingQueue</strong></p>
+<p><strong>LinkedBlockingDeque</strong></p>
+<p><strong>LinkedTransferQueue</strong></p>
+<p><strong>ConcurrentLinkedDeque</strong></p>
+<p><strong>ConcurrentHashMap</strong></p>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

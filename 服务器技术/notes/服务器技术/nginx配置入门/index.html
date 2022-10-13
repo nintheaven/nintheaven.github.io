@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>nginx配置入门 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>nginx配置入门</h1>
+
+    <div>
+        
+        <a href="/notes/#服务器技术">服务器技术</a>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>nginx默认配置</p>
+<pre><code class="hljs plaintext">#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events &#123;
+    worker_connections  1024;
+&#125;
+
+
+http &#123;
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;
+    #                  &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;
+    #                  &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    server &#123;
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / &#123;
+            root   html;
+            index  index.html index.htm;
+        &#125;
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html &#123;
+            root   html;
+        &#125;
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ &#123;
+        #    proxy_pass   http://127.0.0.1;
+        #&#125;
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ &#123;
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #&#125;
+
+        # deny access to .htaccess files, if Apache&#x27;s document root
+        # concurs with nginx&#x27;s one
+        #
+        #location ~ /\.ht &#123;
+        #    deny  all;
+        #&#125;
+    &#125;
+
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server &#123;
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / &#123;
+    #        root   html;
+    #        index  index.html index.htm;
+    #    &#125;
+    #&#125;
+
+
+    # HTTPS server
+    #
+    #server &#123;
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / &#123;
+    #        root   html;
+    #        index  index.html index.htm;
+    #    &#125;
+    #&#125;
+
+&#125;
+</code></pre>
+
+<!--more-->
+
+<h2 id="Nginx配置文件的语法"><a href="#Nginx配置文件的语法" class="headerlink" title="Nginx配置文件的语法"></a>Nginx配置文件的语法</h2><p>语法：使用<strong>键值对</strong>，一个键可以对应多个值，用空格分割，用分号结尾。</p>
+<blockquote>
+<p>注意：如果值中包含空格等特殊字符，需要将值用单(双)引号包围。</p>
+</blockquote>
+<pre><code class="hljs plaintext">worker_processes  1;
+error_log  logs/error.log  notice;</code></pre>
+
+<p><strong>块配置项</strong>,使用大括号{}，可以嵌套</p>
+<pre><code class="hljs plaintext">events &#123;
+
+&#125;
+
+http &#123;
+    server &#123;
+        location / &#123;
+
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p><strong>注释</strong>：使用井号#注释</p>
+<p><strong>单位</strong>：空间大小单位(K或k，M或m)，时间单位（ms,s,m,h,d,w,M,y）</p>
+<p><strong>变量</strong>：前面加上美元符号$</p>
+<h2 id="基础-通用-配置"><a href="#基础-通用-配置" class="headerlink" title="基础(通用)配置"></a>基础(通用)配置</h2><p><strong>Nginx是否以守护进程方式运行</strong></p>
+<pre><code class="hljs plaintext">daemon on|off;</code></pre>
+
+<p>默认on</p>
+<p><strong>是否以master&#x2F;worker方式工作</strong></p>
+<pre><code class="hljs plaintext">master_process on|off;</code></pre>
+
+<p>默认on,一个master进程只负责管理多个worker进程，worker进程处理具体的请求。</p>
+<p><strong>error日志设置</strong></p>
+<pre><code class="hljs plaintext">error_log  /path/file level;</code></pre>
+
+<p>level可取debug,info,notice,warn,error,crit,alert,emerg,日志级别依次增强。</p>
+<pre><code class="hljs plaintext">error_log  logs/error.log error;</code></pre>
+
+<p><strong>定义环境变量</strong></p>
+<pre><code class="hljs plaintext">env VAR;
+env VAR=VALUE;</code></pre>
+
+<p><strong>嵌入其它配置文件</strong></p>
+<pre><code class="hljs plaintext">#include /path/file;
+include       mime.types;</code></pre>
+
+<p><strong>pid文件路径</strong></p>
+<pre><code class="hljs plaintext">pid        logs/nginx.pid;</code></pre>
+
+<p>保存master进程ID的文件路径。</p>
+<p><strong>Nginx worker进程运行的用户及用户组</strong></p>
+<pre><code class="hljs plaintext">user username groupname</code></pre>
+
+<p>组名与用户名一样时，groupname可省略,默认nobody</p>
+<p><strong>worker进程个数</strong></p>
+<pre><code class="hljs plaintext">worker_processes  4;</code></pre>
+
+<p>默认1。每个worker进程都是单线程的进程。</p>
+<p><strong>绑定worker进程到指定的CPU内核</strong></p>
+<pre><code class="hljs plaintext">worker_processes  4;
+worker_cpu_affinity 1000 0100 0010 0001;</code></pre>
+
+<p>每个worker进程独享一个CPU，就实现了在内核的调度上的完全并发，而不存在同步问题。</p>
+<p><strong>worker进程优先级</strong></p>
+<pre><code class="hljs plaintext">worker_priority 0;</code></pre>
+
+<p>默认0。取值范围为-20~19,值越小，优先级越高，但不建议比内核进程的值(-5)还要小。</p>
+<p><strong>是否打开accept锁</strong></p>
+<pre><code class="hljs plaintext">accept_mutex on|off;</code></pre>
+
+<p>默认on。如果关闭，那么建立TCP连接的耗时会更短，但是worker进程之间的负载会非常不均衡。</p>
+<p><code>accept_mutex</code>是负载均衡锁。这把锁可以让多个worker进程轮流的，序列化的与新的客户建立TCP连接。当某个worker进程建立的连接数量达到 <code>worker_connections</code> 配置的最大连接数的 7&#x2F;8 时，nginx会大大的减小该worker进行试图建立新连接的机会，以此实现所有worker进程之上处理的客户请求数尽量接近。</p>
+<pre><code class="hljs plaintext">events &#123;
+    worker_connections  1024;
+    accept_mutex        on;
+&#125;</code></pre>
+
+<p><strong>worker进程获取accept锁失败后,允许再次试图获取锁的延迟时间</strong></p>
+<pre><code class="hljs plaintext">events &#123;
+    worker_connections  1024;
+    accept_mutex        on;
+    accept_mutext_delay 500ms;
+&#125;</code></pre>
+
+<p>默认500ms。</p>
+<p><strong>选择事件模型</strong></p>
+<pre><code class="hljs plaintext">events &#123;
+    worker_connections  1024;
+    use epoll;
+&#125;</code></pre>
+
+<p>默认情况下，Nginx会自动使用最合适的的事件模型。</p>
+<p>对于linux系统来说，可供选择的事件驱动模型有 poll,select和epoll3种，epoll时性能最强的。</p>
+<p><strong>每个worker进程的最大连接数</strong></p>
+<pre><code class="hljs plaintext">events&#123;
+    worker_connections  1024;
+&#125;</code></pre>
+
+
+<h2 id="静态Web内容服务器"><a href="#静态Web内容服务器" class="headerlink" title="静态Web内容服务器"></a>静态Web内容服务器</h2><p>配置静态Web服务器时，常用的模块</p>
+<ul>
+<li>ngx_http_core_module</li>
+<li>ngx_http_index_module</li>
+<li>ngx_http_gzip_filter_module</li>
+<li>ngx_http_image_filter_module</li>
+</ul>
+<p>HTTP配置项位于http,server,location,upstream,if等配置块下。</p>
+<h3 id="虚拟主机与请求的分发"><a href="#虚拟主机与请求的分发" class="headerlink" title="虚拟主机与请求的分发"></a>虚拟主机与请求的分发</h3><p>对于多个主机域名共用同一个IP地址的情况，可以在Nginx配置中，为每个域名配置一个server块，通过 <code>server_name</code>配置其域名。这样，每个server块就代表一个虚拟主机，它只处理与之对应的主机的请求。一台服务器上的Nginx以不同的方式处理访问不同主机域名的HTTP请求。</p>
+<p><strong>监听端口与主机名称</strong></p>
+<pre><code class="hljs plaintext">http&#123;
+    server&#123;
+        listen 80;
+        # listen       443 ssl;
+        server_name localhost;
+    &#125;
+&#125;</code></pre>
+
+<p><strong>location匹配URL</strong></p>
+<pre><code class="hljs plaintext">http&#123;
+    server&#123;
+        location [=|~|~*|^~|@]/uri &#123;
+
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>location会根据匹配规则，将 &#x2F;uri 与用户请求中的URL来匹配。匹配规则如下</p>
+<ul>
+<li><p>&#x3D;: 完全匹配</p>
+</li>
+<li><p>~: 区分大小写</p>
+</li>
+<li><p>~*: 不区分大小写</p>
+</li>
+<li><p>^~: 只需要前半部分与uri匹配即可</p>
+</li>
+<li><p>@: 仅用于nginx服务内部请求之间的重定向</p>
+</li>
+<li><p>uri参数支持使用正则表达式</p>
+</li>
+<li><p>uri为 &#x2F; 可以匹配所有请求</p>
+  <pre><code class="hljs plaintext">location / &#123;
+
+&#125;</code></pre></li>
+</ul>
+<p><strong>文件路径的定义</strong></p>
+<p><code>root</code>: 资源文件最终路径为 root+location+资源剩余路径</p>
+<p><code>alias</code>: 资源文件最终路径为 alias+资源剩余路径</p>
+<pre><code class="hljs plaintext">http&#123;
+    server&#123;
+        location /conf &#123;
+            root /usr/local/nginx/;
+            #alias /usr/local/nginx/conf/;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p><strong>关于嵌套的location</strong></p>
+<p>嵌套的location中，例如 <code>A&#123;B&#125;</code> ，如果B中声明了A中没有的<code>add_header</code>，那么A中的 <code>add_headr</code>对B就失效了；但是，如果B中只是覆盖A中已经声明过的，A中没有被覆盖的<code>add_header</code>对B依然有效。</p>
+<pre><code class="hljs plaintext">location / &#123;
+    root    /home/ubuntu/blog/blog-repo;
+
+    # 允许跨域的请求
+    add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Allow-Methods &#x27;GET, POST, OPTIONS, PUT, PATCH, DELETE&#x27;;
+    add_header Access-Control-Allow-Headers &#x27;DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization&#x27;;
+
+    if ($request_method = &#x27;OPTIONS&#x27;) &#123;
+    	return 204;
+    &#125;
+
+    # 博客文章
+    location /posts &#123;
+    	alias    /home/ubuntu/blog/blog-repo/posts;
+    &#125;
+
+    # 读书笔记
+    location /books &#123;
+    	alias    /home/ubuntu/blog/blog-repo/books;
+    &#125;
+&#125;</code></pre>
+
+<p><strong>配置网站首页</strong></p>
+<pre><code class="hljs plaintext">http&#123;
+    server&#123;
+        location / &#123;
+            index /index.html /index.php;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p><strong>根据HTTP状态码重定向页面</strong></p>
+<pre><code class="hljs plaintext">http&#123;
+    server&#123;
+        error_page   404              /404.html;
+        error_page   500 502 503 504  /50x.html;
+    &#125;
+&#125;</code></pre>
+
+<h3 id="内存及磁盘资源的分配"><a href="#内存及磁盘资源的分配" class="headerlink" title="内存及磁盘资源的分配"></a>内存及磁盘资源的分配</h3><h3 id="网络连接的设置"><a href="#网络连接的设置" class="headerlink" title="网络连接的设置"></a>网络连接的设置</h3><h3 id="MEME类型的设置"><a href="#MEME类型的设置" class="headerlink" title="MEME类型的设置"></a>MEME类型的设置</h3><h3 id="对客户端请求的限制"><a href="#对客户端请求的限制" class="headerlink" title="对客户端请求的限制"></a>对客户端请求的限制</h3><h3 id="优化文件操作"><a href="#优化文件操作" class="headerlink" title="优化文件操作"></a>优化文件操作</h3><h3 id="对客户端请求的特殊处理"><a href="#对客户端请求的特殊处理" class="headerlink" title="对客户端请求的特殊处理"></a>对客户端请求的特殊处理</h3><h2 id="反向代理服务器"><a href="#反向代理服务器" class="headerlink" title="反向代理服务器"></a>反向代理服务器</h2><p>配置反向代理服务器时，常用的Nginx模块：</p>
+<ul>
+<li>proxy</li>
+</ul>
+<p>Nginx可以作为对于<strong>静态Web文件服务器</strong>，直接向用户提供服务。</p>
+<p>但是对于动态内容，则不能做出处理，需要做为<strong>代理服务器</strong>，将客户请求缓存到内存或者硬盘中，然后再向上游服务器发起连接，将缓存的客户端请求转发到上游服务器。</p>
+<h3 id="负载均衡的基本配置"><a href="#负载均衡的基本配置" class="headerlink" title="负载均衡的基本配置"></a>负载均衡的基本配置</h3><p><code>upstream</code>块定义一个<strong>上游服务器集群</strong>，以便于反向代理中的<code>proxy_pass</code>使用</p>
+<pre><code class="hljs plaintext">http&#123;
+    upstream backend&#123;
+        server backend1.example.com;
+        server backend2.example.com;
+        server backend3.example.com;
+    &#125;
+
+    server&#123;
+        location / &#123;
+            proxy_pass http://backend;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>其中,<code>server</code>配置项指定一个上游服务器，可以用域名或IP地址加端口，Unix句柄等。</p>
+<h3 id="反向代理的基本配置"><a href="#反向代理的基本配置" class="headerlink" title="反向代理的基本配置"></a>反向代理的基本配置</h3><p><code>proxy_pass</code>配置项将当前的请求<strong>反向代理</strong>到URL参数指定的上游服务器上。</p>
+<p>URL支持主机名或IP加端口的形式，或者unix句柄，或者直接使用负载均衡中的upstream配置块</p>
+<pre><code class="hljs plaintext">proxy_pass http://localhost:8000/uri/;
+proxy_pass http://backend;</code></pre>
+
+<p>可以把HTTP转换为HTTPS</p>
+<pre><code class="hljs plaintext">proxy_pass https://backend;</code></pre>
+
+<p>默认情况下，反向代理是不会转发请求中的Host头部的，如需转发，加上以下配置</p>
+<pre><code class="hljs plaintext">proxy_set_header Host $host;</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>centos升级gcc版本</h1>
+    <main><div class="post">
+    <h1>centos升级gcc版本</h1>
 
-<span>Linux</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p>centos7中，gcc默认的版本是4.8.5。</p>
 <p>升级到gcc8+</p>
@@ -93,13 +101,18 @@
 <p>永久生效：替换默认的gcc和g++</p>
 <p>默认的gcc以及g++在&#x2F;usr&#x2F;bin&#x2F; 目录下，只需要用&#x2F;opt&#x2F;rh&#x2F;devtoolset-8&#x2F;root&#x2F; 目录下的gcc和g++进行替换即可永久生效。推荐使用软连接。</p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

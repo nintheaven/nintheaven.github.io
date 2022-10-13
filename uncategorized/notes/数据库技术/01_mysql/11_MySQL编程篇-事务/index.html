@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>MySQL编程篇-事务 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>MySQL编程篇-事务</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>概念：事务就是一组原子性的sql更新语句，或者说是一个独立的工作单元。事务内的一组语句，要么全部执行成功，要么全部执行失败。</p>
+<p>事务用在更新操作（insert, update, delete）中。</p>
+<blockquote>
+<p>在MySQL中，InnoDB引擎支持事务，MyISAM引擎不支持事务。</p>
+</blockquote>
+<p>事务相关的几个术语：</p>
+<ul>
+<li>事务(transaction)</li>
+<li>回退(rollback)</li>
+<li>提交(commit)</li>
+<li>保留点(savepoint),用于事务的部分提交或回退</li>
+</ul>
+<h1 id="事务的使用"><a href="#事务的使用" class="headerlink" title="事务的使用"></a>事务的使用</h1><p>开启事务-&gt;执行sql语句-&gt;提交</p>
+<blockquote>
+<p>开启事务，MySQL使用 <code>start transaction</code> ，PostgreSQL使用 <code>begin transaction</code>，Oracle默认开启事务。</p>
+</blockquote>
+<pre><code class="hljs sql"><span class="hljs-keyword">start</span> transaction;
+<span class="hljs-operator">&lt;</span><span class="hljs-keyword">sql</span>语句<span class="hljs-operator">&gt;</span>
+<span class="hljs-keyword">commit</span>;</code></pre>
+
+<p>开启事务-&gt;执行sql语句-&gt;回退</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">start</span> transaction;
+<span class="hljs-operator">&lt;</span><span class="hljs-keyword">sql</span>语句<span class="hljs-operator">&gt;</span>
+<span class="hljs-keyword">rollback</span>;</code></pre>
+
+<p>使用保留点实现部分回退</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">start</span> transaction;
+<span class="hljs-operator">&lt;</span><span class="hljs-keyword">sql</span>语句<span class="hljs-operator">&gt;</span>
+<span class="hljs-keyword">savepoint</span> p1;
+<span class="hljs-operator">&lt;</span><span class="hljs-keyword">sql</span>语句<span class="hljs-operator">&gt;</span>
+<span class="hljs-keyword">rollback</span> <span class="hljs-keyword">to</span> p1;</code></pre>
+
+<p>更改事务默认提交行为</p>
+<p>mysql中，默认情况下会开启事务自动提交模式，即每条SQL语句都是一个事务。</p>
+<blockquote>
+<p>大部分RDBMS都默认开启自动提交模式，Oracle除外。</p>
+</blockquote>
+<p>查看事务默认提交行为</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;autocommit&#x27;</span>;</code></pre>
+
+<p>可以使用以下语句关闭这一行为</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">set</span> autocommit<span class="hljs-operator">=</span><span class="hljs-number">0</span>;</code></pre>
+
+<p>关闭自动提交模式，可以防止误操作造成的数据损失</p>
+<pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">set</span> autocommit <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+Query OK, <span class="hljs-number">0</span> <span class="hljs-keyword">rows</span> affected (<span class="hljs-number">0.01</span> sec)
+
+mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> salary;
+Query OK, <span class="hljs-number">13</span> <span class="hljs-keyword">rows</span> affected (<span class="hljs-number">0.01</span> sec)
+
+mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> salary;
+<span class="hljs-keyword">Empty</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)
+
+mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">rollback</span>;
+Query OK, <span class="hljs-number">0</span> <span class="hljs-keyword">rows</span> affected (<span class="hljs-number">0.00</span> sec)
+
+mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> salary;
+<span class="hljs-operator">+</span><span class="hljs-comment">------+--------+---------+---------+</span>
+<span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> emp_id <span class="hljs-operator">|</span> basic   <span class="hljs-operator">|</span> bonus   <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------+--------+---------+---------+</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0001</span> <span class="hljs-operator">|</span> <span class="hljs-number">0001</span>   <span class="hljs-operator">|</span> <span class="hljs-number">6000.00</span> <span class="hljs-operator">|</span>    <span class="hljs-number">0.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0002</span> <span class="hljs-operator">|</span> <span class="hljs-number">0002</span>   <span class="hljs-operator">|</span> <span class="hljs-number">7000.00</span> <span class="hljs-operator">|</span>    <span class="hljs-number">0.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0003</span> <span class="hljs-operator">|</span> <span class="hljs-number">0003</span>   <span class="hljs-operator">|</span> <span class="hljs-number">8000.00</span> <span class="hljs-operator">|</span> <span class="hljs-number">1000.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0004</span> <span class="hljs-operator">|</span> <span class="hljs-number">0004</span>   <span class="hljs-operator">|</span> <span class="hljs-number">9000.00</span> <span class="hljs-operator">|</span>  <span class="hljs-number">600.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0005</span> <span class="hljs-operator">|</span> <span class="hljs-number">0005</span>   <span class="hljs-operator">|</span> <span class="hljs-number">6600.00</span> <span class="hljs-operator">|</span>  <span class="hljs-number">200.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0006</span> <span class="hljs-operator">|</span> <span class="hljs-number">0006</span>   <span class="hljs-operator">|</span> <span class="hljs-number">6800.00</span> <span class="hljs-operator">|</span> <span class="hljs-number">2000.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0007</span> <span class="hljs-operator">|</span> <span class="hljs-number">0007</span>   <span class="hljs-operator">|</span> <span class="hljs-number">6800.00</span> <span class="hljs-operator">|</span> <span class="hljs-number">1000.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0008</span> <span class="hljs-operator">|</span> <span class="hljs-number">0008</span>   <span class="hljs-operator">|</span> <span class="hljs-number">5000.00</span> <span class="hljs-operator">|</span>    <span class="hljs-number">0.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0009</span> <span class="hljs-operator">|</span> <span class="hljs-number">0009</span>   <span class="hljs-operator">|</span> <span class="hljs-number">5000.00</span> <span class="hljs-operator">|</span>    <span class="hljs-number">0.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0010</span> <span class="hljs-operator">|</span> <span class="hljs-number">0010</span>   <span class="hljs-operator">|</span> <span class="hljs-number">4000.00</span> <span class="hljs-operator">|</span>    <span class="hljs-number">0.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0011</span> <span class="hljs-operator">|</span> <span class="hljs-number">0011</span>   <span class="hljs-operator">|</span> <span class="hljs-number">1000.00</span> <span class="hljs-operator">|</span>    <span class="hljs-number">0.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0012</span> <span class="hljs-operator">|</span> <span class="hljs-number">0012</span>   <span class="hljs-operator">|</span>    <span class="hljs-number">1.00</span> <span class="hljs-operator">|</span> <span class="hljs-number">9999.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-number">0013</span> <span class="hljs-operator">|</span> <span class="hljs-number">0013</span>   <span class="hljs-operator">|</span>    <span class="hljs-number">1.00</span> <span class="hljs-operator">|</span> <span class="hljs-number">8888.00</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------+--------+---------+---------+</span>
+<span class="hljs-number">13</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)
+
+mysql<span class="hljs-operator">&gt;</span></code></pre>
+
+<h1 id="事务的ACID特征"><a href="#事务的ACID特征" class="headerlink" title="事务的ACID特征"></a>事务的ACID特征</h1><p><strong>原子性</strong>(Atomicity)</p>
+<p>一个事务必须被视为一个不可再分的最小工作单元，整个事务中的所有操作要么全部成功commit，要么全部失败rollback。</p>
+<p><strong>一致性</strong>(Consistency)</p>
+<p>数据库总是从一个一致性的状态转换到另一个一致性的状态。</p>
+<p><strong>隔离性</strong>(Isolation)</p>
+<p>隔离性保证不同事务之间互不干扰。</p>
+<p>实际取决于具体的隔离级别。</p>
+<p><strong>持久性</strong>(Durability)</p>
+<p>理想情况下，一旦事务提交，则其所做的修改就会永久的保存到数据库中。保证持久性的常见方法是将事务中的执行记录写入到日志中。</p>
+<h1 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h1><p><strong>Read Uncommitted</strong>，读未提交，存在<strong>脏读</strong>问题</p>
+<p>一个事务允许读取另一个事务中未提交的数据。</p>
+<p>A事务如果读取B事务中未提交的数据，B事务回滚了，则A事务就读到了错误（脏）数据，也被称为脏读(Dirty Read)。</p>
+<p><strong>Read Committed</strong>，读提交,存在<strong>不可重复读</strong>问题</p>
+<p>一个事务只能读取已经提交的数据。</p>
+<p>A事务第一次读的时候，B事务可能正在执行<code>Update</code> 或 <code>delete</code>操作；</p>
+<p>B事务提交后，A事务再次读取会得到不同的结果，导致不可重复读。</p>
+<p><strong>Repeatable Read</strong>，可重复读，存在<strong>幻读</strong>问题</p>
+<p>当一个事务在第一次读数据的时候，就在这些数据上加锁（行锁），其它事务是无法修改这些数据。该隔离级别保证了在一个事务中多次读取同样的纪录其结果是一致的。</p>
+<p>但是依然存在幻读的问题。</p>
+<p>事务A第一次读某个范围内的多条数据时，事务B可能正在执行 <code>insert</code> 操作，插入了一些数据并提交；</p>
+<p>事务A再次读取的时候，莫名其妙的多出了一些数据。这就是幻读。解决的办法就是使用序列化读。</p>
+<p>InnoDB引擎通过多版本并发控制(MVCC，Multiversion Concurrency Control)解决了幻读的问题。</p>
+<p><strong>可重复读是MySQL默认的事务隔离级别</strong>。</p>
+<p><strong>Serializable</strong>，串行化</p>
+<p>这是最高的事务隔离级别。通过强制事务串行执行（读写锁），避免了幻读的问题。</p>
+<p>Serializable会在每一行数据上都加锁，会导致大量的超时和锁争用问题。</p>
+<p>MySQL中设置事务隔离级别的语句如下</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">set</span> session transaction isolation level read committed;</code></pre>
+
+<h1 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h1><h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p>读锁是共享的，是不会相互阻塞的，多个客户在同一时刻可以读取同一资源，而互不干扰。</p>
+<p>写锁是排他的，也就是说，一个写锁会阻塞其它的读锁与写锁。</p>
+<h2 id="锁粒度"><a href="#锁粒度" class="headerlink" title="锁粒度"></a>锁粒度</h2><p>锁粒度，就是在锁的开销和数据的安全性之间寻求平衡，这种平衡当然也会影响性能。</p>
+<p>提高共享资源并发性的方式就是让锁定对象更有选择性，尽量只锁定需要修改的部分数据，而不是所有资源。</p>
+<p><strong>表锁</strong></p>
+<p>table lock，一个用户进行写操作时，锁定整张表</p>
+<p><strong>行级锁</strong></p>
+<p><strong>MVCC</strong>(多版本并发控制)</p>
+<p>MVVC可以认为是行级锁的变种。</p>
+<p>InnoDB是通过在每行纪录后维护2个隐藏的版本号列来实现的。每开始一个新的事务，系统版本号自增。</p>
+<h2 id="死锁问题"><a href="#死锁问题" class="headerlink" title="死锁问题"></a>死锁问题</h2><p>InnoDB解决的方式是死锁回滚算法，当检测到死锁时，将持有最少行级排他锁(写锁)的事务进行回滚。</p>
+<hr>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2014/08/20/innodb-lock.html">https://tech.meituan.com/2014/08/20/innodb-lock.html</a></p>
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

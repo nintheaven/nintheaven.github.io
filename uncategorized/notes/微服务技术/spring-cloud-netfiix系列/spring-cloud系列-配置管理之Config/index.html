@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,10 +75,16 @@
     
 </header>
 
-    <main><h1>spring-cloud系列-配置管理之Config</h1>
+    <main><div class="post">
+    <h1>spring-cloud系列-配置管理之Config</h1>
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p>spring官网文档：<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-cloud-config">https://spring.io/projects/spring-cloud-config</a></p>
 <p>spring-cloud-config提供了支持<strong>外部化配置</strong>的服务器与客户端，将大规模配置文件放到<strong>集中存储库</strong>中。</p>
@@ -92,22 +102,53 @@
 <!--more-->
 
 <h2 id="Config服务器"><a href="#Config服务器" class="headerlink" title="Config服务器"></a>Config服务器</h2><p>创建maven项目 <em>config-server</em>，添加配置服务器依赖 <code>spring-cloud-config-server</code>，此依赖默认包含了 <code>spring-boot-starter-web</code>，无需重复添加 。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-config-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-config-server<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>然后，创建配置服务器的启动引导类，使用注解 <code>@EnableConfigServer</code> 启用配置服务器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableConfigServer</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConfigServerApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ConfigServerApp.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-meta">@EnableConfigServer</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConfigServerApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(ConfigServerApp.class,args);
+    &#125;
+&#125;</code></pre>
 
 <p>最后，在配置文件中，设置客户端应用程序配置文件的存储库。</p>
 <p><code>spring-cloud-config</code> 支持本地文件系统和版本管理库(例如git，svn等)作为配置文件存储库。</p>
 <p><strong>本地文件系统</strong> 作为配置存储库</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8888</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">config-server</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="comment"># 使用本地文件系统</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">native</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">      <span class="attr">server:</span></span><br><span class="line">        <span class="attr">native:</span></span><br><span class="line">          <span class="comment"># 配置文件查找路径，多个路径用逗号分隔</span></span><br><span class="line">          <span class="attr">search-locations:</span> <span class="string">file:E:\Projects\spring-cloud-demos\config</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8888</span>
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">config-server</span>
+  <span class="hljs-attr">profiles:</span>
+    <span class="hljs-comment"># 使用本地文件系统</span>
+    <span class="hljs-attr">active:</span> <span class="hljs-string">native</span>
+  <span class="hljs-attr">cloud:</span>
+    <span class="hljs-attr">config:</span>
+      <span class="hljs-attr">server:</span>
+        <span class="hljs-attr">native:</span>
+          <span class="hljs-comment"># 配置文件查找路径，多个路径用逗号分隔</span>
+          <span class="hljs-attr">search-locations:</span> <span class="hljs-string">file:E:\Projects\spring-cloud-demos\config</span></code></pre>
 
 <p><code>spring.cloud.server.native.search-locations</code> 配置属性用于设置本地文件系统路径，客户端的配置文件都统一存储到该目录下。配置文件名称支持以下形式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/&#123;application&#125;/&#123;profile&#125;[/&#123;label&#125;]</span><br><span class="line">/&#123;application&#125;-&#123;profile&#125;.yml</span><br><span class="line">/&#123;label&#125;/&#123;application&#125;-&#123;profile&#125;.yml</span><br><span class="line">/&#123;application&#125;-&#123;profile&#125;.properties</span><br><span class="line">/&#123;label&#125;/&#123;application&#125;-&#123;profile&#125;.properties</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">/&#123;application&#125;/&#123;profile&#125;[/&#123;label&#125;]
+/&#123;application&#125;-&#123;profile&#125;.yml
+/&#123;label&#125;/&#123;application&#125;-&#123;profile&#125;.yml
+/&#123;application&#125;-&#123;profile&#125;.properties
+/&#123;label&#125;/&#123;application&#125;-&#123;profile&#125;.properties</code></pre>
 
 <p><em>application</em>是客户端应用的名称，<em>profile</em>是xxx(就是profile…)，<em>label</em>是可选的，版本管理库的分支名（默认为<em>master</em>）。</p>
 <p>假如现在有3个应用：用户(user)，产品(product)，订单(order)，它们都有配置文件<em>application.yml</em>，或者还有<em>application-xxx.yml</em>。要将它们的配置文件统一交给配置服务器管理，只需要将各自的配置文件拷贝到上面配置的 <code>search-locations</code> 路径中，将文件名中的<em>application</em>修改为各自的应用名即可，如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">E:\Projects\spring-cloud-demos\config </span><br><span class="line">    order.yml</span><br><span class="line">    product.yml</span><br><span class="line">    user-peer-a.yml</span><br><span class="line">    user-peer-b.yml</span><br><span class="line">    user.yml</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">E:\Projects\spring-cloud-demos\config 
+    order.yml
+    product.yml
+    user-peer-a.yml
+    user-peer-b.yml
+    user.yml</code></pre>
 
 <p>现在，启动配置服务器。</p>
 <p>要想获取一个应用(例如user)的默认配置属性(application.yml)，只需要访问：<a target="_blank" rel="noopener" href="http://localhost:8888/user/default">http://localhost:8888/user/default</a> ，</p>
@@ -116,25 +157,60 @@
 <p><strong>Git仓库</strong> 作为配置存储库</p>
 <p>使用本地文件系统作为配置的存储库，在基于云的分布式应用系统中，是不切实际的（当然也可以自己搭建一个共享文件系统）。推荐使用Git，SVN等成熟的版本管理系统作为存储库。</p>
 <p>使用Git仓库的方法与使用本地文件系统基本一样，只需要修改配置服务器中配置文件的查找路径为远程git仓库即可。</p>
-<p>假如配置文件存储在github仓库的 <em>config</em> 目录下，仓库地址为：<em><a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#x63;&#111;&#109;">&#103;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#x63;&#111;&#109;</a>:lypzzz&#x2F;spring-cloud-demos.git</em></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8888</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">config-server</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="comment"># 使用本地文件系统</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">native</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">      <span class="attr">server:</span></span><br><span class="line"><span class="comment">#        native:</span></span><br><span class="line"><span class="comment">#          # 配置文件查找路径，多个路径用逗号分隔</span></span><br><span class="line"><span class="comment">#          search-locations: file:E:\Projects\spring-cloud-demos\config</span></span><br><span class="line">        <span class="attr">git:</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">git@github.com:lypzzz/spring-cloud-demos.git</span></span><br><span class="line">          <span class="attr">search-paths:</span> <span class="string">config</span></span><br><span class="line">          <span class="attr">username:</span> <span class="string">lypzzz</span></span><br><span class="line">          <span class="attr">password:</span> <span class="string">&lt;密码&gt;</span></span><br><span class="line">          <span class="comment"># git分支</span></span><br><span class="line">          <span class="attr">default-label:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<p>假如配置文件存储在github仓库的 <em>config</em> 目录下，仓库地址为：<em><a href="mailto:&#103;&#105;&#116;&#x40;&#x67;&#105;&#116;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#116;&#x40;&#x67;&#105;&#116;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;</a>:lypzzz&#x2F;spring-cloud-demos.git</em></p>
+<pre><code class="hljs yaml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8888</span>
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">config-server</span>
+  <span class="hljs-attr">profiles:</span>
+    <span class="hljs-comment"># 使用本地文件系统</span>
+    <span class="hljs-attr">active:</span> <span class="hljs-string">native</span>
+  <span class="hljs-attr">cloud:</span>
+    <span class="hljs-attr">config:</span>
+      <span class="hljs-attr">server:</span>
+<span class="hljs-comment">#        native:</span>
+<span class="hljs-comment">#          # 配置文件查找路径，多个路径用逗号分隔</span>
+<span class="hljs-comment">#          search-locations: file:E:\Projects\spring-cloud-demos\config</span>
+        <span class="hljs-attr">git:</span>
+          <span class="hljs-attr">uri:</span> <span class="hljs-string">git@github.com:lypzzz/spring-cloud-demos.git</span>
+          <span class="hljs-attr">search-paths:</span> <span class="hljs-string">config</span>
+          <span class="hljs-attr">username:</span> <span class="hljs-string">lypzzz</span>
+          <span class="hljs-attr">password:</span> <span class="hljs-string">&lt;密码&gt;</span>
+          <span class="hljs-comment"># git分支</span>
+          <span class="hljs-attr">default-label:</span> <span class="hljs-string">master</span></code></pre>
 
 <h2 id="Config客户端"><a href="#Config客户端" class="headerlink" title="Config客户端"></a>Config客户端</h2><p>首先，在客户端应用（用户服务、产品服务、订单服务）的pom中添加 <code>spring-cloud-starter-config</code> 依赖，该依赖默认导入了 <code>spring-cloud-config-client</code></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-config<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>在使用 <em>spring-cloud-config</em> 的服务中，配置信息可以在 <em>bootstrap.yml</em> 和 <em>application.yml</em> 中进行设置，应用启动后，首先加载 <em>bootstrap.yml</em> 中的配置属性。</p>
 <p>在classpath路径下（maven项目的resources目录下）创建 <em>bootstrap.yml</em> 文件，在其中设置要激活的配置profile和配置服务器的地址</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">user</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">default</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">      <span class="attr">uri:</span> <span class="string">http://localhost:8888</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">user</span>
+  <span class="hljs-attr">profiles:</span>
+    <span class="hljs-attr">active:</span> <span class="hljs-string">default</span>
+  <span class="hljs-attr">cloud:</span>
+    <span class="hljs-attr">config:</span>
+      <span class="hljs-attr">uri:</span> <span class="hljs-string">http://localhost:8888</span></code></pre>
 
 <p>如此，客户端配置完成。此时，先启动配置服务器，然后启动客户端应用，客户端应用会根据 <em>bootstrap.yml</em> 中配置的服务器地址和profile选项，远程读取配置服务器中的配置文件。</p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

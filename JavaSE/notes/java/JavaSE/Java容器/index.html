@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java容器 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>Java容器</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>Java容器</p>
+<p><img src="/images/001.png"></p>
+<h1 id="容器的实现原理"><a href="#容器的实现原理" class="headerlink" title="容器的实现原理"></a>容器的实现原理</h1><h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>使用数组实现</p>
+<p>ArrayList核心源码</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ArrayList</span>&lt;E&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractList</span>&lt;E&gt;
+        <span class="hljs-keyword">implements</span> <span class="hljs-title class_">List</span>&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable
+&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;
+    <span class="hljs-comment">// 使用Object[]存储元素</span>
+    <span class="hljs-keyword">transient</span> Object[] elementData; <span class="hljs-comment">// non-private to simplify nested class access</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> size;
+
+    <span class="hljs-comment">// 添加元素</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;
+        modCount++;
+        add(e, elementData, size);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e, Object[] elementData, <span class="hljs-type">int</span> s)</span> &#123;
+        <span class="hljs-keyword">if</span> (s == elementData.length)
+            elementData = grow();
+        elementData[s] = e;
+        size = s + <span class="hljs-number">1</span>;
+    &#125;
+
+    <span class="hljs-keyword">private</span> Object[] grow() &#123;
+        <span class="hljs-keyword">return</span> grow(size + <span class="hljs-number">1</span>);
+    &#125;
+
+    <span class="hljs-keyword">private</span> Object[] grow(<span class="hljs-type">int</span> minCapacity) &#123;
+        <span class="hljs-comment">// 将全部元素复制到新的数组</span>
+        <span class="hljs-type">return</span> <span class="hljs-variable">elementData</span> <span class="hljs-operator">=</span> Arrays.copyOf(elementData,
+                                           newCapacity(minCapacity));
+    &#125;
+
+    <span class="hljs-comment">// 扩容</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-title function_">newCapacity</span><span class="hljs-params">(<span class="hljs-type">int</span> minCapacity)</span> &#123;
+        <span class="hljs-comment">// overflow-conscious code</span>
+        <span class="hljs-type">int</span> <span class="hljs-variable">oldCapacity</span> <span class="hljs-operator">=</span> elementData.length;
+        <span class="hljs-type">int</span> <span class="hljs-variable">newCapacity</span> <span class="hljs-operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="hljs-number">1</span>); <span class="hljs-comment">// 扩容，当前容量的一半</span>
+        <span class="hljs-keyword">if</span> (newCapacity - minCapacity &lt;= <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
+                <span class="hljs-keyword">return</span> Math.max(DEFAULT_CAPACITY, minCapacity);
+            <span class="hljs-keyword">if</span> (minCapacity &lt; <span class="hljs-number">0</span>) <span class="hljs-comment">// overflow</span>
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OutOfMemoryError</span>();
+            <span class="hljs-keyword">return</span> minCapacity;
+        &#125;
+        <span class="hljs-keyword">return</span> (newCapacity - MAX_ARRAY_SIZE &lt;= <span class="hljs-number">0</span>)
+            ? newCapacity
+            : hugeCapacity(minCapacity);
+    &#125;
+
+    <span class="hljs-comment">// 删除元素</span>
+    <span class="hljs-keyword">public</span> E <span class="hljs-title function_">remove</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;
+        Objects.checkIndex(index, size);
+        <span class="hljs-keyword">final</span> Object[] es = elementData;
+
+        <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span> <span class="hljs-type">E</span> <span class="hljs-variable">oldValue</span> <span class="hljs-operator">=</span> (E) es[index];
+        fastRemove(es, index);
+
+        <span class="hljs-keyword">return</span> oldValue;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fastRemove</span><span class="hljs-params">(Object[] es, <span class="hljs-type">int</span> i)</span> &#123;
+        modCount++;
+        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> newSize;
+        <span class="hljs-keyword">if</span> ((newSize = size - <span class="hljs-number">1</span>) &gt; i)
+            System.arraycopy(es, i + <span class="hljs-number">1</span>, es, i, newSize - i); <span class="hljs-comment">// 将被移除元素之后的所有元素向前移动1个位置</span>
+        es[size = newSize] = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 最后一个元素置位null</span>
+    &#125;
+&#125;</code></pre>
+
+<h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><p>使用双向链表实现</p>
+<p>LinkedList核心源码</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LinkedList</span>&lt;E&gt;
+    <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractSequentialList</span>&lt;E&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">List</span>&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable
+&#123;
+    <span class="hljs-comment">// 双向链表结构</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span>&lt;E&gt; &#123;
+        E item;
+        Node&lt;E&gt; next;
+        Node&lt;E&gt; prev;
+
+        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;
+            <span class="hljs-built_in">this</span>.item = element;
+            <span class="hljs-built_in">this</span>.next = next;
+            <span class="hljs-built_in">this</span>.prev = prev;
+        &#125;
+    &#125;
+
+    <span class="hljs-keyword">transient</span> <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; <span class="hljs-comment">// 元素数量</span>
+    <span class="hljs-keyword">transient</span> Node&lt;E&gt; first; <span class="hljs-comment">// 首节点</span>
+    <span class="hljs-keyword">transient</span> Node&lt;E&gt; last; <span class="hljs-comment">// 尾节点</span>
+
+    <span class="hljs-comment">// 添加删除元素，就是常规的链表操作</span>
+&#125;</code></pre>
+
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>实际就是一个值为Object对象的HashMap</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HashSet</span>&lt;E&gt;
+    <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractSet</span>&lt;E&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Set</span>&lt;E&gt;, Cloneable, java.io.Serializable
+&#123;
+    <span class="hljs-comment">// 容器，使用HashMap</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> HashMap&lt;E,Object&gt; map;
+    <span class="hljs-comment">// Map默认值，Set只关注键，其值随意，这里使用new Object()</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Object</span> <span class="hljs-variable">PRESENT</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">HashSet</span><span class="hljs-params">()</span> &#123;
+        map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();
+    &#125;
+
+    <span class="hljs-comment">// 添加</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;
+        <span class="hljs-keyword">return</span> map.put(e, PRESENT)==<span class="hljs-literal">null</span>;
+    &#125;
+
+    <span class="hljs-comment">// 删除</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(Object o)</span> &#123;
+        <span class="hljs-keyword">return</span> map.remove(o)==PRESENT;
+    &#125;
+&#125;</code></pre>
+
+<h3 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h3><p>实际上就是一个值为Object的TreeMap</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeSet</span>&lt;E&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractSet</span>&lt;E&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NavigableSet</span>&lt;E&gt;, Cloneable, java.io.Serializable
+&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> NavigableMap&lt;E,Object&gt; m;
+    <span class="hljs-comment">// 默认值，键值是Object对象</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Object</span> <span class="hljs-variable">PRESENT</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();
+
+    <span class="hljs-comment">// 使用TreeMap作为容器</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">TreeSet</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-built_in">this</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeMap</span>&lt;&gt;());
+    &#125;
+
+    TreeSet(NavigableMap&lt;E,Object&gt; m) &#123;
+        <span class="hljs-built_in">this</span>.m = m;
+    &#125;
+
+    <span class="hljs-comment">// 添加</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;
+        <span class="hljs-keyword">return</span> m.put(e, PRESENT)==<span class="hljs-literal">null</span>;
+    &#125;
+
+    <span class="hljs-comment">// 删除</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(Object o)</span> &#123;
+        <span class="hljs-keyword">return</span> m.remove(o)==PRESENT;
+    &#125;
+&#125;</code></pre>
+
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>数组+单向链表+红黑树</p>
+<p>HashMap核心源码</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HashMap</span>&lt;K,V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractMap</span>&lt;K,V&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;
+    
+    <span class="hljs-comment">// 默认初始容量</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_INITIAL_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">4</span>; <span class="hljs-comment">// aka 16</span>
+    <span class="hljs-comment">// 最大容量</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MAXIMUM_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">30</span>;
+    <span class="hljs-comment">// 默认装载因子(可以在构造器中更改),(数组容量*装载因子)</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">DEFAULT_LOAD_FACTOR</span> <span class="hljs-operator">=</span> <span class="hljs-number">0.75f</span>;
+    <span class="hljs-comment">// 链表结构转换为红黑树结构的阀值，当链表长度大于阀值时，进行转化</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">TREEIFY_THRESHOLD</span> <span class="hljs-operator">=</span> <span class="hljs-number">8</span>;
+    <span class="hljs-comment">// 红黑树结构转换为链表的阀值</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">UNTREEIFY_THRESHOLD</span> <span class="hljs-operator">=</span> <span class="hljs-number">6</span>;
+    <span class="hljs-comment">// 将链表转换成红黑树前会判断，如果当前数组的长度小于 64，那么会选择先进行数组扩容，而不是转换为红黑树</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MIN_TREEIFY_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">64</span>;
+
+    <span class="hljs-comment">// 存储链表节点的数据结构</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span>&lt;K,V&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Map</span>.Entry&lt;K,V&gt; &#123;
+        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> hash; <span class="hljs-comment">// hash值</span>
+        <span class="hljs-keyword">final</span> K key; <span class="hljs-comment">// 键</span>
+        V value; <span class="hljs-comment">// 值</span>
+        Node&lt;K,V&gt; next; <span class="hljs-comment">// hash值相同的下一个元素</span>
+
+        Node(<span class="hljs-type">int</span> hash, K key, V value, Node&lt;K,V&gt; next)    &#123;
+            <span class="hljs-built_in">this</span>.hash = hash;
+            <span class="hljs-built_in">this</span>.key = key;
+            <span class="hljs-built_in">this</span>.value = value;
+            <span class="hljs-built_in">this</span>.next = next;
+        &#125;
+
+		<span class="hljs-comment">// ...</span>
+    &#125;
+    
+    <span class="hljs-comment">// 存储红黑树节点的数据结构</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeNode</span>&lt;K,V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">LinkedHashMap</span>.Entry&lt;K,V&gt; &#123;
+        TreeNode&lt;K,V&gt; parent;  <span class="hljs-comment">// red-black tree links</span>
+        TreeNode&lt;K,V&gt; left;
+        TreeNode&lt;K,V&gt; right;
+        TreeNode&lt;K,V&gt; prev;    <span class="hljs-comment">// needed to unlink next upon deletion</span>
+        <span class="hljs-type">boolean</span> red;
+        TreeNode(<span class="hljs-type">int</span> hash, K key, V val, Node&lt;K,V&gt; next) &#123;
+            <span class="hljs-built_in">super</span>(hash, key, val, next);
+        &#125;
+        
+        <span class="hljs-comment">// ...</span>
+    &#125;
+
+    <span class="hljs-comment">// 使用数组保存元素</span>
+    <span class="hljs-keyword">transient</span> Node&lt;K,V&gt;[] table;
+
+    <span class="hljs-comment">// 元素数量</span>
+    <span class="hljs-keyword">transient</span> <span class="hljs-type">int</span> size;
+
+    <span class="hljs-comment">// 计算key的哈希值</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hash</span><span class="hljs-params">(Object key)</span> &#123;
+        <span class="hljs-type">int</span> h;
+        <span class="hljs-keyword">return</span> (key == <span class="hljs-literal">null</span>) ? <span class="hljs-number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="hljs-number">16</span>);
+    &#125;
+&#125;</code></pre>
+
+<h3 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h3><p>使用红黑树数据结构实现。</p>
+<p>TreeMap核心源码</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeMap</span>&lt;K,V&gt;
+    <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractMap</span>&lt;K,V&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NavigableMap</span>&lt;K,V&gt;, Cloneable, java.io.Serializable
+&#123;
+    <span class="hljs-comment">// 红黑树的根节点</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> Entry&lt;K,V&gt; root;
+    <span class="hljs-comment">// 节点数</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+    
+    <span class="hljs-comment">// 红黑树节点的元素类型</span>
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Entry</span>&lt;K,V&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Map</span>.Entry&lt;K,V&gt; &#123;
+        K key;
+        V value;
+        Entry&lt;K,V&gt; left;
+        Entry&lt;K,V&gt; right;
+        Entry&lt;K,V&gt; parent;
+        <span class="hljs-type">boolean</span> <span class="hljs-variable">color</span> <span class="hljs-operator">=</span> BLACK;
+
+        <span class="hljs-comment">/**</span>
+<span class="hljs-comment">         * Make a new cell with given key, value, and parent, and with</span>
+<span class="hljs-comment">         * &#123;<span class="hljs-doctag">@code</span> null&#125; child links, and BLACK color.</span>
+<span class="hljs-comment">         */</span>
+        Entry(K key, V value, Entry&lt;K,V&gt; parent) &#123;
+            <span class="hljs-built_in">this</span>.key = key;
+            <span class="hljs-built_in">this</span>.value = value;
+            <span class="hljs-built_in">this</span>.parent = parent;
+        &#125;
+        <span class="hljs-comment">// ...</span>
+    &#125;
+&#125;</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

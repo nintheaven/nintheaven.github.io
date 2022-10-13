@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>Java实现装饰器模式</h1>
+    <main><div class="post">
+    <h1>Java实现装饰器模式</h1>
 
-<span>软件设计模式</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <blockquote>
 <p>装饰者模式(Decorator或Wrapper)<br>被装饰者将扩展功能的任务委托给装饰者，从而避免直接修改原来的类(开闭原则：对扩展开放，对修改关闭)<br>装饰者与被装饰者拥有同样的超类型<br>装饰者可以在被装饰者的行为前或行为后，增加自己的行为  </p>
@@ -85,29 +93,114 @@
 <p>Java io包中的包装流就用到了装饰者模式，用来扩展基础流的功能。</p>
 <p>装饰者模式示例：</p>
 <p>小白程序员一开始啥都不会</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Coder</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getSalary</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSkill</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;啥也不会&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Coder</span>
+&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">getSalary</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    &#125;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getSkill</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;啥也不会&quot;</span>;
+    &#125;
+&#125;</code></pre>
 
 <p>私下琢磨了一天后，学会了HelloWorld(增强了超类功能，但没有修改超类中的代码)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldCoder</span> <span class="keyword">extends</span> <span class="title class_">Coder</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Coder coder;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">HelloWorldCoder</span><span class="params">(Coder coder)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">this</span>.coder = coder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getSalary</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> coder.getSalary()+<span class="number">100</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSkill</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> coder.getSkill()+<span class="string">&quot;,会写HelloWorld了&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldCoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Coder</span>
+&#123;
+    <span class="hljs-keyword">private</span> Coder coder;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">HelloWorldCoder</span><span class="hljs-params">(Coder coder)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.coder = coder;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">getSalary</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> coder.getSalary()+<span class="hljs-number">100</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getSkill</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> coder.getSkill()+<span class="hljs-string">&quot;,会写HelloWorld了&quot;</span>;
+    &#125;
+&#125;</code></pre>
 
 <p>通过阅读《Java从入门到精通》，小白终于精通了Java，顺便学会了CRUD</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JavaCoder</span> <span class="keyword">extends</span> <span class="title class_">Coder</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Coder coder;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">JavaCoder</span><span class="params">(Coder coder)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">this</span>.coder = coder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getSalary</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> coder.getSalary()+<span class="number">1000</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSkill</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> coder.getSkill()+<span class="string">&quot;,精通Java&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 扩展功能</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">curd</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;会写增删改查了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JavaCoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Coder</span>
+&#123;
+    <span class="hljs-keyword">private</span> Coder coder;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">JavaCoder</span><span class="hljs-params">(Coder coder)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.coder = coder;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">getSalary</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> coder.getSalary()+<span class="hljs-number">1000</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getSkill</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> coder.getSkill()+<span class="hljs-string">&quot;,精通Java&quot;</span>;
+    &#125;
+
+    <span class="hljs-comment">// 扩展功能</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">curd</span><span class="hljs-params">()</span>
+    &#123;
+        System.out.println(<span class="hljs-string">&quot;会写增删改查了&quot;</span>);
+    &#125;
+&#125;</code></pre>
 
 <p>小白还在不停的学习新的技能…</p>
 <p>测试</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span></span><br><span class="line">&#123;</span><br><span class="line">    Coder coder=<span class="keyword">new</span> <span class="title class_">Coder</span>();</span><br><span class="line">    System.out.println(coder.getSalary());</span><br><span class="line">    System.out.println(coder.getSkill());</span><br><span class="line"></span><br><span class="line">    Coder helloworldCoder=<span class="keyword">new</span> <span class="title class_">HelloWorldCoder</span>(coder);</span><br><span class="line">    System.out.println(helloworldCoder.getSalary());</span><br><span class="line">    System.out.println(helloworldCoder.getSkill());</span><br><span class="line"></span><br><span class="line">    Coder javaCoder=<span class="keyword">new</span> <span class="title class_">JavaCoder</span>(helloworldCoder);</span><br><span class="line">    System.out.println(javaCoder.getSalary());</span><br><span class="line">    System.out.println(javaCoder.getSkill());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用扩展(装饰类特有)的功能</span></span><br><span class="line">    JavaCoder crudCoder= (JavaCoder)javaCoder;</span><br><span class="line">    crudCoder.curd();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span>
+&#123;
+    Coder coder=<span class="hljs-keyword">new</span> <span class="hljs-title class_">Coder</span>();
+    System.out.println(coder.getSalary());
+    System.out.println(coder.getSkill());
+
+    Coder helloworldCoder=<span class="hljs-keyword">new</span> <span class="hljs-title class_">HelloWorldCoder</span>(coder);
+    System.out.println(helloworldCoder.getSalary());
+    System.out.println(helloworldCoder.getSkill());
+
+    Coder javaCoder=<span class="hljs-keyword">new</span> <span class="hljs-title class_">JavaCoder</span>(helloworldCoder);
+    System.out.println(javaCoder.getSalary());
+    System.out.println(javaCoder.getSkill());
+
+    <span class="hljs-comment">// 使用扩展(装饰类特有)的功能</span>
+    JavaCoder crudCoder= (JavaCoder)javaCoder;
+    crudCoder.curd();
+&#125;</code></pre>
 
 <p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0.0</span><br><span class="line">啥也不会</span><br><span class="line">100.0</span><br><span class="line">啥也不会,会写HelloWorld了</span><br><span class="line">1100.0</span><br><span class="line">啥也不会,会写HelloWorld了,精通Java</span><br><span class="line">会写增删改查了</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">0.0
+啥也不会
+100.0
+啥也不会,会写HelloWorld了
+1100.0
+啥也不会,会写HelloWorld了,精通Java
+会写增删改查了</code></pre>
 
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

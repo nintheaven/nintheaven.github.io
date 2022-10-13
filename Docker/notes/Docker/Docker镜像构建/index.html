@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,31 +75,51 @@
     
 </header>
 
-    <main><h1>Docker镜像构建</h1>
+    <main><div class="post">
+    <h1>Docker镜像构建</h1>
 
-<span>Docker</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">https://docs.docker.com/engine/reference/builder/</a></p>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">https://docs.docker.com/engine/reference/builder/</a></p>
 <span id="more"></span>
 
 <h1 id="通过commit命令构建镜像"><a href="#通过commit命令构建镜像" class="headerlink" title="通过commit命令构建镜像"></a>通过commit命令构建镜像</h1><p><code>docker [container] commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]</code></p>
 <p><code>commit</code> 命令从给定容器创建镜像。</p>
 <p>可选参数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--author , -a	作者</span><br><span class="line">--message , -m	提交信息</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">--author , -a	作者
+--message , -m	提交信息</code></pre>
 
 <p>例如，从基础镜像ubuntu:20.04创建了一个容器，名称为ubuntu-dev，然后，在其中安装了vim，现在基于这个容器构建一个镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:20.04 # 拉取基础镜像</span><br><span class="line">docker run --name ubuntu-dev -i -t ubuntu:20.04 /bin/bash # 创建并启动新的容器</span><br><span class="line">apt-get update</span><br><span class="line">apt-get install -y vim</span><br><span class="line">exit	# 退出容器</span><br><span class="line">docker ps -a	# 查看已创建的容器</span><br><span class="line">docker commit ubuntu-dev jifeet66/ubuntu:dev # 构建镜像，仓库名为jifeet66/ubuntu，标签为dev</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs shell">docker pull ubuntu:20.04 # 拉取基础镜像
+docker run --name ubuntu-dev -i -t ubuntu:20.04 /bin/bash # 创建并启动新的容器
+apt-get update
+apt-get install -y vim
+exit	# 退出容器
+docker ps -a	# 查看已创建的容器
+docker commit ubuntu-dev jifeet66/ubuntu:dev # 构建镜像，仓库名为jifeet66/ubuntu，标签为dev</code></pre>
 
 <h1 id="通过build命令和Dockerfile文件构建镜像"><a href="#通过build命令和Dockerfile文件构建镜像" class="headerlink" title="通过build命令和Dockerfile文件构建镜像"></a>通过build命令和Dockerfile文件构建镜像</h1><p><code>docker [image] build [OPTIONS] PATH | URL | -</code></p>
 <p><code>build</code> 命令可以从Dockerfile文件和上下文中构建镜像。</p>
 <p>构建上下文是指通过 <em>PATH(一个文件路径)</em> 或 <em>URL(一个git仓库地址)</em> 指定的一组文件。</p>
 <p>可选参数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--tag , -t	设置仓库名称和可选的标签 仓库名:标签名</span><br><span class="line">--file , -f	设置Dockerfile文件位置，默认为上下文根目录下的Dockerfile文件</span><br><span class="line">--no-cache	构建镜像时不使用缓存</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">--tag , -t	设置仓库名称和可选的标签 仓库名:标签名
+--file , -f	设置Dockerfile文件位置，默认为上下文根目录下的Dockerfile文件
+--no-cache	构建镜像时不使用缓存</code></pre>
 
 <p>Dockerfile使用基本的基于DSL（Domain Specific Language）语法的指令来构建Docker镜像。</p>
 <p>一个简单的例子，创建文件夹 ubuntu-dev(构建上下文)，然后在其中创建 Dockerfile 文件，内容如下</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础镜像</span></span><br><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">20.04</span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> author=<span class="string">&quot;jifeet66&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> version=<span class="string">&quot;1.0&quot;</span></span></span><br><span class="line"><span class="comment"># 构建镜像时要执行的命令</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y nginx</span></span><br><span class="line"><span class="comment"># 设置容器运行时监听指定的端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-comment"># 基础镜像</span>
+<span class="hljs-keyword">FROM</span> ubuntu:<span class="hljs-number">20.04</span>
+<span class="hljs-keyword">LABEL</span><span class="language-bash"> author=<span class="hljs-string">&quot;jifeet66&quot;</span></span>
+<span class="hljs-keyword">LABEL</span><span class="language-bash"> version=<span class="hljs-string">&quot;1.0&quot;</span></span>
+<span class="hljs-comment"># 构建镜像时要执行的命令</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y nginx</span>
+<span class="hljs-comment"># 设置容器运行时监听指定的端口</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span></code></pre>
 
 <p>构建镜像</p>
 <p><code>docker build .</code></p>
@@ -111,11 +135,11 @@
 <p><code>docker build --no-cache .</code></p>
 <h1 id="Dockerfile指令详解"><a href="#Dockerfile指令详解" class="headerlink" title="Dockerfile指令详解"></a>Dockerfile指令详解</h1><p><strong>FROM</strong></p>
 <p>FROM指令设置基础镜像。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">20.04</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:<span class="hljs-number">20.04</span></code></pre>
 
 <p><strong>RUN</strong></p>
 <p>RUN指令指定镜像被构建时要运行的命令。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y nginx</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y nginx</span></code></pre>
 
 <p><strong>CMD</strong></p>
 <p>CMD指令用于指定一个容器启动时要运行的命令。</p>
@@ -123,7 +147,7 @@
 <p>CMD指令会被 <code> docker run</code> 中的命令覆盖。</p>
 <p>Dockerfile中只能指定1条CMD指令。</p>
 </blockquote>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;/bin/bash&quot;</span>,<span class="string">&quot;-la&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;/bin/bash&quot;</span>,<span class="hljs-string">&quot;-la&quot;</span>]</span></code></pre>
 
 <p><strong>ENTRYPOINT</strong></p>
 <p>ENTRYPOINT指令与CMD指令类似，也是用于指定一个容器启动时要执行的命令，但是它不会被 <code>docker run</code> 中的命令覆盖，run命令中的参数会追加到ENTRYPOINT指令中。</p>
@@ -133,34 +157,39 @@
 <p>ARG指令用来定义在build命令运行时传递的变量。</p>
 <p><strong>ENV</strong></p>
 <p>ENV指令用于在构建镜像的过程中设置环境变量。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ENV</span> &lt;key&gt;=&lt;value&gt; ...</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">ENV</span> &lt;key&gt;=&lt;value&gt; ...</code></pre>
 
 <p><strong>USER</strong></p>
 <p>USER指令用来指定该镜像创建的容器的用户身份。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USER</span> &lt;<span class="keyword">user</span>&gt;[:&lt;group&gt;]</span><br><span class="line"><span class="keyword">USER</span> &lt;UID&gt;[:&lt;GID&gt;]</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">USER</span> &lt;<span class="hljs-keyword">user</span>&gt;[:&lt;group&gt;]
+<span class="hljs-keyword">USER</span> &lt;UID&gt;[:&lt;GID&gt;]</code></pre>
 
 <p><strong>VOLUME</strong></p>
 <p>VOLUME指令用来向基于该镜像创建的容器添加卷。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">VOLUME</span><span class="language-bash"> [<span class="string">&quot;/data&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">VOLUME</span><span class="language-bash"> [<span class="hljs-string">&quot;/data&quot;</span>]</span></code></pre>
 
 <p><strong>ADD</strong></p>
 <p>ADD指令用来将构建环境中的文件或目录复制到镜像中。</p>
 <p>ADD指令会自动解压缩归档文件(.tar.gz)。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD</span><span class="language-bash"> [--<span class="built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] &lt;src&gt;... &lt;dest&gt;</span></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> [--<span class="built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] [<span class="string">&quot;&lt;src&gt;&quot;</span>,... <span class="string">&quot;&lt;dest&gt;&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">ADD</span><span class="language-bash"> [--<span class="hljs-built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] &lt;src&gt;... &lt;dest&gt;</span>
+<span class="hljs-keyword">ADD</span><span class="language-bash"> [--<span class="hljs-built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] [<span class="hljs-string">&quot;&lt;src&gt;&quot;</span>,... <span class="hljs-string">&quot;&lt;dest&gt;&quot;</span>]</span></code></pre>
 
 <p><strong>COPY</strong></p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span><span class="language-bash"> [--<span class="built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] &lt;src&gt;... &lt;dest&gt;</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> [--<span class="built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] [<span class="string">&quot;&lt;src&gt;&quot;</span>,... <span class="string">&quot;&lt;dest&gt;&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">COPY</span><span class="language-bash"> [--<span class="hljs-built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] &lt;src&gt;... &lt;dest&gt;</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> [--<span class="hljs-built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] [<span class="hljs-string">&quot;&lt;src&gt;&quot;</span>,... <span class="hljs-string">&quot;&lt;dest&gt;&quot;</span>]</span></code></pre>
 
 <p><strong>EXPOSE</strong></p>
 <p>EXPOSE指令用来设置容器运行时对外公开的端口。不指定网络协议时，默认为TCP。</p>
 <blockquote>
 <p>只是进行定义，要真正开启端口依然需要在 <code>run</code> 的时候使用 <code>-p</code> 参数进行配置</p>
 </blockquote>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#EXPOSE 80</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span>/tcp</span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span>/udp</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-comment">#EXPOSE 80</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>/tcp
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>/udp</code></pre>
 
 <p><strong>LABEL</strong></p>
 <p>LABEL指令用于为Docker镜像添加元数据。</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> &lt;key&gt;=&lt;value&gt; &lt;key&gt;=&lt;value&gt; &lt;key&gt;=&lt;value&gt; ...</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">LABEL</span><span class="language-bash"> &lt;key&gt;=&lt;value&gt; &lt;key&gt;=&lt;value&gt; &lt;key&gt;=&lt;value&gt; ...</span></code></pre>
 
 <p><strong>MAINTAINER</strong></p>
 <p>MAINTAINER指令用于设置镜像维护者的信息。</p>
@@ -173,13 +202,13 @@
 <h1 id="保存-导入本地镜像"><a href="#保存-导入本地镜像" class="headerlink" title="保存-导入本地镜像"></a>保存-导入本地镜像</h1><p><strong>保存(导出)镜像到本地</strong></p>
 <p><code>docker [image] save [OPTIONS] IMAGE [IMAGE...]</code></p>
 <p>可选参数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--output , -o	导出到本地文件系统</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">--output , -o	导出到本地文件系统</code></pre>
 
 <p><code>docker save -o nginx_1.21.3.tar nginx:1.21.3</code></p>
 <p><strong>加载(导入)本地镜像到docker</strong></p>
 <p><code>docker [image] load [OPTIONS]</code></p>
 <p>可选参数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--input , -i	从归档文件中导入</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">--input , -i	从归档文件中导入</code></pre>
 
 <p><code>docker load -i nginx_1.21.3.tar</code></p>
 <h1 id="上传-拉取远程镜像"><a href="#上传-拉取远程镜像" class="headerlink" title="上传-拉取远程镜像"></a>上传-拉取远程镜像</h1><p><strong>上传本地镜像到注册中心仓库</strong></p>
@@ -190,13 +219,18 @@
 <p><strong>拉取(下载)注册中心镜像到本地</strong></p>
 <p><code>docker [image] pull [OPTIONS] NAME[:TAG|@DIGEST]</code></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

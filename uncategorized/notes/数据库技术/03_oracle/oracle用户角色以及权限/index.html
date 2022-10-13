@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>oracle用户角色以及权限 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>oracle用户角色以及权限</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><p>Oracle中，用户分为<strong>系统用户</strong>和<strong>普通用户</strong>。</p>
+<p>可以通过视图 <em>dba_users</em> 查看用户信息</p>
+<pre><code class="hljs plaintext">SQL&gt; set linesize 300
+SQL&gt; select username, account_status, default_tablespace, temporary_tablespace  from dba_users;
+
+USERNAME		       ACCOUNT_STATUS			DEFAULT_TABLESPACE	       TEMPORARY_TABLESPACE
+------------------------------ -------------------------------- ------------------------------ ------------------------------
+SYS			       OPEN				SYSTEM			       TEMP
+SYSTEM			       OPEN				SYSTEM			       TEMP
+OUTLN			       EXPIRED &amp; LOCKED 		SYSTEM			       TEMP
+MGMT_VIEW		       EXPIRED &amp; LOCKED 		SYSTEM			       TEMP
+FLOWS_FILES		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+MDSYS			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+ORDSYS			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+EXFSYS			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+DBSNMP			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+WMSYS			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+APPQOSSYS		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+APEX_030200		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+OWBSYS_AUDIT		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+ORDDATA 		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+CTXSYS			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+ANONYMOUS		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+SYSMAN			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+XDB			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+ORDPLUGINS		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+OWBSYS			       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+SI_INFORMTN_SCHEMA	       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+OLAPSYS 		       EXPIRED &amp; LOCKED 		SYSAUX			       TEMP
+SCOTT			       EXPIRED &amp; LOCKED 		USERS			       TEMP
+ORACLE_OCM		       EXPIRED &amp; LOCKED 		USERS			       TEMP
+XS$NULL 		       EXPIRED &amp; LOCKED 		USERS			       TEMP
+MDDATA			       EXPIRED &amp; LOCKED 		USERS			       TEMP
+DIP			       EXPIRED &amp; LOCKED 		USERS			       TEMP
+
+USERNAME		       ACCOUNT_STATUS			DEFAULT_TABLESPACE	       TEMPORARY_TABLESPACE
+------------------------------ -------------------------------- ------------------------------ ------------------------------
+APEX_PUBLIC_USER	       EXPIRED &amp; LOCKED 		USERS			       TEMP
+SPATIAL_CSW_ADMIN_USR	       EXPIRED &amp; LOCKED 		USERS			       TEMP
+SPATIAL_WFS_ADMIN_USR	       EXPIRED &amp; LOCKED 		USERS			       TEMP
+
+已选择30行。</code></pre>
+
+<p><strong>创建新用户</strong></p>
+<p>以管理员的身份登录数据库</p>
+<p><code>sqlplus / as sysdba</code></p>
+<p>创建用户并指定默认表空间</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> aa identified <span class="hljs-keyword">by</span> &quot;SZsyy#8899&quot; <span class="hljs-keyword">default</span> tablespace tbs_dev;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> bb identified <span class="hljs-keyword">by</span> &quot;SZsyy#8899&quot; <span class="hljs-keyword">default</span> tablespace tbs_test;</code></pre>
+
+<p>查看一下</p>
+<pre><code class="hljs shell"><span class="hljs-meta prompt_">SQL&gt; </span><span class="language-bash">select username, account_status, default_tablespace, temporary_tablespace  from dba_users <span class="hljs-built_in">where</span> lower(username) = <span class="hljs-string">&#x27;u_jadp_dev&#x27;</span>;</span>
+
+USERNAME		       ACCOUNT_STATUS			DEFAULT_TABLESPACE	       TEMPORARY_TABLESPACE
+------------------------------ -------------------------------- ------------------------------ ------------------------------
+BB			       OPEN				TBS_TEST		       TEMP
+</code></pre>
+
+<p><strong>删除用户</strong></p>
+<pre><code class="hljs plaintext">drop user platform cascade;</code></pre>
+
+
+
+<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><p>Oracle中，权限分为<strong>系统权限</strong>和<strong>对象权限</strong>。</p>
+<p>查看所有的<strong>系统权限</strong>，需要以管理员用户登录，执行一下sql</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs;</code></pre>
+
+<p>查看某个用户被授予的所有系统权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(grantee) <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;用户名&#x27;</span>;</code></pre>
+
+<p>查看某个用户被授予的所有<strong>对象权限</strong></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dba_tab_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(grantee) <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;用户名&#x27;</span>;</code></pre>
+
+<h2 id="系统权限"><a href="#系统权限" class="headerlink" title="系统权限"></a>系统权限</h2><p><strong>授予用户权限</strong></p>
+<p>默认情况下，新建的用户没有任何权限。甚至无法连接数据库。</p>
+<p>授予用户权限本身也需要权限，用system管理员身份登录数据库</p>
+<p><code>sqlplus system/SZsyy#8899@zxywb</code></p>
+<p>授予用户连接数据库（连接会话）的权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">create</span> session <span class="hljs-keyword">to</span> u_jadp_dev;</code></pre>
+
+<p>授予用户创建数据表的权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">to</span> aa;</code></pre>
+
+<p><strong>查看用户权限</strong></p>
+<p>用管理员账户登录，执行以下sql语句</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">set</span> linesize <span class="hljs-number">500</span>
+<span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(grantee) <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;aa&#x27;</span>;
+
+GRANTEE 		       PRIVILEGE				ADM
+<span class="hljs-comment">------------------------------ ---------------------------------------- ---</span>
+AA			       <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span>					<span class="hljs-keyword">NO</span>
+AA			       <span class="hljs-keyword">CREATE</span> SESSION				<span class="hljs-keyword">NO</span></code></pre>
+
+<p><strong>撤销用户权限</strong></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">revoke</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">from</span> aa;</code></pre>
+
+<h2 id="对象权限"><a href="#对象权限" class="headerlink" title="对象权限"></a>对象权限</h2><p><strong>授予用户权限</strong></p>
+<p>授予用户查询某个表的权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">select</span> <span class="hljs-keyword">on</span> 表名 <span class="hljs-keyword">to</span> 用户名;</code></pre>
+
+<p>授予用户查询 <em>dual</em> 表的权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">select</span> <span class="hljs-keyword">on</span> dual <span class="hljs-keyword">to</span> aa;</code></pre>
+
+<p>授予用户更新某个表的权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">update</span> <span class="hljs-keyword">on</span> 表名 <span class="hljs-keyword">to</span> 用户名;</code></pre>
+
+<p>使用 <em>all</em> 一次性授予用户对某个表的所有权限</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> <span class="hljs-keyword">on</span> 表名 <span class="hljs-keyword">to</span> 用户名;</code></pre>
+
+<p><strong>查看用户权限</strong></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dba_tab_privs <span class="hljs-keyword">where</span> table_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;表名&#x27;</span>;</code></pre>
+
+<p><strong>撤销用户权限</strong></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">revoke</span> 权限 <span class="hljs-keyword">on</span> 对象 <span class="hljs-keyword">from</span> 用户名;</code></pre>
+
+
+
+<h1 id="角色管理"><a href="#角色管理" class="headerlink" title="角色管理"></a>角色管理</h1></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

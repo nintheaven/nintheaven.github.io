@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java代码规范-p3c-pmd | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>Java代码规范-p3c-pmd</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>阿里巴巴Java代码规约(p3c-pmd - Alibaba Java Coding Guidelines)</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/p3c/tree/master/p3c-pmd">https://github.com/alibaba/p3c/tree/master/p3c-pmd</a></p>
+<p>添加maven插件</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">java.version</span>&gt;</span>11<span class="hljs-tag">&lt;/<span class="hljs-name">java.version</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.target</span>&gt;</span>11<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.target</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!--p3c-pmd--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-pmd-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.11.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">sourceEncoding</span>&gt;</span>$&#123;project.build.sourceEncoding&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">sourceEncoding</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">targetJdk</span>&gt;</span>$&#123;maven.compiler.target&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">targetJdk</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">printFailingErrors</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">printFailingErrors</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">rulesets</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-comment.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-concurrent.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-constant.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-exception.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-flowcontrol.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-naming.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-oop.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-orm.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-other.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ruleset</span>&gt;</span>rulesets/java/ali-set.xml<span class="hljs-tag">&lt;/<span class="hljs-name">ruleset</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">rulesets</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>**/FixClassTypeResolver.java<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">excludes</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">phase</span>&gt;</span>verify<span class="hljs-tag">&lt;/<span class="hljs-name">phase</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>check<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.p3c<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>p3c-pmd<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.1.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span></code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

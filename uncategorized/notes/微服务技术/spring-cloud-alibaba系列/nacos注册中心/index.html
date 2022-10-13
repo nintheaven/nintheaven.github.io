@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,10 +75,16 @@
     
 </header>
 
-    <main><h1>nacos注册中心</h1>
+    <main><div class="post">
+    <h1>nacos注册中心</h1>
 
-<span>2022-10-11</span>
-<div><p>nacos提供了服务注册、发现、配置以及控制面板等功能。</p>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p>nacos提供了服务注册、发现、配置以及控制面板等功能。</p>
 <p>与spring-cloud-netflix进行对比，nacos相当于 <strong>eureka服务器</strong> 和 <strong>config服务器</strong> 2个组件的结合体。</p>
 <p>与spring-cloud-netflix不同，nacos服务器充当了<strong>注册中心和配置中心</strong>2个角色，不需要手动创建用来管理微服务或配置的服务器应用。</p>
 <span id="more"></span>
@@ -87,11 +97,12 @@
 <p><strong>启动</strong></p>
 <p>直接双击startup.cmd</p>
 <p>如果报错：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.io.IOException: java.lang.IllegalArgumentException: db.num is null</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">java.io.IOException: java.lang.IllegalArgumentException: db.num is null</code></pre>
 
 <p>解决：</p>
 <p>nacos默认以集群模式cluster启动，修改startup文件，将其修改为单机模式standalone</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">rem set MODE=&quot;cluster&quot;</span></span><br><span class="line"><span class="built_in">set</span> <span class="built_in">MODE</span>=&quot;standalone&quot;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs cmd"><span class="hljs-comment">rem set MODE=&quot;cluster&quot;</span>
+<span class="hljs-built_in">set</span> <span class="hljs-built_in">MODE</span>=&quot;standalone&quot;</code></pre>
 
 <p><strong>推荐</strong>使用命令行启动</p>
 <p><code>cd D:\apps\dev\spring-cloud-alibaba\nacos\bin</code></p>
@@ -113,20 +124,36 @@
 <p>nacos支持<strong>内置数据源</strong>和<strong>外置数据源</strong>。</p>
 <p>内置数据源无需配置，下面说明使用MySQL作为外置数据源的使用方式。</p>
 <p>首先，创建一个数据库，用于存放nacos相关的配置信息：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database nacos;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> database nacos;</code></pre>
 
 <p>然后，在nacos安装目录的config文件夹下，找到 <em>nacos-mysql.sql</em> 脚本文件，执行sql语句，创建相关数据表并填充默认数据。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use nacos</span><br><span class="line">source D:\apps\dev\spring<span class="operator">-</span>cloud<span class="operator">-</span>alibaba\nacos\conf\nacos<span class="operator">-</span>mysql.sql</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs sql">use nacos
+source D:\apps\dev\spring<span class="hljs-operator">-</span>cloud<span class="hljs-operator">-</span>alibaba\nacos\conf\nacos<span class="hljs-operator">-</span>mysql.sql</code></pre>
 
 <p>最后，在每个nacos884x目录下的config文件夹中，找到 <em>application.properties</em>，设置要监听的端口和数据源信息</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### Default web server port:</span></span><br><span class="line"><span class="comment"># 8840 8843 8846</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8840</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### If use MySQL as datasource:</span></span><br><span class="line"><span class="attr">spring.datasource.platform</span>=<span class="string">mysql</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### Count of DB:</span></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### Connect URL of DB:</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC</span></span><br><span class="line"><span class="attr">db.user.0</span>=<span class="string">root</span></span><br><span class="line"><span class="attr">db.password.0</span>=<span class="string">root</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs properties"><span class="hljs-comment">### Default web server port:</span>
+<span class="hljs-comment"># 8840 8843 8846</span>
+<span class="hljs-attr">server.port</span>=<span class="hljs-string">8840</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">### If use MySQL as datasource:</span>
+<span class="hljs-attr">spring.datasource.platform</span>=<span class="hljs-string">mysql</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">### Count of DB:</span>
+<span class="hljs-attr">db.num</span>=<span class="hljs-string">1</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">### Connect URL of DB:</span>
+<span class="hljs-attr">db.url.0</span>=<span class="hljs-string">jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC</span>
+<span class="hljs-attr">db.user.0</span>=<span class="hljs-string">root</span>
+<span class="hljs-attr">db.password.0</span>=<span class="hljs-string">root</span></code></pre>
 
 <p><strong>2.配置nacos服务器实例访问地址</strong></p>
 <p>在每个nacos884x目录下的config文件夹中，复制 <em>cluster.conf.example</em> 文件，重命名为 <em>cluster.conf</em>，在该文件中设置nacos服务器实例的ip和端口</p>
 <blockquote>
 <p>说明：至少3个以上的nacos服务器实例才能构成集群！</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">localhost:8840</span><br><span class="line">localhost:8843</span><br><span class="line">localhost:8846</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">localhost:8840
+localhost:8843
+localhost:8846</code></pre>
 
 <p><strong>3.以集群模式启动nacos服务器</strong></p>
 <p>nacos默认就以集群模式启动，并且使用外部数据源</p>
@@ -134,14 +161,30 @@
 <p>如果使用的是内置数据源，需要使用参数 <code>-p embedded</code></p>
 <p><code>startup.cmd -p embedded</code></p>
 <p>控制台输出以下信息，说明配置已生效</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO The server IP list of Nacos is [localhost:8840, localhost:8843, localhost:8846]</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">INFO The server IP list of Nacos is [localhost:8840, localhost:8843, localhost:8846]</code></pre>
 
 <p>现在，访问 8840、8843、8846 三个端口，即可看到效果。</p>
 <p><strong>4.使用nginx对多个nacos服务器实例进行负载均衡</strong></p>
 <blockquote>
 <p>注意：集群名称不要使用下划线_，否则报HTTP 400错误。</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    # nacos集群</span><br><span class="line">    upstream nacos-cluster &#123;</span><br><span class="line">        server  localhost:8840;</span><br><span class="line">        server  localhost:8843;</span><br><span class="line">        server  localhost:8846;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    server &#123;</span><br><span class="line">        listen  8848;</span><br><span class="line">        server_name localhost;</span><br><span class="line">        </span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass  http://nacos-cluster;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">http &#123;
+    # nacos集群
+    upstream nacos-cluster &#123;
+        server  localhost:8840;
+        server  localhost:8843;
+        server  localhost:8846;
+    &#125;
+    
+    server &#123;
+        listen  8848;
+        server_name localhost;
+        
+        location / &#123;
+            proxy_pass  http://nacos-cluster;
+        &#125;
+    &#125;
+&#125;</code></pre>
 
 <p>OK，一个基础的nacos服务器集群搭建完毕！</p>
 <p>nacos客户端访问服务器时，使用nginx监听的 8848 端口即可，nginx会负责进行负载均衡，（默认使用轮询的方式）。</p>
@@ -153,16 +196,32 @@
 <blockquote>
 <p>注意，groupId是 com.alibaba.cloud，而不是 org.springframework.cloud。后者是alibaba-cloud处于孵化器时代的版本，已不再更新。</p>
 </blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p><strong>配置nacos服务器地址</strong></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">product-service</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">product-service</span>
+  <span class="hljs-attr">cloud:</span>
+    <span class="hljs-attr">nacos:</span>
+      <span class="hljs-attr">discovery:</span>
+        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span></code></pre>
 
 <p><strong>启用服务发现功能</strong></p>
 <blockquote>
 <p>现在的版本中，<code>@EnableDiscoveryClient</code> 注解是可选的</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">//@EnableDiscoveryClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProductApp.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-comment">//@EnableDiscoveryClient</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(ProductApp.class,args);
+    &#125;
+&#125;</code></pre>
 
 <p>对产品和订单微服务都进行以上操作，刷新nacos控制面板，即可看到注册的2个微服务。</p>
 <p><strong>其它配置</strong></p>
@@ -213,52 +272,174 @@
 <p>可以选择只使用 <code>RestTemplate</code> 的相关API，通过远程服务的物理地址来请求远程服务的接口。但是，更推荐使用一些实现了客户端负载均衡的组件来完成此功能。</p>
 <h3 id="使用RestTemplate和netflix-ribbon-调用远程服务"><a href="#使用RestTemplate和netflix-ribbon-调用远程服务" class="headerlink" title="使用RestTemplate和netflix-ribbon 调用远程服务"></a>使用<code>RestTemplate</code>和<code>netflix-ribbon</code> 调用远程服务</h3><p>nacos-discovery默认引入了netflix-ribbon库，用来实现客户端负载均衡。</p>
 <p>在Spring容器中注入一个 <code>RestTemplate</code> 类型的Bean，并添加 <code>@LoadBalanced</code> 注解启用客户端负载均衡</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RestTemplateConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="keyword">public</span> RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">RestTemplateBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RestTemplateBuilder</span>();</span><br><span class="line">        <span class="keyword">return</span> builder.build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RestTemplateConfig</span> &#123;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-meta">@LoadBalanced</span>
+    <span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">restTemplate</span><span class="hljs-params">()</span>&#123;
+        <span class="hljs-type">RestTemplateBuilder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplateBuilder</span>();
+        <span class="hljs-keyword">return</span> builder.build();
+    &#125;
+&#125;</code></pre>
 
 <p>使用 <code>RestTemplate</code> 通过远程服务名（ID），来调用远程服务。</p>
 <p>在订单服务中调用产品服务，通过产品ID获取产品详细信息</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/order&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title function_">get</span><span class="params">(<span class="meta">@RequestParam(&quot;orderId&quot;)</span>Long orderId)</span>&#123;</span><br><span class="line">    <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderService.findById(orderId);</span><br><span class="line">    <span class="keyword">if</span> (order == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.notFound().build();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 调用远程服务，查询商品信息</span></span><br><span class="line">    List&lt;Product&gt; products = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    List&lt;Long&gt; productIds = order.getProductIds();</span><br><span class="line">    <span class="keyword">for</span> (Long productId : productIds)&#123;</span><br><span class="line">        <span class="comment">//String url = String.format(&quot;http://%s/product?productId=%d&quot;, &quot;localhost:8000&quot;, productId);</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> String.format(<span class="string">&quot;http://%s/product?productId=%d&quot;</span>, <span class="string">&quot;product-service&quot;</span>, productId);</span><br><span class="line">        <span class="type">Product</span> <span class="variable">product</span> <span class="operator">=</span> restTemplate.getForObject(url, Product.class);</span><br><span class="line">        products.add(product);</span><br><span class="line">    &#125;</span><br><span class="line">    order.setProducts(products);</span><br><span class="line">    <span class="keyword">return</span> ResponseEntity.ok(order);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">private</span> RestTemplate restTemplate;
+
+<span class="hljs-meta">@GetMapping(&quot;/order&quot;)</span>
+<span class="hljs-keyword">public</span> ResponseEntity&lt;Object&gt; <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;orderId&quot;)</span>Long orderId)</span>&#123;
+    <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> orderService.findById(orderId);
+    <span class="hljs-keyword">if</span> (order == <span class="hljs-literal">null</span>)&#123;
+        <span class="hljs-keyword">return</span> ResponseEntity.notFound().build();
+    &#125;
+    <span class="hljs-comment">// 调用远程服务，查询商品信息</span>
+    List&lt;Product&gt; products = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
+    List&lt;Long&gt; productIds = order.getProductIds();
+    <span class="hljs-keyword">for</span> (Long productId : productIds)&#123;
+        <span class="hljs-comment">//String url = String.format(&quot;http://%s/product?productId=%d&quot;, &quot;localhost:8000&quot;, productId);</span>
+        <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> String.format(<span class="hljs-string">&quot;http://%s/product?productId=%d&quot;</span>, <span class="hljs-string">&quot;product-service&quot;</span>, productId);
+        <span class="hljs-type">Product</span> <span class="hljs-variable">product</span> <span class="hljs-operator">=</span> restTemplate.getForObject(url, Product.class);
+        products.add(product);
+    &#125;
+    order.setProducts(products);
+    <span class="hljs-keyword">return</span> ResponseEntity.ok(order);
+&#125;</code></pre>
 
 <p>请求地址  <a target="_blank" rel="noopener" href="http://localhost:8100/order?orderId=1%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%A6%82%E4%B8%8B">http://localhost:8100/order?orderId=1，结果如下</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;productIds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="number">1</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;products&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;联想Yoga14S&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">6899.0</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;inventory&quot;</span><span class="punctuation">:</span> <span class="number">99</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;productIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-number">1</span>
+    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;products&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-punctuation">&#123;</span>
+            <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;联想Yoga14S&quot;</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;price&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">6899.0</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;inventory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">99</span>
+        <span class="hljs-punctuation">&#125;</span>
+    <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">&#125;</span></code></pre>
 
 <h3 id="使用OpenFeign-调用远程服务"><a href="#使用OpenFeign-调用远程服务" class="headerlink" title="使用OpenFeign 调用远程服务"></a>使用<code>OpenFeign</code> 调用远程服务</h3><p><strong>使用步骤</strong></p>
 <p>1.添加 <code>spring-cloud-starter-openfeign</code> 依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>2.启用Feign</p>
 <p>在启动类上添加 <code>@EnableFeignClients</code> 注解</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">//@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@RibbonClients(&#123;</span></span><br><span class="line"><span class="meta">        @RibbonClient(name = &quot;product-service&quot;, configuration = &#123;NacosRule.class&#125;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(OrderApp.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-comment">//@EnableDiscoveryClient</span>
+<span class="hljs-meta">@RibbonClients(&#123;</span>
+<span class="hljs-meta">        @RibbonClient(name = &quot;product-service&quot;, configuration = &#123;NacosRule.class&#125;)</span>
+<span class="hljs-meta">&#125;)</span>
+<span class="hljs-meta">@EnableFeignClients</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(OrderApp.class, args);
+    &#125;
+&#125;</code></pre>
 
 <p>3.定义客户端接口</p>
 <p>定义接口，使用 <code>FeignClient</code> 注解标记，name属性指定远程服务的名称。</p>
 <p>客户端接口中的方法与远程服务中的控制器方法一一对应，方法参数要相同，返回值类型要兼容。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(name = &quot;product-service&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ProductClient</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/product&quot;)</span></span><br><span class="line">    ResponseEntity&lt;Product&gt; <span class="title function_">get</span><span class="params">(<span class="meta">@RequestParam(&quot;productId&quot;)</span>Long productId)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/product/ping&quot;)</span></span><br><span class="line">    ResponseEntity&lt;Integer&gt; <span class="title function_">ping</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@FeignClient(name = &quot;product-service&quot;)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ProductClient</span> &#123;
+    <span class="hljs-meta">@GetMapping(&quot;/product&quot;)</span>
+    ResponseEntity&lt;Product&gt; <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;productId&quot;)</span>Long productId)</span>;
+
+    <span class="hljs-meta">@GetMapping(&quot;/product/ping&quot;)</span>
+    ResponseEntity&lt;Integer&gt; <span class="hljs-title function_">ping</span><span class="hljs-params">()</span>;
+&#125;</code></pre>
 
 <p>4.使用客户端接口调用远程服务</p>
 <p>现在，不再使用<code>RestTemplate</code>，而是使用FeignClient接口中的方法调用远程服务</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OrderService orderService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ProductClient productClient;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/order&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title function_">get</span><span class="params">(<span class="meta">@RequestParam(&quot;orderId&quot;)</span> Long orderId)</span> &#123;</span><br><span class="line">        <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderService.findById(orderId);</span><br><span class="line">        <span class="keyword">if</span> (order == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> ResponseEntity.notFound().build();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 调用远程服务，查询商品信息</span></span><br><span class="line">        List&lt;Product&gt; products = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        List&lt;Long&gt; productIds = order.getProductIds();</span><br><span class="line">        <span class="keyword">for</span> (Long productId : productIds) &#123;</span><br><span class="line">            <span class="comment">// 通过FeignClient调用远程服务</span></span><br><span class="line">            ResponseEntity&lt;Product&gt; response = productClient.get(productId);</span><br><span class="line">            <span class="type">Product</span> <span class="variable">product</span> <span class="operator">=</span> response.getBody();</span><br><span class="line">            products.add(product);</span><br><span class="line">        &#125;</span><br><span class="line">        order.setProducts(products);</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.ok(order);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/order/ping&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;Integer&gt; <span class="title function_">ping</span><span class="params">()</span>&#123;</span><br><span class="line">        ResponseEntity&lt;Integer&gt; response = productClient.ping();</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">port</span> <span class="operator">=</span> response.getBody();</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.ok(port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderController</span> &#123;
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> OrderService orderService;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> ProductClient productClient;
+
+    <span class="hljs-meta">@GetMapping(&quot;/order&quot;)</span>
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;Object&gt; <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;orderId&quot;)</span> Long orderId)</span> &#123;
+        <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> orderService.findById(orderId);
+        <span class="hljs-keyword">if</span> (order == <span class="hljs-literal">null</span>) &#123;
+            <span class="hljs-keyword">return</span> ResponseEntity.notFound().build();
+        &#125;
+        <span class="hljs-comment">// 调用远程服务，查询商品信息</span>
+        List&lt;Product&gt; products = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
+        List&lt;Long&gt; productIds = order.getProductIds();
+        <span class="hljs-keyword">for</span> (Long productId : productIds) &#123;
+            <span class="hljs-comment">// 通过FeignClient调用远程服务</span>
+            ResponseEntity&lt;Product&gt; response = productClient.get(productId);
+            <span class="hljs-type">Product</span> <span class="hljs-variable">product</span> <span class="hljs-operator">=</span> response.getBody();
+            products.add(product);
+        &#125;
+        order.setProducts(products);
+        <span class="hljs-keyword">return</span> ResponseEntity.ok(order);
+    &#125;
+
+    <span class="hljs-meta">@GetMapping(&quot;/order/ping&quot;)</span>
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;Integer&gt; <span class="hljs-title function_">ping</span><span class="hljs-params">()</span>&#123;
+        ResponseEntity&lt;Integer&gt; response = productClient.ping();
+        <span class="hljs-type">Integer</span> <span class="hljs-variable">port</span> <span class="hljs-operator">=</span> response.getBody();
+        <span class="hljs-keyword">return</span> ResponseEntity.ok(port);
+    &#125;
+&#125;</code></pre>
 
 <p><strong>Feign日志配置</strong></p>
 <p>Feign定义了4中日志类型</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Level</span> &#123;</span><br><span class="line">    <span class="comment">// 不输出任何日志</span></span><br><span class="line">    NONE,</span><br><span class="line">    <span class="comment">// 输出基础信息，包括请求方法、URL，响应状态码和请求执行时间</span></span><br><span class="line">    BASIC,</span><br><span class="line">    <span class="comment">// 除了输出基础信息外，还输出请求头、响应头信息</span></span><br><span class="line">    HEADERS,</span><br><span class="line">    <span class="comment">// 除了输出进出信息、头信息外，还输出响应体</span></span><br><span class="line">    FULL</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Level</span> &#123;
+    <span class="hljs-comment">// 不输出任何日志</span>
+    NONE,
+    <span class="hljs-comment">// 输出基础信息，包括请求方法、URL，响应状态码和请求执行时间</span>
+    BASIC,
+    <span class="hljs-comment">// 除了输出基础信息外，还输出请求头、响应头信息</span>
+    HEADERS,
+    <span class="hljs-comment">// 除了输出进出信息、头信息外，还输出响应体</span>
+    FULL
+&#125;</code></pre>
 
 <p>默认情况下，Feign使用 <em>NONE</em> ，不会输出任何日志信息。如果要启用日志，需要进行以下2步骤：</p>
 <p>1.定义配置类，设置Feign日志输出类型</p>
 <blockquote>
 <p>注意：要使用 <code>feign.Logger.Level</code> 枚举类</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FeignConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Logger.Level <span class="title function_">feignLoggerLevel</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Logger.Level.BASIC;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FeignConfig</span> &#123;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-keyword">public</span> Logger.Level <span class="hljs-title function_">feignLoggerLevel</span><span class="hljs-params">()</span>&#123;
+        <span class="hljs-keyword">return</span> Logger.Level.BASIC;
+    &#125;
+&#125;</code></pre>
 
 <p>2.单独设置Feign日志级别</p>
 <p>由于SpringBoot默认的日志级别为info，而Feign输出日志使用debug级别，所以要对Feign客户端接口所在的包单独设置日志级别</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="attr">com.lypzz.feign:</span> <span class="string">debug</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">logging:</span>
+  <span class="hljs-attr">level:</span>
+    <span class="hljs-attr">com.lypzz.feign:</span> <span class="hljs-string">debug</span></code></pre>
 
 <h3 id="客户端负载均衡策略"><a href="#客户端负载均衡策略" class="headerlink" title="客户端负载均衡策略"></a>客户端负载均衡策略</h3><p>为了演示负载均衡的效果，在产品微服务的Controller中，添加一个控制器方法ping，返回当前实例绑定的端口号</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line"><span class="keyword">private</span> Integer port;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/product/ping&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ResponseEntity&lt;Integer&gt; <span class="title function_">ping</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ResponseEntity.ok(port);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span>
+<span class="hljs-keyword">private</span> Integer port;
+
+<span class="hljs-meta">@GetMapping(&quot;/product/ping&quot;)</span>
+<span class="hljs-keyword">public</span> ResponseEntity&lt;Integer&gt; <span class="hljs-title function_">ping</span><span class="hljs-params">()</span>&#123;
+    <span class="hljs-keyword">return</span> ResponseEntity.ok(port);
+&#125;</code></pre>
 
 <p>然后在订单微服务的Controller中，添加一个控制器方法ping，远程调用产品微服务的ping，返回所请求的产品微服务实例的端口号</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/order/ping&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ResponseEntity&lt;Integer&gt; <span class="title function_">ping</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> String.format(<span class="string">&quot;http://%s/product/ping&quot;</span>,<span class="string">&quot;product-service&quot;</span>);</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">port</span> <span class="operator">=</span> restTemplate.getForObject(url, Integer.class);</span><br><span class="line">    <span class="keyword">return</span> ResponseEntity.ok(port);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/order/ping&quot;)</span>
+<span class="hljs-keyword">public</span> ResponseEntity&lt;Integer&gt; <span class="hljs-title function_">ping</span><span class="hljs-params">()</span>&#123;
+    <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> String.format(<span class="hljs-string">&quot;http://%s/product/ping&quot;</span>,<span class="hljs-string">&quot;product-service&quot;</span>);
+    <span class="hljs-type">Integer</span> <span class="hljs-variable">port</span> <span class="hljs-operator">=</span> restTemplate.getForObject(url, Integer.class);
+    <span class="hljs-keyword">return</span> ResponseEntity.ok(port);
+&#125;</code></pre>
 
 <p>使用不同的端口号启动多个产品服务，订单服务调用产品服务中的方法时，Ribbon会对产品服务的多个实例进行负载均衡。</p>
 <p>Ribbon默认实现了几种负载均衡策略，另外，nacos也提供了一种基于权重的负载均衡策略。如下表所示</p>
@@ -302,7 +483,9 @@
 <p>方式一：修改配置文件</p>
 <p>Ribbon默认使用 <code>ZoneAvoidanceRule</code> 进行负载均衡。要想修改某个服务的负载均衡策略，只需要在配置文件中设置 <code>&lt;service_name&gt;.ribbon.NFLoadBalancerRuleClassName</code> 配置项为 <code>IRule</code> 实现类的全名即可。</p>
 <p>例如，修改产品服务的负载均衡策略为 <code>NacosRule</code></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">product-service:</span></span><br><span class="line">  <span class="attr">ribbon:</span></span><br><span class="line">    <span class="attr">NFLoadBalancerRuleClassName:</span> <span class="string">com.alibaba.cloud.nacos.ribbon.NacosRule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">product-service:</span>
+  <span class="hljs-attr">ribbon:</span>
+    <span class="hljs-attr">NFLoadBalancerRuleClassName:</span> <span class="hljs-string">com.alibaba.cloud.nacos.ribbon.NacosRule</span></code></pre>
 
 <p>然后，在nacos管理界面中，设置产品服务具体实例的权重即可。</p>
 <p>方式二：</p>
@@ -312,10 +495,25 @@
 <blockquote>
 <p>注意：此配置类不能在启动类所在包或子包中</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RibbonConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> IRule <span class="title function_">iRule</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">NacosRule</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RibbonConfig</span> &#123;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-keyword">public</span> IRule <span class="hljs-title function_">iRule</span><span class="hljs-params">()</span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NacosRule</span>();
+    &#125;
+&#125;</code></pre>
 </li>
 <li><p>在启动类上使用 <code>@RibbonClients</code>注解设置针对具体服务的负载均衡策略类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@RibbonClients(&#123;</span></span><br><span class="line"><span class="meta">        @RibbonClient(name = &quot;product-service&quot;, configuration = &#123;NacosRule.class&#125;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(OrderApp.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-meta">@EnableDiscoveryClient</span>
+<span class="hljs-meta">@RibbonClients(&#123;</span>
+<span class="hljs-meta">        @RibbonClient(name = &quot;product-service&quot;, configuration = &#123;NacosRule.class&#125;)</span>
+<span class="hljs-meta">&#125;)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(OrderApp.class, args);
+    &#125;
+&#125;</code></pre></li>
 </ol>
 <p>方式三：</p>
 <p>在方式二中，创建Ribbon配置类时，不能在启动类所在包或子包中。其实，也可以将其放到启动类所在包或子包下。如果这样做了，那么，手动添加到Spring容器中的<code>IRule</code>将自动对所有微服务生效（即不需要在使用 <code>RibbonClients</code> 注解进行配置了）。</p>
@@ -323,20 +521,44 @@
 <p>自定义负载均衡策略需要实现 <code>IRule</code> 接口。但是，一般都是通过继承抽象类 <code>AbstractLoadBalancerRule</code>  的方式来实现的。这个抽象类实现了 <code>IRule</code> 接口。</p>
 <p>只需要重写 <code>choose()</code> 方法，返回表示一个服务实例的 <code>Server</code> 对象即可。</p>
 <p>下面这个自定义的负载均衡器，只是演示，固定使用服务实例列表中的第一个实例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyRule</span> <span class="keyword">extends</span> <span class="title class_">AbstractLoadBalancerRule</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initWithNiwsConfig</span><span class="params">(IClientConfig clientConfig)</span> &#123;</span><br><span class="line">        <span class="comment">// TODO</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Server <span class="title function_">choose</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取负载均衡器对象</span></span><br><span class="line">        <span class="type">ILoadBalancer</span> <span class="variable">lb</span> <span class="operator">=</span> getLoadBalancer();</span><br><span class="line">        <span class="comment">// 获取全部服务实例</span></span><br><span class="line">        <span class="comment">//List&lt;Server&gt; servers = lb.getAllServers();</span></span><br><span class="line">        <span class="comment">// 获取全部可用的服务实例</span></span><br><span class="line">        List&lt;Server&gt; reachableServers = lb.getReachableServers();</span><br><span class="line">        <span class="keyword">return</span> reachableServers.get(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyRule</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractLoadBalancerRule</span> &#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initWithNiwsConfig</span><span class="hljs-params">(IClientConfig clientConfig)</span> &#123;
+        <span class="hljs-comment">// TODO</span>
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> Server <span class="hljs-title function_">choose</span><span class="hljs-params">(Object key)</span> &#123;
+        <span class="hljs-comment">// 获取负载均衡器对象</span>
+        <span class="hljs-type">ILoadBalancer</span> <span class="hljs-variable">lb</span> <span class="hljs-operator">=</span> getLoadBalancer();
+        <span class="hljs-comment">// 获取全部服务实例</span>
+        <span class="hljs-comment">//List&lt;Server&gt; servers = lb.getAllServers();</span>
+        <span class="hljs-comment">// 获取全部可用的服务实例</span>
+        List&lt;Server&gt; reachableServers = lb.getReachableServers();
+        <span class="hljs-keyword">return</span> reachableServers.get(<span class="hljs-number">0</span>);
+    &#125;
+&#125;</code></pre>
 
 <p>然后修改配置文件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">product-service:</span><br><span class="line">  ribbon:</span><br><span class="line">    #NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule</span><br><span class="line">    NFLoadBalancerRuleClassName: com.lypzz.loadbalancer.MyRule</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java">product-service:
+  ribbon:
+    #NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule
+    NFLoadBalancerRuleClassName: com.lypzz.loadbalancer.MyRule</code></pre>
 
 <p>OK!</p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

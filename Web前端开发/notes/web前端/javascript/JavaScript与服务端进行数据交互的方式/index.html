@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>JavaScript与服务端进行数据交互的方式 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>JavaScript与服务端进行数据交互的方式</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h2 id="XMLHttpRequest"><a href="#XMLHttpRequest" class="headerlink" title="XMLHttpRequest"></a>XMLHttpRequest</h2><blockquote>
+<p>XHR是项古老的技术，不同的浏览器厂商对其实现方式不同，例如有些浏览器只支持<code>onload</code>事件处理器，有些只支持<code>onreadystatechange</code>事件处理器。</p>
+</blockquote>
+<p><strong>发送Get请求</strong></p>
+<pre><code class="hljs javascript"><span class="hljs-comment">// 创建XHR请求</span>
+<span class="hljs-keyword">let</span> xhr;
+<span class="hljs-comment">// Old compatibility code, no longer needed.</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">XMLHttpRequest</span>) &#123; <span class="hljs-comment">// Mozilla, Safari, IE7+ ...</span>
+    xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();
+&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">ActiveXObject</span>) &#123; <span class="hljs-comment">// IE 6 and older</span>
+    xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ActiveXObject</span>(<span class="hljs-string">&quot;Microsoft.XMLHTTP&quot;</span>);
+&#125;
+
+<span class="hljs-comment">// 指定用于从网络请求资源的HTTP方法和URL</span>
+xhr.<span class="hljs-title function_">open</span>(<span class="hljs-string">&#x27;GET&#x27;</span>, url);
+
+<span class="hljs-comment">// (可选)设置请求头</span>
+<span class="hljs-comment">// xhr.setRequestHeader(header,value);</span>
+<span class="hljs-comment">// 设置响应类型,默认&#x27;text&#x27;</span>
+xhr.<span class="hljs-property">responseType</span> = <span class="hljs-string">&#x27;application/json&#x27;</span>;
+
+<span class="hljs-comment">// 响应已经返回时,将执行onload事件处理器</span>
+xhr.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;
+  <span class="hljs-keyword">let</span> resp = request.<span class="hljs-property">response</span>;
+&#125;;
+
+<span class="hljs-comment">// 发送请求</span>
+xhr.<span class="hljs-title function_">send</span>();</code></pre>
+
+<p><strong>发送POST请求</strong></p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">let</span> nicknameInput=<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#nickname&#x27;</span>);
+<span class="hljs-keyword">let</span> introInput=<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#intro&#x27;</span>);
+<span class="hljs-keyword">let</span> submitBtn=<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#submit&#x27;</span>);
+
+submitBtn.<span class="hljs-property">onclick</span>=<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;
+    <span class="hljs-keyword">let</span> xhr;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">XMLHttpRequest</span>) &#123;
+        xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">ActiveXObject</span>) &#123;
+        xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ActiveXObject</span>(<span class="hljs-string">&quot;Microsoft.XMLHTTP&quot;</span>);
+    &#125;
+
+    xhr.<span class="hljs-title function_">open</span>(<span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;http://localhost:8080/api/user&#x27;</span>, <span class="hljs-literal">true</span>);
+
+    xhr.<span class="hljs-title function_">setRequestHeader</span>(<span class="hljs-string">&#x27;content-type&#x27;</span>,<span class="hljs-string">&#x27;application/json&#x27;</span>);
+    xhr.<span class="hljs-property">responseType</span> = <span class="hljs-string">&#x27;application/json&#x27;</span>;
+
+    xhr.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;
+        <span class="hljs-keyword">if</span>(xhr.<span class="hljs-property">readyState</span> === <span class="hljs-title class_">XMLHttpRequest</span>.<span class="hljs-property">DONE</span>)&#123;
+            <span class="hljs-keyword">if</span>(xhr.<span class="hljs-property">status</span>==<span class="hljs-number">200</span>)&#123;
+                <span class="hljs-keyword">let</span> text=xhr.<span class="hljs-property">responseText</span>;
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(text));
+            &#125;<span class="hljs-keyword">else</span>&#123;
+
+            &#125;
+        &#125;
+    &#125;
+    
+    <span class="hljs-keyword">let</span> body=&#123;
+        <span class="hljs-attr">nickname</span>: nicknameInput.<span class="hljs-property">value</span>,
+        <span class="hljs-attr">intro</span>: introInput.<span class="hljs-property">value</span>
+    &#125;;
+    xhr.<span class="hljs-title function_">send</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(body));
+&#125;</code></pre>
+
+<h2 id="Fetch-API"><a href="#Fetch-API" class="headerlink" title="Fetch API"></a>Fetch API</h2><p><strong>发送GET请求</strong></p>
+<pre><code class="hljs javascript"><span class="hljs-title function_">fetch</span>(url)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">response</span>) &#123;
+        response.<span class="hljs-title function_">text</span>()
+            .<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">text</span>) &#123;
+                
+            &#125;);
+    &#125;);</code></pre>
+
+<p><strong>Promises</strong></p>
+<p><code>fetch</code>发送请求，接收响应，返回值是一个Promises；</p>
+<p><code>then</code>运行后续操作，参数为一个函数，这个函数接收1个参数，就是从Promises中解析出来的response；</p>
+<p>response的<code>text()</code>方法用于获取响应的纯文本格式，返回值依然是一个Promises，可以接着连接另一个<code>then</code>；</p>
+<p><code>then</code>的返回值依然是一个Promises，可以接着连接另一个<code>then</code>，所以，上面的代码等价于下面的代码</p>
+<pre><code class="hljs javascript"><span class="hljs-title function_">fetch</span>(url)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">response</span>)&#123;
+        <span class="hljs-keyword">return</span> response.<span class="hljs-title function_">text</span>();
+    &#125;)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">text</span>)&#123;
+
+    &#125;);</code></pre>
+
+<p><strong>response</strong></p>
+<p>请求是否成功：<code>response.ok</code></p>
+<p>响应的网络状态和描述性消息：<code>response.status</code> <code>response.statusText</code></p>
+<p>响应主体内容：<code>response.text()</code> <code>response.json()</code> <code>response.blob()</code></p>
+<p><strong>发送POST请求</strong></p>
+<pre><code class="hljs javascript"><span class="hljs-title function_">fetch</span>(url,&#123;
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;POST&quot;</span>,
+    <span class="hljs-attr">headers</span>: &#123;
+        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json&quot;</span>,
+    &#125;,
+    <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(data),
+&#125;)
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">response</span>=&gt;</span>response.<span class="hljs-title function_">json</span>())
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">data</span>=&gt;</span><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data));</code></pre>
+
+<h2 id="JQuery中的Ajax"><a href="#JQuery中的Ajax" class="headerlink" title="JQuery中的Ajax"></a>JQuery中的Ajax</h2><h2 id="axios"><a href="#axios" class="headerlink" title="axios"></a>axios</h2></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

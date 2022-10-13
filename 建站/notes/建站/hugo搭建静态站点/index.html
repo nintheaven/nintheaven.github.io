@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>hugo搭建静态站点</h1>
+    <main><div class="post">
+    <h1>hugo搭建静态站点</h1>
 
-<span>建站</span>
+    <div>
+        
 
-<span>2021-03-01</span>
-<div><p>hugo中文文档：<a target="_blank" rel="noopener" href="https://www.gohugo.org/">https://www.gohugo.org/</a></p>
+        <span>2021-03-01</span>
+    </div>
+
+    <div><p>hugo中文文档：<a target="_blank" rel="noopener" href="https://www.gohugo.org/">https://www.gohugo.org/</a></p>
 <p>Hugo In Action在线图书：<a target="_blank" rel="noopener" href="https://livebook.manning.com/book/hugo-in-action/">https://livebook.manning.com/book/hugo-in-action/</a></p>
 <span id="more"></span>
 
@@ -100,7 +108,15 @@
 <p><strong>基础配置</strong></p>
 <p>hugo支持的配置文件格式依次是toml,yaml,json。这里使用yaml进行配置。</p>
 <p>修改config.toml为config.yml</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">config:</span> <span class="string">&quot;config.yml&quot;</span></span><br><span class="line"><span class="attr">watch:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基础url，必须以斜杠结尾，否则静态资源文件路径会拼接错误，导致404.</span></span><br><span class="line"><span class="attr">baseURL:</span> <span class="string">&#x27;https://lypzzz.github.io/&#x27;</span></span><br><span class="line"><span class="attr">languageCode:</span> <span class="string">&#x27;zh-cn&#x27;</span> <span class="comment">#&#x27;en-us&#x27;</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">&#x27;我的博客&#x27;</span></span><br><span class="line"><span class="comment"># 配置默认主题</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">&quot;ananke&quot;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">config:</span> <span class="hljs-string">&quot;config.yml&quot;</span>
+<span class="hljs-attr">watch:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-comment"># 基础url，必须以斜杠结尾，否则静态资源文件路径会拼接错误，导致404.</span>
+<span class="hljs-attr">baseURL:</span> <span class="hljs-string">&#x27;https://lypzzz.github.io/&#x27;</span>
+<span class="hljs-attr">languageCode:</span> <span class="hljs-string">&#x27;zh-cn&#x27;</span> <span class="hljs-comment">#&#x27;en-us&#x27;</span>
+<span class="hljs-attr">title:</span> <span class="hljs-string">&#x27;我的博客&#x27;</span>
+<span class="hljs-comment"># 配置默认主题</span>
+<span class="hljs-attr">theme:</span> <span class="hljs-string">&quot;ananke&quot;</span></code></pre>
 
 <p><strong>构建</strong></p>
 <p>修改content目录及其子目录下的文章，将文章头部的draft修改为false；</p>
@@ -130,15 +146,38 @@
 <p><code>hugo server</code></p>
 <p>构建内容</p>
 <p><code>hugo -D</code></p>
-<h2 id="hugo目录结构"><a href="#hugo目录结构" class="headerlink" title="hugo目录结构"></a>hugo目录结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">─archetypes</span><br><span class="line">├─assets</span><br><span class="line">├─content</span><br><span class="line">├─data</span><br><span class="line">├─i18n</span><br><span class="line">├─layouts</span><br><span class="line">├─public</span><br><span class="line">├─resources</span><br><span class="line">├─static</span><br><span class="line">├─themes</span><br><span class="line">├─config.yml</span><br></pre></td></tr></table></figure>
+<h2 id="hugo目录结构"><a href="#hugo目录结构" class="headerlink" title="hugo目录结构"></a>hugo目录结构</h2><pre><code class="hljs plaintext">─archetypes
+├─assets
+├─content
+├─data
+├─i18n
+├─layouts
+├─public
+├─resources
+├─static
+├─themes
+├─config.yml</code></pre>
 
 <p><strong>archetypes</strong></p>
 <p>该目录下的default.md是一个默认的内容模板文件，用于在使用 <code>hugo new</code> 添加页面时，自动生成预定义的信息。</p>
 <p>默认生成以下内容</p>
-<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &quot;&#123;&#123; replace .Name &quot;-&quot; &quot; &quot; | title &#125;&#125;&quot;</span><br><span class="line">date: &#123;&#123; .Date &#125;&#125;</span><br><span class="line"><span class="section">draft: true</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs md">---
+title: &quot;&#123;&#123; replace .Name &quot;-&quot; &quot; &quot; | title &#125;&#125;&quot;
+date: &#123;&#123; .Date &#125;&#125;
+<span class="hljs-section">draft: true</span>
+<span class="hljs-section">---</span></code></pre>
 
 <p>可以添加其它头部信息</p>
-<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">draft: false</span><br><span class="line">title: &quot;&#123;&#123; replace .Name &quot;-&quot; &quot; &quot; | title &#125;&#125;&quot;</span><br><span class="line">date: &#123;&#123; .Date &#125;&#125;</span><br><span class="line">categories:</span><br><span class="line">tags:</span><br><span class="line">keywords:</span><br><span class="line">description: </span><br><span class="line"><span class="section">slug:</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs md">---
+draft: false
+title: &quot;&#123;&#123; replace .Name &quot;-&quot; &quot; &quot; | title &#125;&#125;&quot;
+date: &#123;&#123; .Date &#125;&#125;
+categories:
+tags:
+keywords:
+description: 
+<span class="hljs-section">slug:</span>
+<span class="hljs-section">---</span></code></pre>
 
 <p>还可以添加新的模板文件</p>
 <p><strong>assets</strong></p>
@@ -153,13 +192,18 @@
 <p><strong>config.yml</strong></p>
 <p>配置文件。</p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Oracle数据库使用步骤 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>Oracle数据库使用步骤</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>Oracle数据库的逻辑结构与其它数据库有比较大的区别，使用过程也比较复杂。</p>
+<p>在安装了Oracle数据库之后，使用步骤如下：</p>
+<ol>
+<li>创建数据库(实例)</li>
+<li>创建表空间</li>
+<li>创建用户，并赋予其操作表空间的权限</li>
+<li>用户登录数据库实例，创建数据表</li>
+<li>执行SQL操作</li>
+</ol>
+<h1 id="创建数据库实例"><a href="#创建数据库实例" class="headerlink" title="创建数据库实例"></a>创建数据库实例</h1><p>使用 dbca 工具(Oracle Database Configuration Assistant，数据库配置助手)，进行数据库实例的创建。</p>
+<p>有多种方式，包括图形界面、命令行、使用 <em>dbca.rsp</em> 静默创建。</p>
+<p>安装了Oracle数据库后，会在 <code>$ORACLE_HOME/assistants/dbca</code> 下自动生成dbca.rsp 模板文件，在该模板文件的基础上进行适量修改即可</p>
+<pre><code class="hljs plaintext">GDBNAME= &quot;zxywb&quot; #数据库名
+SID =&quot;zxywb&quot; #数据库实例名
+SYSPASSWORD= &quot;sys用户密码&quot;
+SYSTEMPASSWORD= &quot;system用户密码&quot;
+SYSMANPASSWORD= &quot;sysman用户密码&quot;
+DBSNMPPASSWORD= &quot;dbsnmp用户密码&quot;
+DATAFILEDESTINATION=/opt/oracle/oradata # datafile目录
+RECOVERYAREADESTINATION=/opt/oracle/fast_recovery_area # recovery_area目录
+CHARACTERSET= &quot;AL32UTF8&quot; # 编码
+TOTALMEMORY= &quot;1024&quot; # 总内存,MB</code></pre>
+
+<p>执行静默创建数据库实例的脚本</p>
+<p><code>dbca -silent -responseFile /opt/oracle/product/11gR2/assistants/dbca/dbca_zxywb.rsp</code></p>
+<p>创建完毕后，查看是否监听</p>
+<pre><code class="hljs plaintext">[oracle@oracledb oracle]$ lsnrctl status
+
+LSNRCTL for Linux: Version 11.2.0.1.0 - Production on 05-3月 -2022 10:25:24
+
+Copyright (c) 1991, 2009, Oracle.  All rights reserved.
+
+正在连接到 (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=EXTPROC1521)))
+LISTENER 的 STATUS
+------------------------
+别名                      LISTENER
+版本                      TNSLSNR for Linux: Version 11.2.0.1.0 - Production
+启动日期                  04-3月 -2022 05:40:45
+正常运行时间              1 天 4 小时 44 分 39 秒
+跟踪级别                  off
+安全性                    ON: Local OS Authentication
+SNMP                      OFF
+监听程序参数文件          /opt/oracle/product/11gR2/network/admin/listener.ora
+监听程序日志文件          /opt/oracle/diag/tnslsnr/oracledb/listener/alert/log.xml
+监听端点概要...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=oracledb)(PORT=1521)))
+服务摘要..
+服务 &quot;orcl&quot; 包含 1 个实例。
+  实例 &quot;orcl&quot;, 状态 READY, 包含此服务的 1 个处理程序...
+服务 &quot;orclXDB&quot; 包含 1 个实例。
+  实例 &quot;orcl&quot;, 状态 READY, 包含此服务的 1 个处理程序...
+服务 &quot;zxywb&quot; 包含 1 个实例。
+  实例 &quot;zxywb&quot;, 状态 READY, 包含此服务的 1 个处理程序...
+服务 &quot;zxywbXDB&quot; 包含 1 个实例。
+  实例 &quot;zxywb&quot;, 状态 READY, 包含此服务的 1 个处理程序...
+命令执行成功</code></pre>
+
+<p>推荐设置 <code>ORACLE_SID</code> 环境变量，使得用户默认登录该实例</p>
+<p><code>vi ~/.bash_profile</code></p>
+<pre><code class="hljs plaintext">## oracle
+ORACLE_BASE=/opt/oracle
+ORACLE_HOME=$ORACLE_BASE/product/11gR2
+ORACLE_PID=orcl
+# ORACLE_SID=orcl
+ORACLE_SID=zxywb
+LANG=&quot;zh_CN.UTF-8&quot;
+NLS_LANG=&quot;SIMPLIFIED CHINESE_CHINA.AL32UTF8&quot;
+NLS_DATE_FORMAT=&quot;yyyy-mm-dd hh24:mi:ss&quot;
+export ORACLE_BASE ORACLE_HOME ORACLE_PID ORACLE_SID LANG NLS_LANG NLS_DATE_FORMAT
+
+PATH=$PATH:$ORACLE_HOME/bin
+export PATH</code></pre>
+
+<p>立即生效</p>
+<p><code>source ~/.bash_profile</code></p>
+<h1 id="创建表空间"><a href="#创建表空间" class="headerlink" title="创建表空间"></a>创建表空间</h1><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span>space tbs_dev 
+	datafile <span class="hljs-string">&#x27;/opt/oracle/oradata/zxywb/dev.dbf&#x27;</span> 
+	size <span class="hljs-number">20</span>M 
+	autoextend <span class="hljs-keyword">on</span> 
+	next <span class="hljs-number">2</span>M
+	maxsize <span class="hljs-number">2048</span>M;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span>space tbs_test 
+	datafile <span class="hljs-string">&#x27;/opt/oracle/oradata/zxywb/test.dbf&#x27;</span> 
+	size <span class="hljs-number">20</span>M 
+	autoextend <span class="hljs-keyword">on</span> 
+	next <span class="hljs-number">2</span>M
+	maxsize <span class="hljs-number">1024</span>M;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span>space tbs_platform
+	datafile <span class="hljs-string">&#x27;/opt/oracle/oradata/zxywb/platform.dbf&#x27;</span> 
+	size <span class="hljs-number">20</span>M 
+	autoextend <span class="hljs-keyword">on</span> 
+	next <span class="hljs-number">2</span>M
+	maxsize <span class="hljs-number">512</span>M;</code></pre>
+
+<h1 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h1><p><strong>创建用户</strong></p>
+<p>以管理员的身份登录数据库</p>
+<p><code>sqlplus / as sysdba</code></p>
+<p>创建用户并指定默认表空间</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> aa identified <span class="hljs-keyword">by</span> &quot;SZsyy#8899&quot; <span class="hljs-keyword">default</span> tablespace tbs_dev;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> bb identified <span class="hljs-keyword">by</span> &quot;SZsyy#8899&quot; <span class="hljs-keyword">default</span> tablespace tbs_test;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> platform identified <span class="hljs-keyword">by</span> &quot;SZsyy#8899&quot; <span class="hljs-keyword">default</span> tablespace tbs_platform;</code></pre>
+
+<p>在授权之前，需要在表空间上为用户分配存储空间</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> aa quota UNLIMITED <span class="hljs-keyword">ON</span> tbs_dev;
+<span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> bb quota UNLIMITED <span class="hljs-keyword">ON</span> tbs_test;
+<span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> platform quota UNLIMITED <span class="hljs-keyword">ON</span> tbs_platform;</code></pre>
+
+<p><strong>授权</strong></p>
+<p>授予系统权限</p>
+<pre><code class="hljs sql"># 连接数据库
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> SESSION <span class="hljs-keyword">to</span> aa;
+
+# 表
+# <span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(privilege) <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%table%&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> COMMENT <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+
+# 增删改查
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">to</span> aa;
+
+# 索引
+# <span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(privilege) <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%index%&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> INDEX <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">ANY</span> INDEX <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">ANY</span> INDEXTYPE <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">EXECUTE</span> <span class="hljs-keyword">ANY</span> INDEXTYPE <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> INDEXTYPE <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">ANY</span> INDEX <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> INDEXTYPE <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">ANY</span> INDEXTYPE <span class="hljs-keyword">to</span> aa;
+
+# 视图
+# <span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(privilege) <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%view%&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">ANY</span> MATERIALIZED <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> MATERIALIZED <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> MATERIALIZED <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">ANY</span> MATERIALIZED <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+# <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">VIEW</span>
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">MERGE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> UNDER <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">VIEW</span> <span class="hljs-keyword">to</span> aa;
+
+# 存储过程
+# <span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(privilege) <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%procedure%&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">PROCEDURE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">EXECUTE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">PROCEDURE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">PROCEDURE</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">PROCEDURE</span> <span class="hljs-keyword">to</span> aa;
+# <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">PROCEDURE</span>
+<span class="hljs-keyword">grant</span> DEBUG <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">PROCEDURE</span> <span class="hljs-keyword">to</span> aa;
+
+# 触发器
+# <span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(privilege) <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%trigger%&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TRIGGER</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TRIGGER</span> <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TRIGGER</span> <span class="hljs-keyword">to</span> aa;
+#<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">ANY</span> <span class="hljs-keyword">TRIGGER</span>
+#ADMINISTER DATABASE <span class="hljs-keyword">TRIGGER</span>
+
+# 事务
+# <span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> privilege <span class="hljs-keyword">from</span> dba_sys_privs <span class="hljs-keyword">where</span> <span class="hljs-built_in">lower</span>(privilege) <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%transaction%&#x27;</span>;
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ANY</span> TRANSACTION <span class="hljs-keyword">to</span> aa;
+<span class="hljs-keyword">grant</span> FORCE TRANSACTION <span class="hljs-keyword">to</span> aa;
+#FORCE <span class="hljs-keyword">ANY</span> TRANSACTION</code></pre>
+
+<p>授予对象权限</p>
+<pre><code class="hljs sql"># 允许查询dual表
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">select</span> <span class="hljs-keyword">on</span> dual <span class="hljs-keyword">to</span> aa;</code></pre>
+
+
+
+<h1 id="创建数据表"><a href="#创建数据表" class="headerlink" title="创建数据表"></a>创建数据表</h1><h1 id="执行SQL操作"><a href="#执行SQL操作" class="headerlink" title="执行SQL操作"></a>执行SQL操作</h1></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

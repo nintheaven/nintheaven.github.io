@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,10 +75,16 @@
     
 </header>
 
-    <main><h1>spring-cloud系列-客户端弹性之netflix-hystrix</h1>
+    <main><div class="post">
+    <h1>spring-cloud系列-客户端弹性之netflix-hystrix</h1>
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p><strong>客户端弹性</strong>是指当远程服务发生错误或表现不佳时，保护远程资源（其它的微服务调用或数据库查询）的客户端免于崩溃。客户端弹性模式的目的是让客户端“快速失败”，而不消耗诸如数据库连接和线程之类的资源，并且防止远程服务的问题向上游客户端进行传播。</p>
 <p>有4种客户端弹性模式：</p>
@@ -96,13 +106,25 @@
 </blockquote>
 <p>Hystrix相当于一个中间人，客户端调用远程微服务的代码在使用了Hystrix后，不再直接与远程服务进行交互，而是通过Hystrix代理进行。</p>
 <p>添加maven依赖 <code>spring-cloud-starter-netflix-hystrix</code></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-hystrix<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>在应用的启动引导类上添加注解 <code>@EnableCircuitBreaker</code></p>
 <blockquote>
 <p><code>@EnableHystrix</code> 注解与 <code>@EnableCircuitBreaker</code> 的作用一样，都是在客户端开启断路器功能。前者只是 netflix-hystrix 对后者的包装而已。</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">//@EnableEurekaClient</span></span><br><span class="line"><span class="comment">//@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span></span><br><span class="line"><span class="meta">@EnableCircuitBreaker</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(OrderApp.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-comment">//@EnableEurekaClient</span>
+<span class="hljs-comment">//@EnableDiscoveryClient</span>
+<span class="hljs-meta">@EnableFeignClients</span>
+<span class="hljs-meta">@EnableCircuitBreaker</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(OrderApp.class,args);
+    &#125;
+&#125;</code></pre>
 
 <p><strong>Hystrix可以直接在Controller层使用，但是更多的还是在Service层使用。</strong></p>
 <blockquote>
@@ -113,11 +135,28 @@
 </blockquote>
 <p>在控制器方法或者服务层方法上，添加<code>@HystrixCommand</code>注解，当远程调用失败时(超时或抛出异常)，Hystrix将中断该操作。</p>
 <p>为了演示超时，定义如下方法，有2&#x2F;3的几率休眠3s</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2/3的概率休眠3秒</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sleep</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">    <span class="type">int</span> <span class="variable">randNum</span> <span class="operator">=</span> random.nextInt(<span class="number">3</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (randNum != <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">// 2/3的概率休眠3秒</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sleep</span><span class="hljs-params">()</span> &#123;
+    <span class="hljs-type">Random</span> <span class="hljs-variable">random</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Random</span>();
+    <span class="hljs-type">int</span> <span class="hljs-variable">randNum</span> <span class="hljs-operator">=</span> random.nextInt(<span class="hljs-number">3</span>) + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (randNum != <span class="hljs-number">1</span>) &#123;
+        <span class="hljs-keyword">try</span> &#123;
+            Thread.sleep(<span class="hljs-number">3000</span>);
+        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;</code></pre>
 
 <p>然后在用户服务(suer)的控制器方法中使用它，模拟一个高延迟的响应。</p>
 <p>以订单(order)微服务为例，在服务层代码中，从远程用户服务查询用户信息的方法上，使用<code>@HystrixCommand</code>注解</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span></span><br><span class="line"><span class="keyword">public</span> Order <span class="title function_">findOrderById</span><span class="params">(Integer orderId)</span> &#123;</span><br><span class="line">    <span class="comment">// 查询订单数据</span></span><br><span class="line">    <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderMapper.selectOne(orderId);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 其它代码略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@HystrixCommand</span>
+<span class="hljs-keyword">public</span> Order <span class="hljs-title function_">findOrderById</span><span class="hljs-params">(Integer orderId)</span> &#123;
+    <span class="hljs-comment">// 查询订单数据</span>
+    <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> orderMapper.selectOne(orderId);
+    
+    <span class="hljs-comment">// 其它代码略</span>
+&#125;</code></pre>
 
 <p>当调用<code>@HystrixCommand</code>方法超时的时候，程序不会一直等待下去，而是会<strong>快速失败</strong>，即抛出异常，中断此次调用。</p>
 <p><strong>设置Hystrix断路器默认超时时间</strong></p>
@@ -127,18 +166,39 @@
 <p>Hystrix默认超时时间为1s，当使用<code>@HystrixCommand</code>注解的方法超过这个时间后，会抛出异常，而不是继续等待。</p>
 <p>可以在<code>commandProperties</code>这个注解属性定制断路器的默认行为。</p>
 <p>设置超时时间的代码如下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand(</span></span><br><span class="line"><span class="meta">    commandProperties = &#123;</span></span><br><span class="line"><span class="meta">        @HystrixProperty(name = &quot;execution.isolation.thread.timeoutInMilliseconds&quot;, value = &quot;1000&quot;)</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line"><span class="keyword">public</span> Order <span class="title function_">findOrderById</span><span class="params">(Integer orderId)</span> &#123;</span><br><span class="line">    <span class="comment">// 查询订单数据</span></span><br><span class="line">    <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderMapper.selectOne(orderId);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 其它代码略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@HystrixCommand(</span>
+<span class="hljs-meta">    commandProperties = &#123;</span>
+<span class="hljs-meta">        @HystrixProperty(name = &quot;execution.isolation.thread.timeoutInMilliseconds&quot;, value = &quot;1000&quot;)</span>
+<span class="hljs-meta">    &#125;)</span>
+<span class="hljs-keyword">public</span> Order <span class="hljs-title function_">findOrderById</span><span class="hljs-params">(Integer orderId)</span> &#123;
+    <span class="hljs-comment">// 查询订单数据</span>
+    <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> orderMapper.selectOne(orderId);
+
+    <span class="hljs-comment">// 其它代码略</span>
+&#125;</code></pre>
 
 <h2 id="后备模式"><a href="#后备模式" class="headerlink" title="后备模式"></a>后备模式</h2><p>当远程服务调用失败时，客户端不直接返回一个异常结果，而是执行替代方案，相当于是“<strong>降级</strong>”处理。这通常涉及到其它数据源。例如，在购物网站中，通常有推荐系统，基于用户的购买历史记录推荐相关的产品。当推荐系统微服务出现故障时，后备模式的策略是向用户推荐一个更普遍的商品列表。</p>
 <p>还是以订单(order)微服务为例，首先定义一个回退方法，当<code>@HystrixCommand</code>注解的方法调用失败时，不是直接抛出异常，而是执行该方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Order <span class="title function_">defaultOrder</span><span class="params">(Integer orderId)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Order</span>(orderId, <span class="number">0</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> Order <span class="hljs-title function_">defaultOrder</span><span class="hljs-params">(Integer orderId)</span> &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Order</span>(orderId, <span class="hljs-number">0</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);
+&#125;</code></pre>
 
 <p>然后在<code>@HystrixCommand</code>注解中使用<code>fallbackMethod</code>参数，值为回退方法名。</p>
 <blockquote>
 <p>注意：<code>fallbackMethod</code>后备方法应该与<code>@HystrixCommand</code>注解的方法在同一个class中，且它们的方法签名必须一致，返回值也要一致。</p>
 <p>因为<code>@HystrixCommand</code>注解的方法失败后，会将其方法参数全部传递给fallback方法，fallback方法的返回值会赋值给被注解的方法。</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand(</span></span><br><span class="line"><span class="meta">    commandProperties = &#123;</span></span><br><span class="line"><span class="meta">        @HystrixProperty(name = &quot;execution.isolation.thread.timeoutInMilliseconds&quot;, value = &quot;1000&quot;)</span></span><br><span class="line"><span class="meta">    &#125;,</span></span><br><span class="line"><span class="meta">    fallbackMethod = &quot;defaultOrder&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Order <span class="title function_">findOrderById</span><span class="params">(Integer orderId)</span> &#123;</span><br><span class="line">    <span class="comment">// 查询订单数据</span></span><br><span class="line">    <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderMapper.selectOne(orderId);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 其它代码略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@HystrixCommand(</span>
+<span class="hljs-meta">    commandProperties = &#123;</span>
+<span class="hljs-meta">        @HystrixProperty(name = &quot;execution.isolation.thread.timeoutInMilliseconds&quot;, value = &quot;1000&quot;)</span>
+<span class="hljs-meta">    &#125;,</span>
+<span class="hljs-meta">    fallbackMethod = &quot;defaultOrder&quot;)</span>
+<span class="hljs-keyword">public</span> Order <span class="hljs-title function_">findOrderById</span><span class="hljs-params">(Integer orderId)</span> &#123;
+    <span class="hljs-comment">// 查询订单数据</span>
+    <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> orderMapper.selectOne(orderId);
+    
+    <span class="hljs-comment">// 其它代码略</span>
+&#125;</code></pre>
 
 <h2 id="舱壁模式"><a href="#舱壁模式" class="headerlink" title="舱壁模式"></a>舱壁模式</h2><p>当一个客户端需要同时与多个远程微服务进行交互时，为跟每一个远程微服务进行交互的调用进行线程<strong>隔离</strong>(<strong>线程池</strong>或<strong>信号量</strong>)。当某个远程服务响应缓慢时，因为与这个服务交互的调用在一个独立的线程(池)中，所以不会影响其它服务的调用。线程隔离就相当于“舱壁”。</p>
 <p>默认情况下，由Hystrix接管的远程调用代码共享一个线程池。在存在大量请求的情况下，一个远程服务调用出现问题，可能会出现大量线程阻塞的情况，最终导致内存被消耗殆尽，即<strong>雪崩效应</strong>。舱壁模式将每个远程调用限制在单独的线程池中，即使某个服务出现问题，也不会影响其它服务调用，从而避免整个应用崩溃。</p>
@@ -146,7 +206,21 @@
 <blockquote>
 <p>Hystrix支持的线程池相关的配置，请查看 <code>HystrixThreadPoolProperties</code> 源码</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand(</span></span><br><span class="line"><span class="meta">    commandProperties = &#123;</span></span><br><span class="line"><span class="meta">        @HystrixProperty(name = &quot;execution.isolation.thread.timeoutInMilliseconds&quot;, value = &quot;1000&quot;)</span></span><br><span class="line"><span class="meta">    &#125;,</span></span><br><span class="line"><span class="meta">    fallbackMethod = &quot;defaultOrder&quot;,</span></span><br><span class="line"><span class="meta">    threadPoolKey = &quot;orderThreadPool&quot;,</span></span><br><span class="line"><span class="meta">    threadPoolProperties = &#123;</span></span><br><span class="line"><span class="meta">        @HystrixProperty(name = &quot;coreSize&quot;, value = &quot;10&quot;),</span></span><br><span class="line"><span class="meta">        @HystrixProperty(name = &quot;maxQueueSize&quot;, value = &quot;5&quot;)&#125;)</span></span><br><span class="line"><span class="keyword">public</span> Order <span class="title function_">findOrderById</span><span class="params">(Integer orderId)</span> &#123;</span><br><span class="line">    <span class="comment">// 查询订单数据</span></span><br><span class="line">    <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderMapper.selectOne(orderId);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 其它代码略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@HystrixCommand(</span>
+<span class="hljs-meta">    commandProperties = &#123;</span>
+<span class="hljs-meta">        @HystrixProperty(name = &quot;execution.isolation.thread.timeoutInMilliseconds&quot;, value = &quot;1000&quot;)</span>
+<span class="hljs-meta">    &#125;,</span>
+<span class="hljs-meta">    fallbackMethod = &quot;defaultOrder&quot;,</span>
+<span class="hljs-meta">    threadPoolKey = &quot;orderThreadPool&quot;,</span>
+<span class="hljs-meta">    threadPoolProperties = &#123;</span>
+<span class="hljs-meta">        @HystrixProperty(name = &quot;coreSize&quot;, value = &quot;10&quot;),</span>
+<span class="hljs-meta">        @HystrixProperty(name = &quot;maxQueueSize&quot;, value = &quot;5&quot;)&#125;)</span>
+<span class="hljs-keyword">public</span> Order <span class="hljs-title function_">findOrderById</span><span class="hljs-params">(Integer orderId)</span> &#123;
+    <span class="hljs-comment">// 查询订单数据</span>
+    <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> orderMapper.selectOne(orderId);
+    
+    <span class="hljs-comment">// 其它代码略</span>
+&#125;</code></pre>
 
 <p>线程池属性中</p>
 <ul>
@@ -157,7 +231,11 @@
 <p><strong>线程隔离模式</strong></p>
 <p>Hystrix支持通过**线程池(<code>THREAD</code>)<strong>和</strong>信号量(<code>SEMAPHORE</code>)**2种方式实现线程隔离。默认（推荐）使用线程池的方式。</p>
 <p>设置使用信号量隔离方式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand(commandProperties = &#123;</span></span><br><span class="line"><span class="meta">                    @HystrixProperty(name = &quot;execution.isolation.strategy&quot;, value = &quot;SEMAPHORE&quot;),</span></span><br><span class="line"><span class="meta">                    // 信号量隔离模式下，最大并发请求量</span></span><br><span class="line"><span class="meta">                    @HystrixProperty(name = &quot;execution.isolation.semaphore.maxConcurrentRequests&quot;, value = &quot;10&quot;)</span></span><br><span class="line"><span class="meta">&#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-meta">@HystrixCommand(commandProperties = &#123;</span>
+<span class="hljs-meta">                    @HystrixProperty(name = &quot;execution.isolation.strategy&quot;, value = &quot;SEMAPHORE&quot;),</span>
+<span class="hljs-meta">                    // 信号量隔离模式下，最大并发请求量</span>
+<span class="hljs-meta">                    @HystrixProperty(name = &quot;execution.isolation.semaphore.maxConcurrentRequests&quot;, value = &quot;10&quot;)</span>
+<span class="hljs-meta">&#125;</span></code></pre>
 
 <h2 id="定制Hystrix行为"><a href="#定制Hystrix行为" class="headerlink" title="定制Hystrix行为"></a>定制Hystrix行为</h2><p><strong>类级别的配置：<code>@DefaultProperties</code></strong></p>
 <p>除了在方法上的 <code>@HystrixCommand</code> 注解中进行配置外，还可以在类上使用 <code>@DefaultProperties</code> 注解，配置该类中所有被 <code>@HystrixCommand</code> 注解的方法共有的配置项，支持的配置属性与 <code>@HystricCommand</code> 一样。</p>
@@ -166,13 +244,18 @@
 <p>查看全部支持的属性请看hystrix源码：<code>HystrixCommandProperties</code> 和 <code>HystrixThreadPoolProperties</code></p>
 </blockquote>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

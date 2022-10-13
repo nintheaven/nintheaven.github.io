@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>servlet监听器与过滤器 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>servlet监听器与过滤器</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<h1 id="监听器"><a href="#监听器" class="headerlink" title="监听器"></a>监听器</h1><p>常用监听器一览:</p>
+<ul>
+<li>应用上下文监听器(ServletContextListener)</li>
+<li>应用上下文属性监听器(ServletContextAttributeListener)</li>
+<li>Servlet请求监听器(ServletRequestListener)</li>
+<li>Servlet请求属性监听器(ServletRequestAttributeListener)</li>
+<li>会话监听器(HttpSessionListener)</li>
+<li>会话属性监听器(HttpSessionAttributeListener)</li>
+<li>会话绑定监听器(HttpSessionBindingListener)</li>
+</ul>
+<h2 id="应用上下文监听器"><a href="#应用上下文监听器" class="headerlink" title="应用上下文监听器"></a>应用上下文监听器</h2><p>应用上下文监听器(ServletContextListener)，可以监听ServletContext的2个关键时刻：初始化和销毁。</p>
+<p>使用场景1：管理数据库连接</p>
+<p>上下文初始化时(应用部署)时得到通知</p>
+<ul>
+<li>从ServletContext获取上下文初始化参数</li>
+<li>使用初始化参数创建数据库连接对象</li>
+<li>将数据库连接设置为上下文的属性，使得Web应用的各个部分都能使用这个连接</li>
+</ul>
+<p>上下文销毁(应用关闭)时得到通知</p>
+<ul>
+<li>关闭数据库连接</li>
+</ul>
+<p>创建应用上下文监听器实现类</p>
+<blockquote>
+<p>在DD中添加context-param略；异常处理略</p>
+</blockquote>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> javax.servlet.ServletContext;
+<span class="hljs-keyword">import</span> javax.servlet.ServletContextEvent;
+<span class="hljs-keyword">import</span> javax.servlet.ServletContextListener;
+<span class="hljs-keyword">import</span> java.sql.Connection;
+<span class="hljs-keyword">import</span> java.sql.DriverManager;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyServletContextListener</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ServletContextListener</span>
+&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">contextInitialized</span><span class="hljs-params">(ServletContextEvent sce)</span>
+    &#123;
+        <span class="hljs-comment">// 获取ServletContext</span>
+        ServletContext ctx=sce.getServletContext();
+        <span class="hljs-comment">// 获取上下文初始化参数</span>
+        String driver=ctx.getInitParameter(<span class="hljs-string">&quot;driver&quot;</span>);
+        String url=ctx.getInitParameter(<span class="hljs-string">&quot;url&quot;</span>);
+        String user=ctx.getInitParameter(<span class="hljs-string">&quot;user&quot;</span>);
+        String password=ctx.getInitParameter(<span class="hljs-string">&quot;password&quot;</span>);
+        <span class="hljs-comment">// 根据初始化参数创建数据库连接对象</span>
+        Class.forName(driver);
+        Connection conn=DriverManager.getConnection(url,user,password);
+        <span class="hljs-comment">// 将连接对象设置为应用上下文属性</span>
+        ctx.setAttribute(<span class="hljs-string">&quot;conn&quot;</span>,conn);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">contextDestroyed</span><span class="hljs-params">(ServletContextEvent sce)</span>
+    &#123;
+        ServletContext ctx=sce.getServletContext();
+        Connection conn=(Connection)ctx.getAttribute(<span class="hljs-string">&quot;conn&quot;</span>);
+        conn.close();
+    &#125;
+&#125;</code></pre>
+
+<p>在DD中添加listener</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>me.lyp.listener.MyServletContextListener<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span></code></pre>
+
+<p>之后，在Servlet中就可以通过ServletContext获取数据库连接对象，进行相关数据库操作</p>
+<pre><code class="hljs java">ServletContext ctx=getServletContext();
+String email=ctx.getInitParameter(<span class="hljs-string">&quot;email&quot;</span>);
+Connection conn=(Connection)ctx.getAttribute(<span class="hljs-string">&quot;conn&quot;</span>);
+<span class="hljs-comment">//...</span></code></pre>
+
+<h2 id="应用上下文属性监听器"><a href="#应用上下文属性监听器" class="headerlink" title="应用上下文属性监听器"></a>应用上下文属性监听器</h2><p>ServletContextAttributeListener，监听Web应用上下文中是否添加，删除，替换了一个属性</p>
+<h2 id="Servlet请求监听器"><a href="#Servlet请求监听器" class="headerlink" title="Servlet请求监听器"></a>Servlet请求监听器</h2><p>ServletRequestListener，监听请求的初始化与销毁，可以生成日志信息。</p>
+<h2 id="servlet请求属性监听器"><a href="#servlet请求属性监听器" class="headerlink" title="servlet请求属性监听器"></a>servlet请求属性监听器</h2><p>ServletRequestAttributeListener，监听请求属性的添加，替换与删除。</p>
+<h2 id="会话监听器"><a href="#会话监听器" class="headerlink" title="会话监听器"></a>会话监听器</h2><p>HttpSessionListener，可以跟踪会话的创建与销毁(可以统计有多少个并发用户)</p>
+<h2 id="会话属性监听器"><a href="#会话属性监听器" class="headerlink" title="会话属性监听器"></a>会话属性监听器</h2><p>HttpSessionAttributeListener，监听会话属性的添加，替换与删除。</p>
+<h2 id="会话绑定监听器"><a href="#会话绑定监听器" class="headerlink" title="会话绑定监听器"></a>会话绑定监听器</h2><p>HttpSessionBindingListener，属性类绑定到会话或者从会话中解除绑定时会得到通知。</p>
+<p>一个Java Bean类实现HttpSessionBindingListener接口，即成为了一个监听器.<br><strong>它不需要在DD中进行配置，本身自动监听它何时在会话中绑定和解除绑定。</strong></p>
+<p>创建属性类Dog</p>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> javax.servlet.http.HttpSession;
+<span class="hljs-keyword">import</span> javax.servlet.http.HttpSessionBindingEvent;
+<span class="hljs-keyword">import</span> javax.servlet.http.HttpSessionBindingListener;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Dog</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">HttpSessionBindingListener</span>
+&#123;
+    <span class="hljs-keyword">private</span> String breed;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Dog</span><span class="hljs-params">(String breed)</span>
+    &#123;
+        <span class="hljs-built_in">this</span>.breed=breed;
+    &#125;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getBreed</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> breed;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">valueBound</span><span class="hljs-params">(HttpSessionBindingEvent event)</span>
+    &#123;
+        HttpSession session=event.getSession();
+        String name=event.getName();
+        Object value=event.getValue();
+        System.out.printf(<span class="hljs-string">&quot;valueBound: session=%s,Dog(%s,%s)\n&quot;</span>,session.getId(),name,value);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">valueUnbound</span><span class="hljs-params">(HttpSessionBindingEvent event)</span>
+    &#123;
+        System.out.println(<span class="hljs-string">&quot;valueUnbound...&quot;</span>);
+    &#125;
+&#125;</code></pre>
+
+<p>在Servlet中，为HttpSession设置Dog属性和移除Dog属性时，Dog本身会得到通知</p>
+<pre><code class="hljs java">HttpSession session=req.getSession();
+session.setAttribute(<span class="hljs-string">&quot;dog&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Dog</span>(<span class="hljs-string">&quot;中华田园犬&quot;</span>));
+session.removeAttribute(<span class="hljs-string">&quot;dog&quot;</span>);</code></pre>
+
+<h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

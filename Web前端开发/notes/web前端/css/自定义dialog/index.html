@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>自定义dialog | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>自定义dialog</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p>参考MDN相关教程：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/dialog">https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/dialog</a></p>
+<p><strong>基本用法</strong></p>
+<p>使用dialog标签定义对话框元素</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">dialog</span>&gt;</span>
+    <span class="hljs-comment">&lt;!--可以定义任何html内容--&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dialog</span>&gt;</span></code></pre>
+
+<p>设置样式，可以使用 <code>::backdrop</code> CSS伪元素设置dialog打开时背景变暗的效果</p>
+<pre><code class="hljs css">dialog &#123;
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">60%</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">40%</span>;
+    <span class="hljs-attribute">overflow</span>: scroll;
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#cee4e9</span>;
+    <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0.99</span>;
+&#125;
+
+dialog<span class="hljs-selector-pseudo">::backdrop</span> &#123;
+    <span class="hljs-attribute">background</span>: <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.8</span>), <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, .<span class="hljs-number">5</span>))
+&#125;</code></pre>
+
+<p>dialog中有个属性 <code>open</code> 用于控制对话框的显示与隐藏，但是不直接操作属性，而是使用快捷方法 <code>showModal()</code> 和 <code>close()</code>。</p>
+<pre><code class="hljs js"><span class="hljs-keyword">let</span> dialog = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;dialog&#x27;</span>);
+<span class="hljs-comment">// 显示dialog</span>
+dialog.<span class="hljs-title function_">showModal</span>();
+<span class="hljs-comment">// 关闭dialog</span>
+dialog.<span class="hljs-title function_">close</span>();</code></pre>
+
+<p><strong>浏览器兼容问题</strong></p>
+<p>dialog作为HTML5.2中新加的功能，除了最新的Chrome浏览器支持外，其它浏览器还没有进行支持。</p>
+<p>可以使用第三方的<strong>dialog-polyfill</strong>库进行兼容，npm地址 <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/dialog-polyfill">https://www.npmjs.com/package/dialog-polyfill</a> 。</p>
+<p>安装</p>
+<p><code>npm install dialog-polyfill</code></p>
+<p>导入dialog-polyfill，然后在使用每个dialog之前，使用它进行注册即可</p>
+<pre><code class="hljs js"><span class="hljs-keyword">import</span> dialogPolyfill <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;dialog-polyfill&#x27;</span>;
+
+dialogPolyfill.<span class="hljs-title function_">registerDialog</span>(dialog);</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

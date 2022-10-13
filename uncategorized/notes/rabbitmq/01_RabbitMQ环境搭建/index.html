@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,10 +75,16 @@
     
 </header>
 
-    <main><h1>RabbitMQ环境搭建</h1>
+    <main><div class="post">
+    <h1>RabbitMQ环境搭建</h1>
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <blockquote>
 <p>注意Erlang版本要与RabbitMQ-Server版本对应，这里erlang使用23.x，rabbitmq-server使用3.9.x。具体参见官网。</p>
@@ -87,7 +97,9 @@
 <p>3.安装erlang之前，需要确保安装了 <em>ncurses-dev</em> 软件包</p>
 <p><code>apt install ncurses-dev</code></p>
 <p>否则，运行 <code>configure</code> 时，可能报错</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">configure: error: No curses library functions found</span><br><span class="line">ERROR: /Downloads/otp_src_23.3.2/erts/configure failed!</span><br><span class="line">Killed</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">configure: error: No curses library functions found
+ERROR: /Downloads/otp_src_23.3.2/erts/configure failed!
+Killed</code></pre>
 
 <p>4.安装erlang</p>
 <p><code>cd otp_src_23.3.2</code></p>
@@ -108,12 +120,17 @@
 <p><code>mv rabbitmq_server-3.9.13/ /opt/</code></p>
 <p>3.配置PATH环境变量</p>
 <p>在 <em>~&#x2F;.bashrc</em> （或 <em>&#x2F;etc&#x2F;profile</em>） 文件中，添加以下内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">RabbitMQ</span></span><br><span class="line">RABBITMQ_HOME=/opt/rabbitmq_server-3.9.13</span><br><span class="line">PATH=$PATH:$RABBITMQ_HOME/sbin</span><br><span class="line"></span><br><span class="line">export PATH</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">RabbitMQ</span>
+RABBITMQ_HOME=/opt/rabbitmq_server-3.9.13
+PATH=$PATH:$RABBITMQ_HOME/sbin
+
+export PATH</code></pre>
 
 <p>使其生效</p>
 <p><code>source ~/.bashrc</code></p>
 <p>测试一下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yyds@ubuntu:/opt/rabbitmq_server-3.9.13$ rabbitmqctl --version</span><br><span class="line">3.9.13</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs shell">yyds@ubuntu:/opt/rabbitmq_server-3.9.13$ rabbitmqctl --version
+3.9.13</code></pre>
 
 <p><strong>Windows</strong></p>
 <p>1.下载安装包</p>
@@ -144,13 +161,18 @@
 <p>启用插件</p>
 <p><code>rabbitmq-plugins enable rabbitmq_management</code></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

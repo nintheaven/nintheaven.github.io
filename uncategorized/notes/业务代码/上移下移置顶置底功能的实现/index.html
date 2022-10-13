@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,10 +75,16 @@
     
 </header>
 
-    <main><h1>上移下移置顶置底功能的实现</h1>
+    <main><div class="post">
+    <h1>上移下移置顶置底功能的实现</h1>
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>客户端展示一个表格，在每一行中提供按钮，进行上移、下移、置顶、置底操作。</p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p><strong>基本思路</strong></p>
@@ -93,13 +103,18 @@
 <p>当数据量大时，进行了大量的插入与删除操作，可能导致只有1000条记录时，最大的seq为9999。</p>
 <p>可以考虑在插入或删除操作中，比较maxSeq和数据总量（或者一个固定数字），如果差距比较大，就重新设置所有记录的seq。</p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

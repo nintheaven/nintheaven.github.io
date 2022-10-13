@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,51 +75,101 @@
     
 </header>
 
-    <main><h1>Java实现适配器模式</h1>
+    <main><div class="post">
+    <h1>Java实现适配器模式</h1>
 
-<span>软件设计模式</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="适配器模式介绍"><a href="#适配器模式介绍" class="headerlink" title="适配器模式介绍"></a>适配器模式介绍</h2><p>适配器模式用以解决这种情况：<strong>现有类（被适配者）与目标接口（适配目标）不兼容的时候</strong>，此时，可以为现有类创建一个<strong>适配器类</strong>，这个适配器类与目标接口兼容（接口实现）。</p>
 <p>例如，生活用电的电压为220V，但是各种家用电器的电压一般远低于220V，这时，要想让电器在220V的电压下使用，就必须在电器与220V输入电路之间使用变压器，变压器可以让12V的电器间接使用200V的电压。这里的220V电压是适配目标，电器是被适配者，变压器是适配器。</p>
 <p>还有各种USB分线器（扩展坞），就是让无法在USB插口中直接使用的Micro&#x2F;Type-C接口的数据线，通过分线器而可以使用。这里的USB插口是适配目标，Micro&#x2F;Type-C接口数据线是被适配者，USB分线器是适配器。</p>
 <h2 id="适配器模式示例"><a href="#适配器模式示例" class="headerlink" title="适配器模式示例"></a>适配器模式示例</h2><h3 id="类适配器模式"><a href="#类适配器模式" class="headerlink" title="类适配器模式"></a>类适配器模式</h3><p>以USB分线器为例，USB接口如下，使用 <code>transfer()</code> 方法传输数据</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*USB接口：接口*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">USB</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">transfer</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*USB接口：接口*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">USB</span> &#123;
+    <span class="hljs-keyword">void</span> <span class="hljs-title function_">transfer</span><span class="hljs-params">()</span>;
+&#125;</code></pre>
 
 <p>现在有根Type-C数据线，使用不同的方式传输数据</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*Type-C数据线*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TypeCCable</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">typeCTransfer</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;使用Type-C数据线&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*Type-C数据线*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TypeCCable</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">typeCTransfer</span><span class="hljs-params">()</span>&#123;
+        System.out.println(<span class="hljs-string">&quot;使用Type-C数据线&quot;</span>);
+    &#125;
+&#125;</code></pre>
 
 <p>在只支持传统USB接口的设备上，是无直接使用Type-C数据线的，需要有一个USB分线器 <code>USBAdapter</code> 来实现适配。</p>
 <p><code>USBAdapter</code> 继承 <code>TypeCCabel</code> ，并实现 <code>USB</code> 接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*USB适配器：类适配器*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">USBAdapter</span> <span class="keyword">extends</span> <span class="title class_">TypeCCable</span> <span class="keyword">implements</span> <span class="title class_">USB</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">transfer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.typeCTransfer();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*USB适配器：类适配器*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">USBAdapter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">TypeCCable</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">USB</span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">transfer</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-built_in">super</span>.typeCTransfer();
+    &#125;
+&#125;</code></pre>
 
 <p>这样，<code>USBAdapter</code> 从 <code>TypeCCable</code> 中获得了数据传输的功能，当需要使用Type-C的数据线传输数据时 <code>typeCTransfer()</code>，就可以在 <code>USBAdapter</code> 中调用它。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">USB</span> <span class="variable">usb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">USBAdapter</span>();</span><br><span class="line">    usb.transfer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+    <span class="hljs-type">USB</span> <span class="hljs-variable">usb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">USBAdapter</span>();
+    usb.transfer();
+&#125;</code></pre>
 
 <h3 id="对象适配器模式"><a href="#对象适配器模式" class="headerlink" title="对象适配器模式"></a>对象适配器模式</h3><p>上面的例子中，<code>USB</code> 是一个接口，所以 <code>USBAdapter</code> 可以继承 <code>TypeCCable</code> 并实现 <code>USB</code> 接口。有时候，适配目标可能不是接口，而是一个(抽象)类。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*USB接口：抽象类*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbsUSB</span> &#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">transfer</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*USB接口：抽象类*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbsUSB</span> &#123;
+    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">transfer</span><span class="hljs-params">()</span>;
+&#125;</code></pre>
 
 <p>由于Java类不支持多继承，所以类适配器模式就行不通了。</p>
 <p>这种情况下，可以使用对象适配器：适配器类继承 <code>AbsUSB</code> 适配目标类，通过依赖注入的方式，在其内部添加一个 <code>TypeCCable</code> 对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*USB适配器：对象适配器*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">USBAdapter2</span> <span class="keyword">extends</span> <span class="title class_">AbsUSB</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TypeCCable typeCCable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">USBAdapter2</span><span class="params">(TypeCCable typeCCable)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.typeCCable = typeCCable;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">transfer</span><span class="params">()</span> &#123;</span><br><span class="line">        typeCCable.typeCTransfer();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/*USB适配器：对象适配器*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">USBAdapter2</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbsUSB</span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> TypeCCable typeCCable;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">USBAdapter2</span><span class="hljs-params">(TypeCCable typeCCable)</span> &#123;
+        <span class="hljs-built_in">this</span>.typeCCable = typeCCable;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">void</span> <span class="hljs-title function_">transfer</span><span class="hljs-params">()</span> &#123;
+        typeCCable.typeCTransfer();
+    &#125;
+&#125;</code></pre>
 
 <p>创建对象适配器时，需要同时创建被适配者 <code>TypeCCable</code> 的一个对象，作为构造器参数传递</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// 类适配器</span></span><br><span class="line">    <span class="comment">// USB usb = new USBAdapter();</span></span><br><span class="line">    <span class="comment">// usb.transfer();</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对象适配器</span></span><br><span class="line">    <span class="type">TypeCCable</span> <span class="variable">typeCCable</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TypeCCable</span>();</span><br><span class="line">    <span class="type">AbsUSB</span> <span class="variable">usb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">USBAdapter2</span>(typeCCable);</span><br><span class="line">    usb.transfer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+    <span class="hljs-comment">// 类适配器</span>
+    <span class="hljs-comment">// USB usb = new USBAdapter();</span>
+    <span class="hljs-comment">// usb.transfer();</span>
+
+    <span class="hljs-comment">// 对象适配器</span>
+    <span class="hljs-type">TypeCCable</span> <span class="hljs-variable">typeCCable</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeCCable</span>();
+    <span class="hljs-type">AbsUSB</span> <span class="hljs-variable">usb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">USBAdapter2</span>(typeCCable);
+    usb.transfer();
+&#125;</code></pre>
 
 <h2 id="适配器模式类图"><a href="#适配器模式类图" class="headerlink" title="适配器模式类图"></a>适配器模式类图</h2><p>类适配器模式类图</p>
 <p><img src="/images/adapter1.png"></p>
 <p>对象适配器模式类图</p>
 <p><img src="/images/adapter2.png"></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

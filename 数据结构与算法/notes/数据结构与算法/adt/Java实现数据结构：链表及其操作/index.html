@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>Java实现数据结构：链表及其操作</h1>
+    <main><div class="post">
+    <h1>Java实现数据结构：链表及其操作</h1>
 
-<span>数据结构与算法</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="链表介绍"><a href="#链表介绍" class="headerlink" title="链表介绍"></a>链表介绍</h2><p>数组和链表是最基本的数据结构，是实现其他数据结构的基础。。</p>
 <p>链表本质上是串在一起的一个个节点。</p>
@@ -87,10 +95,25 @@
 <p>链表包括单向链表、双向链表、循环链表。</p>
 <p><strong>单向链表</strong>只有指向后继元素的 <code>next</code> 指针，<strong>双向链表</strong> <code>next</code> 和 <code>prev</code> 都有，<strong>循环链表</strong>在双向链表的基础上，将 <code>head.prev</code> 指向 <code>tail</code>，并将 <code>tail.next</code> 指向 <code>head</code>。</p>
 <h2 id="构造链表"><a href="#构造链表" class="headerlink" title="构造链表"></a>构造链表</h2><p>构造单向链表使用如下的数据结构</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SinglyNode</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> E val;</span><br><span class="line">    <span class="keyword">public</span> SinglyNode&lt;E&gt; next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">SinglyNode</span><span class="params">(E val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SinglyNode</span>&lt;E&gt; &#123;
+    <span class="hljs-keyword">public</span> E val;
+    <span class="hljs-keyword">public</span> SinglyNode&lt;E&gt; next;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">SinglyNode</span><span class="hljs-params">(E val)</span> &#123;
+        <span class="hljs-built_in">this</span>.val = val;
+    &#125;
+&#125;</code></pre>
 
 <p>构造双向链表和循环链表使用如下的数据结构</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DoublyNode</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> E val;</span><br><span class="line">    <span class="keyword">public</span> SinglyNode&lt;E&gt; prev;</span><br><span class="line">    <span class="keyword">public</span> SinglyNode&lt;E&gt; next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DoublyNode</span><span class="params">(E val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DoublyNode</span>&lt;E&gt; &#123;
+    <span class="hljs-keyword">public</span> E val;
+    <span class="hljs-keyword">public</span> SinglyNode&lt;E&gt; prev;
+    <span class="hljs-keyword">public</span> SinglyNode&lt;E&gt; next;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">DoublyNode</span><span class="hljs-params">(E val)</span> &#123;
+        <span class="hljs-built_in">this</span>.val = val;
+    &#125;
+&#125;</code></pre>
 
 <h2 id="链表常见操作"><a href="#链表常见操作" class="headerlink" title="链表常见操作"></a>链表常见操作</h2><blockquote>
 <p>非特殊说明，以下操作均使用双向链表。</p>
@@ -98,13 +121,18 @@
 <p><strong>在表头插入元素</strong></p>
 <p><strong>从表头删除元素</strong></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Tomcat必知必会 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>Tomcat必知必会</h1>
+
+    <div>
+        
+        <a href="/notes/#服务器技术">服务器技术</a>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><p><a target="_blank" rel="noopener" href="https://tomcat.apache.org/">https://tomcat.apache.org/</a></p>
+<span id="more"></span>
+
+<h2 id="Tomcat服务器安装"><a href="#Tomcat服务器安装" class="headerlink" title="Tomcat服务器安装"></a>Tomcat服务器安装</h2><p>首先，下载安装包<br>下载地址: <a target="_blank" rel="noopener" href="https://tomcat.apache.org/">https://tomcat.apache.org/</a></p>
+<p>然后安装，Tomcat安装包只是一个压缩包文件，只需要解压到安装目录即可。<br>例如，在linux中，要将其安装到 &#x2F;opt 目录中,运行命令<br><code>sudo tar zxvf apache-tomcat-9.0.36.tar.gz -C /opt/</code><br>此时，opt下的tomcat目录属于root用户，root用户组，为了避免权限问题，再运行以下命令<br><code>sudo chown -R ubuntu.ubuntu apache-tomcat-9.0.36/</code><br>这里的ubuntu是用户名和用户组名</p>
+<p>至此，Tomcat已成功安装。</p>
+<p>卸载Tomcat服务器很简单，只需要将Tomcat文件夹删除即可(如果配置了环境变量，也要记得删除)。</p>
+<h2 id="Tomcat环境配置"><a href="#Tomcat环境配置" class="headerlink" title="Tomcat环境配置"></a>Tomcat环境配置</h2><p>在启动服务器之前，需要确保配置了<code>JAVA_HOME</code> 或 <code>JRE_HOME</code> 环境变量，以及 <code>CATALINA_HOME</code> 和 <code>CATALINA_BASE</code> 环境变量</p>
+<blockquote>
+<p>这里没有将 bin&#x2F; 目录加到 PATH 环境变量中，因为没必要</p>
+</blockquote>
+<pre><code class="hljs sh"><span class="hljs-comment"># JDK</span>
+JAVA_HOME=<span class="hljs-string">&quot;/opt/jdk/jdk-11.0.12&quot;</span>
+PATH=<span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$JAVA_HOME</span>/bin
+
+<span class="hljs-comment"># Tomcat</span>
+CATALINA_HOME=<span class="hljs-string">&quot;/opt/apache-tomcat-9.0.54&quot;</span>
+CATALINA_BASE=<span class="hljs-string">&quot;/opt/apache-tomcat-9.0.54&quot;</span>
+
+<span class="hljs-built_in">export</span> PATH</code></pre>
+
+<h2 id="Tomcat服务的启动与停止"><a href="#Tomcat服务的启动与停止" class="headerlink" title="Tomcat服务的启动与停止"></a>Tomcat服务的启动与停止</h2><p><strong>启动服务</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a></p>
+</blockquote>
+<p>On Windows:</p>
+<pre><code>%CATALINA_HOME%\bin\startup.bat
+or
+%CATALINA_HOME%\bin\catalina.bat start
+</code></pre>
+<p>On *nix:</p>
+<pre><code>$CATALINA_HOME/bin/startup.sh
+or
+$CATALINA_HOME/bin/catalina.sh start
+</code></pre>
+<p><strong>停止服务</strong></p>
+<p>On Windows:</p>
+<pre><code>%CATALINA_HOME%\bin\shutdown.bat
+or
+%CATALINA_HOME%\bin\catalina.bat stop
+</code></pre>
+<p>On *nix:</p>
+<pre><code>$CATALINA_HOME/bin/shutdown.sh
+or
+$CATALINA_HOME/bin/catalina.sh stop
+</code></pre>
+<h2 id="部署web项目"><a href="#部署web项目" class="headerlink" title="部署web项目"></a>部署web项目</h2><p>首先熟悉一下Tomcat安装目录下都有些什么</p>
+<pre><code class="hljs plaintext">apache-tomcat-9.0.36/
+├── BUILDING.txt
+├── README.md
+├── RUNNING.txt
+├── bin
+│   ├── bootstrap.jar
+│   ├── catalina-tasks.xml
+│   ├── catalina.bat
+│   ├── catalina.sh
+│   ├── ciphers.bat
+│   ├── ciphers.sh
+│   ├── commons-daemon-native.tar.gz
+│   ├── commons-daemon.jar
+│   ├── configtest.bat
+│   ├── configtest.sh
+│   ├── daemon.sh
+│   ├── digest.bat
+│   ├── digest.sh
+│   ├── makebase.bat
+│   ├── makebase.sh
+│   ├── setclasspath.bat
+│   ├── setclasspath.sh
+│   ├── shutdown.bat
+│   ├── shutdown.sh
+│   ├── startup.bat
+│   ├── startup.sh
+│   ├── tomcat-juli.jar
+│   ├── tomcat-native.tar.gz
+│   ├── tool-wrapper.bat
+│   ├── tool-wrapper.sh
+│   ├── version.bat
+│   └── version.sh
+├── conf
+│   ├── Catalina
+│   ├── catalina.policy
+│   ├── catalina.properties
+│   ├── context.xml
+│   ├── jaspic-providers.xml
+│   ├── jaspic-providers.xsd
+│   ├── logging.properties
+│   ├── server.xml
+│   ├── tomcat-users.xml
+│   ├── tomcat-users.xsd
+│   └── web.xml
+├── lib
+│   ├── annotations-api.jar
+│   ├── catalina-ant.jar
+│   ├── catalina-ha.jar
+│   ├── catalina-ssi.jar
+│   ├── catalina-storeconfig.jar
+│   ├── catalina-tribes.jar
+│   ├── catalina.jar
+│   ├── ecj-4.15.jar
+│   ├── el-api.jar
+│   ├── jasper-el.jar
+│   ├── jasper.jar
+│   ├── jaspic-api.jar
+│   ├── jsp-api.jar
+│   ├── servlet-api.jar
+│   ├── tomcat-api.jar
+│   ├── tomcat-coyote.jar
+│   ├── tomcat-dbcp.jar
+│   ├── tomcat-i18n-cs.jar
+│   ├── tomcat-i18n-de.jar
+│   ├── tomcat-i18n-es.jar
+│   ├── tomcat-i18n-fr.jar
+│   ├── tomcat-i18n-ja.jar
+│   ├── tomcat-i18n-ko.jar
+│   ├── tomcat-i18n-pt-BR.jar
+│   ├── tomcat-i18n-ru.jar
+│   ├── tomcat-i18n-zh-CN.jar
+│   ├── tomcat-jdbc.jar
+│   ├── tomcat-jni.jar
+│   ├── tomcat-util-scan.jar
+│   ├── tomcat-util.jar
+│   ├── tomcat-websocket.jar
+│   └── websocket-api.jar
+├── logs/
+├── temp/
+├── webapps
+│   ├── ROOT
+│   ├── docs
+│   ├── examples
+│   ├── host-manager
+│   └── manager
+└── work
+    └── Catalina</code></pre>
+
+<p>部署Web项目有几种不同的方式</p>
+<p>1.直接将项目文件夹复制到webapps目录下</p>
+<p>2.通过war包的方式，将项目文件打包为war包，复制到webapps目录下。  </p>
+<p>这种方式的好处是，Tomcat可以在不重启的情况下，自动管理war包</p>
+<p>3.在conf&#x2F;server.xml中的Host标签中配置</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Host</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Context</span> <span class="hljs-attr">docBase</span>=<span class="hljs-string">&quot;/home/ubuntu/Projects/blog&quot;</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/blog&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Host</span>&gt;</span></code></pre>
+
+<p>4.在conf&#x2F;Catalina&#x2F;localhost目录下，为每个项目创建单独的配置文件</p>
+<p>文件名为blog.xml，文件名blog就是项目的上下文路径。配置内容如下</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Context</span> <span class="hljs-attr">docBase</span>=<span class="hljs-string">&quot;/home/ubuntu/Projects/blog&quot;</span> /&gt;</span></code></pre>
+
+<h2 id="警告和报错"><a href="#警告和报错" class="headerlink" title="警告和报错"></a>警告和报错</h2><p>tomcat启动日志中文乱码，修改 <em>conf</em> 目录下的 <em>logging.properties</em> 配置文件，修改控制台编码为GBK</p>
+<pre><code class="hljs properties"><span class="hljs-attr">java.util.logging.ConsoleHandler.level</span> = <span class="hljs-string">FINE</span>
+<span class="hljs-attr">java.util.logging.ConsoleHandler.formatter</span> = <span class="hljs-string">org.apache.juli.OneLineFormatter</span>
+<span class="hljs-comment">#java.util.logging.ConsoleHandler.encoding = UTF-8</span>
+<span class="hljs-attr">java.util.logging.ConsoleHandler.encoding</span> = <span class="hljs-string">GBK</span></code></pre>
+
+<h2 id="Tomcat自启动服务"><a href="#Tomcat自启动服务" class="headerlink" title="Tomcat自启动服务"></a>Tomcat自启动服务</h2></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

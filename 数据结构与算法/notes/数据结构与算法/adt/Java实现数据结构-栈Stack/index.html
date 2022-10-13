@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>Java实现数据结构-栈Stack</h1>
+    <main><div class="post">
+    <h1>Java实现数据结构-栈Stack</h1>
 
-<span>数据结构与算法</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <h2 id="栈介绍"><a href="#栈介绍" class="headerlink" title="栈介绍"></a>栈介绍</h2><p>栈（Stack）是一种动态集合。</p>
 <p>栈采用后进先出（last-in, first-out, LIFO）策略；</p>
@@ -90,7 +98,15 @@
 <li><code>pop()</code>：出栈，并返回栈顶元素</li>
 </ul>
 <p>定义<code>Stack</code> 接口如下，<code>Stack</code> 接口继承 JDK内置的<code>Iterable</code> 接口，要求实现类必须提供重写的 <code>iterator()</code> 方法（迭代器模式）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> adt.stack;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*栈接口*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Stack</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">Iterable</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(E item)</span>;</span><br><span class="line">    E <span class="title function_">pop</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">package</span> adt.stack;
+
+<span class="hljs-comment">/*栈接口*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Stack</span>&lt;E&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Iterable</span>&lt;E&gt; &#123;
+    <span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span>;
+    <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span>;
+    <span class="hljs-keyword">void</span> <span class="hljs-title function_">push</span><span class="hljs-params">(E item)</span>;
+    E <span class="hljs-title function_">pop</span><span class="hljs-params">()</span>;
+&#125;</code></pre>
 
 <h2 id="数组实现"><a href="#数组实现" class="headerlink" title="数组实现"></a>数组实现</h2><p>使用 <code>Object[]</code> 存储栈中的元素，使用一个 <code>int</code> 类型的变量 <em>top</em> 表示栈顶，当 <em>top &#x3D; 0</em> 时，表示栈为空；当 <em>top &#x3D; 数组长度</em> 时，表示栈已满。</p>
 <p><code>push</code> 时：</p>
@@ -109,28 +125,229 @@
 <p>扩容：这里只是简单的每次加10个容量，并确保容量不超过上限</p>
 <p><strong>时间复杂度</strong></p>
 <p>入栈、出栈操作都为 O(1)。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> adt.stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*栈：数组实现*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayStack</span>&lt;E&gt; <span class="keyword">implements</span> <span class="title class_">Stack</span>&lt;E&gt;&#123;</span><br><span class="line">    <span class="comment">// 默认容量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_CAPACITY</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_CAPACITY</span> <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存放元素的数组</span></span><br><span class="line">    <span class="keyword">private</span> Object[] elements;</span><br><span class="line">    <span class="comment">// 栈顶位置</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">top</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ArrayStack</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.elements = <span class="keyword">new</span> <span class="title class_">Object</span>[DEFAULT_CAPACITY];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ArrayStack</span><span class="params">(<span class="type">int</span> initialCapacity)</span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> initialCapacity &gt;= <span class="number">0</span> &amp;&amp; initialCapacity &lt;= MAX_CAPACITY;</span><br><span class="line">        <span class="built_in">this</span>.elements = <span class="keyword">new</span> <span class="title class_">Object</span>[initialCapacity];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> top == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> top;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(E item)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (top == MAX_CAPACITY) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;overflow&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (top+<span class="number">1</span> &gt; elements.length) &#123;</span><br><span class="line">            grow();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.elements[top++] = item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">pop</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (top == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;underflow&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">E</span> <span class="variable">item</span> <span class="operator">=</span> (E) elements[--top];</span><br><span class="line">        elements[top] = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*扩容*/</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elements.length;</span><br><span class="line">        <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> Math.min(oldCapacity + <span class="number">10</span>, MAX_CAPACITY);</span><br><span class="line">        elements = Arrays.copyOf(elements,newCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;E&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ArrayStackIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ArrayStackIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;E&gt;&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">cursor</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> cursor &lt; size();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> E <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">E</span> <span class="variable">e</span> <span class="operator">=</span> (E) elements[cursor++];</span><br><span class="line">            <span class="keyword">return</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">package</span> adt.stack;
+
+<span class="hljs-keyword">import</span> java.util.Arrays;
+<span class="hljs-keyword">import</span> java.util.Iterator;
+
+<span class="hljs-comment">/*栈：数组实现*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ArrayStack</span>&lt;E&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Stack</span>&lt;E&gt;&#123;
+    <span class="hljs-comment">// 默认容量</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;
+    <span class="hljs-comment">// 最大容量</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MAX_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">100</span>;
+
+    <span class="hljs-comment">// 存放元素的数组</span>
+    <span class="hljs-keyword">private</span> Object[] elements;
+    <span class="hljs-comment">// 栈顶位置</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">top</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ArrayStack</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-built_in">this</span>.elements = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[DEFAULT_CAPACITY];
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ArrayStack</span><span class="hljs-params">(<span class="hljs-type">int</span> initialCapacity)</span>&#123;
+        <span class="hljs-keyword">assert</span> initialCapacity &gt;= <span class="hljs-number">0</span> &amp;&amp; initialCapacity &lt;= MAX_CAPACITY;
+        <span class="hljs-built_in">this</span>.elements = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[initialCapacity];
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> top == <span class="hljs-number">0</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> top;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">push</span><span class="hljs-params">(E item)</span> &#123;
+        <span class="hljs-keyword">if</span> (top == MAX_CAPACITY) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;overflow&quot;</span>);
+        &#125;
+        <span class="hljs-keyword">if</span> (top+<span class="hljs-number">1</span> &gt; elements.length) &#123;
+            grow();
+        &#125;
+        <span class="hljs-built_in">this</span>.elements[top++] = item;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> E <span class="hljs-title function_">pop</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">if</span> (top == <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;underflow&quot;</span>);
+        &#125;
+        <span class="hljs-type">E</span> <span class="hljs-variable">item</span> <span class="hljs-operator">=</span> (E) elements[--top];
+        elements[top] = <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">return</span> item;
+    &#125;
+
+    <span class="hljs-comment">/*扩容*/</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">grow</span><span class="hljs-params">()</span>&#123;
+        <span class="hljs-type">int</span> <span class="hljs-variable">oldCapacity</span> <span class="hljs-operator">=</span> elements.length;
+        <span class="hljs-type">int</span> <span class="hljs-variable">newCapacity</span> <span class="hljs-operator">=</span> Math.min(oldCapacity + <span class="hljs-number">10</span>, MAX_CAPACITY);
+        elements = Arrays.copyOf(elements,newCapacity);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayStackIterator</span>();
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ArrayStackIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;E&gt;&#123;
+        <span class="hljs-type">int</span> <span class="hljs-variable">cursor</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span> &#123;
+            <span class="hljs-keyword">return</span> cursor &lt; size();
+        &#125;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-keyword">public</span> E <span class="hljs-title function_">next</span><span class="hljs-params">()</span> &#123;
+            <span class="hljs-type">E</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> (E) elements[cursor++];
+            <span class="hljs-keyword">return</span> e;
+        &#125;
+    &#125;
+&#125;</code></pre>
 
 <h2 id="链表实现"><a href="#链表实现" class="headerlink" title="链表实现"></a>链表实现</h2><p>使用双向链表实现栈数据结构。只涉及到链表的插入、删除及其迭代。</p>
 <p>在栈中维护一个叫 <em>top</em> 的节点，表示栈顶。<code>push</code>和 <code>pop</code>时，只需要操作该节点即可。由于是链表数据结构，所以容量无上限（取决于JVM内存）。</p>
 <p><strong>时间复杂度</strong></p>
 <p>入栈、出栈操作都为 O(1)。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> adt.stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*栈：队列实现*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LinkedStack</span>&lt;E&gt; <span class="keyword">implements</span> <span class="title class_">Stack</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="comment">// 头结点</span></span><br><span class="line">    <span class="keyword">private</span> ListNode&lt;E&gt; head = <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 栈顶节点</span></span><br><span class="line">    <span class="keyword">private</span> ListNode&lt;E&gt; top = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">LinkedStack</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> head == <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(E val)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">null</span>) &#123;</span><br><span class="line">            head = <span class="keyword">new</span> <span class="title class_">ListNode</span>&lt;&gt;(val, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">            top = head;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            top.next = <span class="keyword">new</span> <span class="title class_">ListNode</span>&lt;&gt;(val, top, <span class="literal">null</span>);</span><br><span class="line">            top = top.next;</span><br><span class="line">        &#125;</span><br><span class="line">        size++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">pop</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (top == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;underflow&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">E</span> <span class="variable">val</span> <span class="operator">=</span> top.val;</span><br><span class="line">        ListNode&lt;E&gt; prev = top.prev;</span><br><span class="line">        <span class="keyword">if</span> (prev == <span class="literal">null</span>) &#123; <span class="comment">// 当top为首元素时</span></span><br><span class="line">            head = <span class="literal">null</span>;</span><br><span class="line">            top = <span class="literal">null</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            prev.next = <span class="literal">null</span>;</span><br><span class="line">            top.prev = <span class="literal">null</span>;</span><br><span class="line">            top = prev;</span><br><span class="line">        &#125;</span><br><span class="line">        size--;</span><br><span class="line">        <span class="keyword">return</span> val;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ListNode</span>&lt;E&gt; &#123;</span><br><span class="line">        E val;</span><br><span class="line">        ListNode&lt;E&gt; prev;</span><br><span class="line">        ListNode&lt;E&gt; next;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">ListNode</span><span class="params">(E val, ListNode&lt;E&gt; prev, ListNode&lt;E&gt; next)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.val = val;</span><br><span class="line">            <span class="built_in">this</span>.prev = prev;</span><br><span class="line">            <span class="built_in">this</span>.next = next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;E&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">LinkedStackIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">LinkedStackIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;E&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> ListNode&lt;E&gt; head = LinkedStack.<span class="built_in">this</span>.head;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> head != <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> E <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">E</span> <span class="variable">val</span> <span class="operator">=</span> head.val;</span><br><span class="line">            head = head.next;</span><br><span class="line">            <span class="keyword">return</span> val;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">package</span> adt.stack;
+
+<span class="hljs-keyword">import</span> java.util.Iterator;
+
+<span class="hljs-comment">/*栈：队列实现*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LinkedStack</span>&lt;E&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Stack</span>&lt;E&gt; &#123;
+    <span class="hljs-comment">// 头结点</span>
+    <span class="hljs-keyword">private</span> ListNode&lt;E&gt; head = <span class="hljs-literal">null</span>;
+    <span class="hljs-comment">// 栈顶节点</span>
+    <span class="hljs-keyword">private</span> ListNode&lt;E&gt; top = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">LinkedStack</span><span class="hljs-params">()</span> &#123;
+
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> head == <span class="hljs-literal">null</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> size;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">push</span><span class="hljs-params">(E val)</span> &#123;
+        <span class="hljs-keyword">if</span> (head == <span class="hljs-literal">null</span>) &#123;
+            head = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ListNode</span>&lt;&gt;(val, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);
+            top = head;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            top.next = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ListNode</span>&lt;&gt;(val, top, <span class="hljs-literal">null</span>);
+            top = top.next;
+        &#125;
+        size++;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> E <span class="hljs-title function_">pop</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">if</span> (top == <span class="hljs-literal">null</span>) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;underflow&quot;</span>);
+        &#125;
+        <span class="hljs-type">E</span> <span class="hljs-variable">val</span> <span class="hljs-operator">=</span> top.val;
+        ListNode&lt;E&gt; prev = top.prev;
+        <span class="hljs-keyword">if</span> (prev == <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// 当top为首元素时</span>
+            head = <span class="hljs-literal">null</span>;
+            top = <span class="hljs-literal">null</span>;
+        &#125;<span class="hljs-keyword">else</span> &#123;
+            prev.next = <span class="hljs-literal">null</span>;
+            top.prev = <span class="hljs-literal">null</span>;
+            top = prev;
+        &#125;
+        size--;
+        <span class="hljs-keyword">return</span> val;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ListNode</span>&lt;E&gt; &#123;
+        E val;
+        ListNode&lt;E&gt; prev;
+        ListNode&lt;E&gt; next;
+
+        <span class="hljs-keyword">public</span> <span class="hljs-title function_">ListNode</span><span class="hljs-params">(E val, ListNode&lt;E&gt; prev, ListNode&lt;E&gt; next)</span> &#123;
+            <span class="hljs-built_in">this</span>.val = val;
+            <span class="hljs-built_in">this</span>.prev = prev;
+            <span class="hljs-built_in">this</span>.next = next;
+        &#125;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedStackIterator</span>();
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LinkedStackIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;E&gt; &#123;
+        <span class="hljs-keyword">private</span> ListNode&lt;E&gt; head = LinkedStack.<span class="hljs-built_in">this</span>.head;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span> &#123;
+            <span class="hljs-keyword">return</span> head != <span class="hljs-literal">null</span>;
+        &#125;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-keyword">public</span> E <span class="hljs-title function_">next</span><span class="hljs-params">()</span> &#123;
+            <span class="hljs-type">E</span> <span class="hljs-variable">val</span> <span class="hljs-operator">=</span> head.val;
+            head = head.next;
+            <span class="hljs-keyword">return</span> val;
+        &#125;
+    &#125;
+&#125;</code></pre>
 
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p><code>ArrayStack</code> 和 <code>LinkedStack</code> 均实现 <code>Stack</code> 接口，拥有一样的API，使用方法一样</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//Stack&lt;Integer&gt; stack = new ArrayStack&lt;&gt;();</span></span><br><span class="line">    Stack&lt;Integer&gt; stack = <span class="keyword">new</span> <span class="title class_">LinkedStack</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        stack.push(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;size = &quot;</span> +stack.size());</span><br><span class="line"></span><br><span class="line">    Iterator&lt;Integer&gt; it = stack.iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext())&#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;%d &quot;</span>,it.next());</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">num</span> <span class="operator">=</span> stack.pop();</span><br><span class="line">        System.out.printf(<span class="string">&quot;%d &quot;</span>,num);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(stack.isEmpty());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+    <span class="hljs-comment">//Stack&lt;Integer&gt; stack = new ArrayStack&lt;&gt;();</span>
+    Stack&lt;Integer&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedStack</span>&lt;&gt;();
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+        stack.push(i);
+    &#125;
+
+    System.out.println(<span class="hljs-string">&quot;size = &quot;</span> +stack.size());
+
+    Iterator&lt;Integer&gt; it = stack.iterator();
+    <span class="hljs-keyword">while</span> (it.hasNext())&#123;
+        System.out.printf(<span class="hljs-string">&quot;%d &quot;</span>,it.next());
+    &#125;
+    System.out.println();
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+        <span class="hljs-type">Integer</span> <span class="hljs-variable">num</span> <span class="hljs-operator">=</span> stack.pop();
+        System.out.printf(<span class="hljs-string">&quot;%d &quot;</span>,num);
+    &#125;
+    System.out.println();
+    System.out.println(stack.isEmpty());
+&#125;</code></pre>
 
 <p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">size = 10</span><br><span class="line">0 1 2 3 4 5 6 7 8 9 </span><br><span class="line">9 8 7 6 5 4 3 2 1 0 </span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">size = 10
+0 1 2 3 4 5 6 7 8 9 
+9 8 7 6 5 4 3 2 1 0 
+true</code></pre>
 
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

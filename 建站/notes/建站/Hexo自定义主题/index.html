@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>Hexo自定义主题</h1>
+    <main><div class="post">
+    <h1>Hexo自定义主题</h1>
 
-<span>建站</span>
+    <div>
+        
 
-<span>2020-02-05</span>
-<div><p>Hexo自定义主题的本质是利用Hexo提供的相关工具，结合支持的模板引擎，操作本地文件系统中的数据。</p>
+        <span>2020-02-05</span>
+    </div>
+
+    <div><p>Hexo自定义主题的本质是利用Hexo提供的相关工具，结合支持的模板引擎，操作本地文件系统中的数据。</p>
 <span id="more"></span>
 
 <h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><ul>
@@ -90,7 +98,11 @@
 </li>
 </ul>
 <h2 id="创建Hexo内置的页面与模板"><a href="#创建Hexo内置的页面与模板" class="headerlink" title="创建Hexo内置的页面与模板"></a>创建Hexo内置的页面与模板</h2><p>创建主题的第1步是创建文件结构</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├── _config.yml</span><br><span class="line">├── languages</span><br><span class="line">├── layout</span><br><span class="line">├── scripts</span><br><span class="line">└── source</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">├── _config.yml
+├── languages
+├── layout
+├── scripts
+└── source</code></pre>
 
 <p>然后是创建下面的模板文件</p>
 <table>
@@ -140,39 +152,101 @@
 <li><p>在主题的 <em>layout&#x2F;</em> 目录下创建新的模板文件 <em>links.njk</em></p>
 </li>
 <li><p>在模板的 Front-matter 中使用 <code>layout</code> 关联内容 <em>links&#x2F;index.md</em> 与模板 <em>layout&#x2F;links.njk</em></p>
-<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: links</span><br><span class="line">layout: links</span><br><span class="line">type: links</span><br><span class="line"><span class="section">date: 2021-01-01</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure></li>
+<pre><code class="hljs md">---
+title: links
+layout: links
+type: links
+<span class="hljs-section">date: 2021-01-01</span>
+<span class="hljs-section">---</span></code></pre></li>
 </ol>
 <p>另一种<strong>推荐的做法</strong>是，不需要创建新的布局文件(Front-matter中不需要指定 <code>layout</code>)，而是复用主题中的 <em>layout&#x2F;page.njk</em> 模板。</p>
 <blockquote>
 <p>任何通过命令 <code>hexo new page &lt;page_name&gt;</code> 创建的页面，如果不指定 <code>type</code> ，默认会复用 <code>page.njk</code> 模板。</p>
 </blockquote>
 <p>在主题的 <em>layout&#x2F;_partials&#x2F;page</em> 路径下创建局部模板，然后在 <em>page.njk</em> 中根据 <code>page.type</code> 来 <strong>include</strong> 不同的局部模板。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;%- if page.type === &#x27;projects&#x27; -%&#125;</span><br><span class="line">  &#123;%- include &#x27;_partials/page/projects.njk&#x27; -%&#125;</span><br><span class="line">&#123;%- elif page.type === &#x27;favorites&#x27; -%&#125;</span><br><span class="line">  &#123;%- include &#x27;_partials/page/favorites.njk&#x27; -%&#125;</span><br><span class="line">&#123;%- elif page.type === &#x27;friends&#x27; -%&#125;</span><br><span class="line">  &#123;%- include &#x27;_partials/page/friends.njk&#x27; -%&#125;</span><br><span class="line">&#123;%- elif page.type === &#x27;about&#x27; -%&#125;</span><br><span class="line">  &#123;%- include &#x27;_partials/page/about.njk&#x27; -%&#125;</span><br><span class="line">&#123;%- elif page.type === &#x27;rewards&#x27; -%&#125;</span><br><span class="line">  &#123;%- include &#x27;_partials/page/rewards.njk&#x27; -%&#125;</span><br><span class="line">&#123;% else %&#125;</span><br><span class="line">  &#123;&#123; page.content &#125;&#125;</span><br><span class="line">&#123;%- endif %&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html">&#123;%- if page.type === &#x27;projects&#x27; -%&#125;
+  &#123;%- include &#x27;_partials/page/projects.njk&#x27; -%&#125;
+&#123;%- elif page.type === &#x27;favorites&#x27; -%&#125;
+  &#123;%- include &#x27;_partials/page/favorites.njk&#x27; -%&#125;
+&#123;%- elif page.type === &#x27;friends&#x27; -%&#125;
+  &#123;%- include &#x27;_partials/page/friends.njk&#x27; -%&#125;
+&#123;%- elif page.type === &#x27;about&#x27; -%&#125;
+  &#123;%- include &#x27;_partials/page/about.njk&#x27; -%&#125;
+&#123;%- elif page.type === &#x27;rewards&#x27; -%&#125;
+  &#123;%- include &#x27;_partials/page/rewards.njk&#x27; -%&#125;
+&#123;% else %&#125;
+  &#123;&#123; page.content &#125;&#125;
+&#123;%- endif %&#125;</code></pre>
 
 <h2 id="添加回到顶部按钮"><a href="#添加回到顶部按钮" class="headerlink" title="添加回到顶部按钮"></a>添加回到顶部按钮</h2><p>页面过高时，就有回到顶部的需求。实现原理很简单，在页面下方添加1个按钮，点击按钮时，执行js代码 <code>scrollIntoView()</code> 即可滚动到可视区域的顶部。</p>
 <p>html只是1个按钮</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">id</span>=<span class="string">&quot;back-to-top-btn&quot;</span>&gt;</span>回到顶部<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;back-to-top-btn&quot;</span>&gt;</span>回到顶部<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 
 <p>css使其位于右下角</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span>,</span><br><span class="line"><span class="selector-tag">body</span>&#123;</span><br><span class="line">    scroll-behavior: smooth; <span class="comment">/* 平滑滚动 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#back-to-top-btn</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: fixed;</span><br><span class="line">    <span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">bottom</span>: <span class="number">10vh</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs css"><span class="hljs-selector-tag">html</span>,
+<span class="hljs-selector-tag">body</span>&#123;
+    scroll-behavior: smooth; <span class="hljs-comment">/* 平滑滚动 */</span>
+&#125;
+
+<span class="hljs-selector-id">#back-to-top-btn</span> &#123;
+    <span class="hljs-attribute">position</span>: fixed;
+    <span class="hljs-attribute">right</span>: <span class="hljs-number">0</span>;
+    <span class="hljs-attribute">bottom</span>: <span class="hljs-number">10vh</span>;
+&#125;</code></pre>
 
 <p>js添加点击事件，进行滚动</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> $body = $(<span class="string">&#x27;body&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line">$(<span class="string">&#x27;#back-to-top-btn&#x27;</span>).<span class="title function_">on</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    $body.<span class="title function_">scrollIntoView</span>(<span class="literal">true</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs js"><span class="hljs-keyword">let</span> $body = $(<span class="hljs-string">&#x27;body&#x27;</span>)[<span class="hljs-number">0</span>];
+$(<span class="hljs-string">&#x27;#back-to-top-btn&#x27;</span>).<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;
+    $body.<span class="hljs-title function_">scrollIntoView</span>(<span class="hljs-literal">true</span>);
+&#125;);</code></pre>
 
 <h2 id="文章置顶"><a href="#文章置顶" class="headerlink" title="文章置顶"></a>文章置顶</h2><p>Hexo的 index 页面下的 <code>posts</code> 变量，根据Hexo配置下的 <code>index_generator.order_by</code> 进行排序，默认为 <code>-date</code> 即按照创建日期倒序排序。该功能是通过模块 <code>hexo-generator-index</code> 实现的。所以，要添加置顶功能，可以修改此模块中的代码。</p>
 <p>修改 <em>node_modules&#x2F;hexo-generator-index&#x2F;lib&#x2F;generator.js</em> 文件，在默认排序代码之后，添加以下代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">posts.<span class="property">data</span> = posts.<span class="property">data</span>.<span class="title function_">sort</span>(<span class="keyword">function</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(a.<span class="property">top</span> &amp;&amp; b.<span class="property">top</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(a.<span class="property">top</span> == b.<span class="property">top</span>) <span class="keyword">return</span> b.<span class="property">date</span> - a.<span class="property">date</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> b.<span class="property">top</span> - a.<span class="property">top</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(a.<span class="property">top</span> &amp;&amp; !b.<span class="property">top</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(!a.<span class="property">top</span> &amp;&amp; b.<span class="property">top</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> b.<span class="property">date</span> - a.<span class="property">date</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs js">posts.<span class="hljs-property">data</span> = posts.<span class="hljs-property">data</span>.<span class="hljs-title function_">sort</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>) &#123;
+    <span class="hljs-keyword">if</span>(a.<span class="hljs-property">top</span> &amp;&amp; b.<span class="hljs-property">top</span>) &#123;
+        <span class="hljs-keyword">if</span>(a.<span class="hljs-property">top</span> == b.<span class="hljs-property">top</span>) <span class="hljs-keyword">return</span> b.<span class="hljs-property">date</span> - a.<span class="hljs-property">date</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> b.<span class="hljs-property">top</span> - a.<span class="hljs-property">top</span>;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(a.<span class="hljs-property">top</span> &amp;&amp; !b.<span class="hljs-property">top</span>) &#123;
+        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(!a.<span class="hljs-property">top</span> &amp;&amp; b.<span class="hljs-property">top</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> b.<span class="hljs-property">date</span> - a.<span class="hljs-property">date</span>;
+&#125;);</code></pre>
 
 <p>此时，index页中的文章，将优先根据<em>Front-matter</em>中的top值进行排序，然后才是按照date倒序排序。</p>
 <p>另外，可以在模板中根据<code>post.top</code>来判断当前文章是否置顶，来添加置顶标志。</p>
 <h2 id="代码高亮"><a href="#代码高亮" class="headerlink" title="代码高亮"></a>代码高亮</h2><p>Hexo内置了代码高亮功能(使用 <em>marked</em> 库)，只需要参考Hexo文档进行简单的配置，开启代码高亮功能，然后引入 <em>hignlight.js</em> 相关的css和js文件即可</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- highlight.js --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/styles/default.min.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/highlight.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- highlight.js --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/styles/default.min.css&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/highlight.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 
 <h2 id="添加RSS订阅功能"><a href="#添加RSS订阅功能" class="headerlink" title="添加RSS订阅功能"></a>添加RSS订阅功能</h2><p>github地址: <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-generator-feed">https://github.com/hexojs/hexo-generator-feed</a></p>
 <p>安装模块</p>
 <p><code>npm install hexo-generator-feed --save</code></p>
 <p>在hexo配置文件中添加如下配置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># RSS插件配置</span></span><br><span class="line"><span class="comment"># https://github.com/hexojs/hexo-generator-feed</span></span><br><span class="line"><span class="attr">feed:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Generate both atom and rss2 feeds</span></span><br><span class="line">  <span class="attr">type:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">atom</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">rss2</span></span><br><span class="line">  <span class="attr">path:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">atom.xml</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">rss2.xml</span></span><br><span class="line">  <span class="attr">limit:</span> <span class="number">20</span></span><br><span class="line">  <span class="attr">hub:</span></span><br><span class="line">  <span class="attr">content:</span></span><br><span class="line">  <span class="attr">content_limit:</span> <span class="number">140</span></span><br><span class="line">  <span class="attr">content_limit_delim:</span> <span class="string">&#x27; &#x27;</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-date</span></span><br><span class="line">  <span class="attr">icon:</span> <span class="string">icon.png</span></span><br><span class="line">  <span class="attr">autodiscovery:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">template:</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-comment"># RSS插件配置</span>
+<span class="hljs-comment"># https://github.com/hexojs/hexo-generator-feed</span>
+<span class="hljs-attr">feed:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-comment"># Generate both atom and rss2 feeds</span>
+  <span class="hljs-attr">type:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">atom</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">rss2</span>
+  <span class="hljs-attr">path:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">atom.xml</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">rss2.xml</span>
+  <span class="hljs-attr">limit:</span> <span class="hljs-number">20</span>
+  <span class="hljs-attr">hub:</span>
+  <span class="hljs-attr">content:</span>
+  <span class="hljs-attr">content_limit:</span> <span class="hljs-number">140</span>
+  <span class="hljs-attr">content_limit_delim:</span> <span class="hljs-string">&#x27; &#x27;</span>
+  <span class="hljs-attr">order_by:</span> <span class="hljs-string">-date</span>
+  <span class="hljs-attr">icon:</span> <span class="hljs-string">icon.png</span>
+  <span class="hljs-attr">autodiscovery:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">template:</span></code></pre>
 
 <p>此时，运行 <code>hexo g</code> 时，会在hexo的 <em>public&#x2F;</em> 文件夹下生成 <em>atom.xml</em> 和 <em>rss2.xml</em>。</p>
 <p>通过a标签添加RSS订阅链接即可。</p>
@@ -189,13 +263,52 @@
 </li>
 <li><p>安装gitalk插件(直接引入css和js文件，或者使用npm进行安装)，然后在需要展示评论的地方添加1个div作为容器，并复制相关js代码来生成gitalk插件。</p>
 <p>创建一个njk文件：<em>layout&#x2F;_third_party&#x2F;comments&#x2F;gitalk.njk</em></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;gitalk-container&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- gitalk --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    var gitalk = new Gitalk(&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        clientID: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.clientID</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        clientSecret: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.clientSecret</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        repo: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.repo</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        owner: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.owner</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        admin: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.admin</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        id: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">page.path.slice</span>(<span class="name">0</span>,<span class="number">49</span>) &#125;&#125;</span><span class="language-xml">&#x27;,  // location.pathname    // Ensure uniqueness and length less than 50</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        distractionFreeMode: </span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.distractionFreeMode</span> &#125;&#125;</span><span class="language-xml">,  // Facebook-like distraction free mode</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        language: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">config.language</span> &#125;&#125;</span><span class="language-xml">&#x27;, //navigator.language || navigator.userLanguage</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        perPage: </span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.perPage</span> &#125;&#125;</span><span class="language-xml">,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        pagerDirection: &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.pagerDirection</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">        createIssueManually: </span><span class="template-variable">&#123;&#123; <span class="name">theme.gitalk.createIssueManually</span> &#125;&#125;</span><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    &#125;);</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    gitalk.render(&#x27;gitalk-container&#x27;);</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;gitalk-container&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- gitalk --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span>
+<span class="language-xml"><span class="language-handlebars">    var gitalk = new Gitalk(&#123;</span></span>
+<span class="language-xml"><span class="language-handlebars">        clientID: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.clientID</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span>
+<span class="language-xml"><span class="language-handlebars">        clientSecret: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.clientSecret</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span>
+<span class="language-xml"><span class="language-handlebars">        repo: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.repo</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span>
+<span class="language-xml"><span class="language-handlebars">        owner: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.owner</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span>
+<span class="language-xml"><span class="language-handlebars">        admin: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.admin</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span>
+<span class="language-xml"><span class="language-handlebars">        id: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">page.path.slice</span>(<span class="hljs-name">0</span>,<span class="hljs-number">49</span>) &#125;&#125;</span><span class="language-xml">&#x27;,  // location.pathname    // Ensure uniqueness and length less than 50</span></span>
+<span class="language-xml"><span class="language-handlebars">        distractionFreeMode: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.distractionFreeMode</span> &#125;&#125;</span><span class="language-xml">,  // Facebook-like distraction free mode</span></span>
+<span class="language-xml"><span class="language-handlebars">        language: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">config.language</span> &#125;&#125;</span><span class="language-xml">&#x27;, //navigator.language || navigator.userLanguage</span></span>
+<span class="language-xml"><span class="language-handlebars">        perPage: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.perPage</span> &#125;&#125;</span><span class="language-xml">,</span></span>
+<span class="language-xml"><span class="language-handlebars">        pagerDirection: &#x27;</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.pagerDirection</span> &#125;&#125;</span><span class="language-xml">&#x27;,</span></span>
+<span class="language-xml"><span class="language-handlebars">        createIssueManually: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">theme.gitalk.createIssueManually</span> &#125;&#125;</span><span class="language-xml"></span></span>
+<span class="language-xml"><span class="language-handlebars">    &#125;);</span></span>
+<span class="language-xml"><span class="language-handlebars"></span></span>
+<span class="language-xml"><span class="language-handlebars">    gitalk.render(&#x27;gitalk-container&#x27;);</span></span>
+<span class="language-xml"><span class="language-handlebars"></span></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 
 <p>在主题配置文件中添加gitalk配置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gitalk</span></span><br><span class="line"><span class="attr">gitalk:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">clientID:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">clientSecret:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="comment"># gitalk存储评论的仓库名称</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">&#x27;lypzzz.github.io&#x27;</span></span><br><span class="line">  <span class="attr">owner:</span> <span class="string">&#x27;lypzzz&#x27;</span></span><br><span class="line">  <span class="attr">admin:</span> [<span class="string">&#x27;lypzzz&#x27;</span>]</span><br><span class="line">  <span class="comment"># 是否开启类似Facebook的遮罩功能</span></span><br><span class="line">  <span class="attr">distractionFreeMode:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 每页显示的评论数</span></span><br><span class="line">  <span class="attr">perPage:</span> <span class="number">5</span></span><br><span class="line">  <span class="comment"># 评论排序方式: 倒序 last, 正序 first</span></span><br><span class="line">  <span class="attr">pagerDirection:</span> <span class="string">&#x27;last&#x27;</span></span><br><span class="line">  <span class="comment"># 自动创建issue</span></span><br><span class="line">  <span class="attr">createIssueManually:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-comment"># gitalk</span>
+<span class="hljs-attr">gitalk:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">clientID:</span> <span class="hljs-string">&#x27;&#x27;</span>
+  <span class="hljs-attr">clientSecret:</span> <span class="hljs-string">&#x27;&#x27;</span>
+  <span class="hljs-comment"># gitalk存储评论的仓库名称</span>
+  <span class="hljs-attr">repo:</span> <span class="hljs-string">&#x27;lypzzz.github.io&#x27;</span>
+  <span class="hljs-attr">owner:</span> <span class="hljs-string">&#x27;lypzzz&#x27;</span>
+  <span class="hljs-attr">admin:</span> [<span class="hljs-string">&#x27;lypzzz&#x27;</span>]
+  <span class="hljs-comment"># 是否开启类似Facebook的遮罩功能</span>
+  <span class="hljs-attr">distractionFreeMode:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-comment"># 每页显示的评论数</span>
+  <span class="hljs-attr">perPage:</span> <span class="hljs-number">5</span>
+  <span class="hljs-comment"># 评论排序方式: 倒序 last, 正序 first</span>
+  <span class="hljs-attr">pagerDirection:</span> <span class="hljs-string">&#x27;last&#x27;</span>
+  <span class="hljs-comment"># 自动创建issue</span>
+  <span class="hljs-attr">createIssueManually:</span> <span class="hljs-literal">true</span></code></pre>
 
 <p>然后在需要添加评论的地方引入gitalk文件</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.gitalk.enable %&#125;</span><br><span class="line">	&#123;% include &quot;_third_party/comments/gitalk.njk&quot; %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure></li>
+<pre><code class="hljs html">&#123;% if theme.gitalk.enable %&#125;
+	&#123;% include &quot;_third_party/comments/gitalk.njk&quot; %&#125;
+&#123;% endif %&#125;</code></pre></li>
 </ol>
 <h3 id="Valine"><a href="#Valine" class="headerlink" title="Valine"></a>Valine</h3><p>Valine官网地址：<a target="_blank" rel="noopener" href="https://valine.js.org/">https://valine.js.org/</a></p>
 <blockquote>
@@ -207,7 +320,13 @@
 <p><code>npm install hexo-generator-search --save</code></p>
 </li>
 <li><p>配置(Hexo配置文件)</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo-generator-search插件配置</span></span><br><span class="line"><span class="attr">search:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">search.xml</span></span><br><span class="line">  <span class="comment"># post | page | all</span></span><br><span class="line">  <span class="attr">field:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">content:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">template:</span> <span class="comment">#./search.xml</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-comment"># hexo-generator-search插件配置</span>
+<span class="hljs-attr">search:</span>
+  <span class="hljs-attr">path:</span> <span class="hljs-string">search.xml</span>
+  <span class="hljs-comment"># post | page | all</span>
+  <span class="hljs-attr">field:</span> <span class="hljs-string">all</span>
+  <span class="hljs-attr">content:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">template:</span> <span class="hljs-comment">#./search.xml</span></code></pre>
 
 <p>此时，运行 <code>hexo clean &amp;&amp; hexo g</code> 命令，会在public目录下生成search.xml文章。</p>
 </li>
@@ -217,15 +336,28 @@
 </blockquote>
 </li>
 </ol>
-<h2 id="SEO优化"><a href="#SEO优化" class="headerlink" title="SEO优化"></a>SEO优化</h2><h3 id="创建robots-txt"><a href="#创建robots-txt" class="headerlink" title="创建robots.txt"></a>创建robots.txt</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">User-agent: Googlebot</span><br><span class="line">Allow: /</span><br><span class="line"></span><br><span class="line">User-agent: Baiduspider</span><br><span class="line">Allow: /</span><br><span class="line"></span><br><span class="line">User-agent: Sogou web spider</span><br><span class="line">Allow: /</span><br><span class="line"></span><br><span class="line">User-agent: Sosospider</span><br><span class="line">Allow: /</span><br><span class="line"></span><br><span class="line">User-agent: *</span><br><span class="line">Disallow: /</span><br></pre></td></tr></table></figure>
+<h2 id="SEO优化"><a href="#SEO优化" class="headerlink" title="SEO优化"></a>SEO优化</h2><h3 id="创建robots-txt"><a href="#创建robots-txt" class="headerlink" title="创建robots.txt"></a>创建robots.txt</h3><pre><code class="hljs plaintext">User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: Sosospider
+Allow: /
+
+User-agent: *
+Disallow: /</code></pre>
 
 <h3 id="搜索引擎优化"><a href="#搜索引擎优化" class="headerlink" title="搜索引擎优化"></a>搜索引擎优化</h3><p>安装站点地图生成插件</p>
 <p><code>npm install hexo-generator-sitemap --save</code></p>
 <p>然后修改hexo配置文件中的url配置项为个人域名</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://lypzz.com/</span> <span class="comment"># https://lypzzz.github.io/root: /</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs yaml"><span class="hljs-attr">url:</span> <span class="hljs-string">https://lypzz.com/</span> <span class="hljs-comment"># https://lypzzz.github.io/root: /</span></code></pre>
 
 <p>此时，运行 <code>hexo clean &amp;&amp; hexo g</code>，此插件会生成  <em>public&#x2F;sitemap.xml</em> 文件，此文件即为搜索引擎需要的站点地图</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://lypzz.com/sitemap.xml</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">http://lypzz.com/sitemap.xml</code></pre>
 
 <h4 id="Google"><a href="#Google" class="headerlink" title="Google"></a>Google</h4><p>传送门：<a target="_blank" rel="noopener" href="https://search.google.com/search-console/welcome?hl=zh-CN">Google Search Console</a> 。</p>
 <p>支持2种方式：<em>网域</em> 和 <em>网址前缀</em>，推荐使用网域方式。</p>
@@ -249,16 +381,23 @@
 </ol>
 <h3 id="不蒜子显示访问量"><a href="#不蒜子显示访问量" class="headerlink" title="不蒜子显示访问量"></a>不蒜子显示访问量</h3><p>传送门：<a target="_blank" rel="noopener" href="http://busuanzi.ibruce.info/">卜蒜子</a></p>
 <p>引入脚本</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">async</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 
 <p>显示网站访问量</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_container_site_pv&quot;</span>&gt;</span></span><br><span class="line">    本站总访问量<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>次</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_container_site_uv&quot;</span>&gt;</span></span><br><span class="line">  本站访客数<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>人次</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_site_pv&quot;</span>&gt;</span>
+    本站总访问量<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>次
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_site_uv&quot;</span>&gt;</span>
+  本站访客数<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>人次
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></code></pre>
 
 <p>文章点击量</p>
 <blockquote>
 <p>实际上是页面点击量，在文章列表中无法显示每篇文章的点击量，只能在文章详情页显示。</p>
 </blockquote>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_container_page_pv&quot;</span>&gt;</span></span><br><span class="line">  本文总阅读量<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_page_pv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>次</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_page_pv&quot;</span>&gt;</span>
+  本文总阅读量<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_page_pv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>次
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></code></pre>
 
 <h2 id="插入广告"><a href="#插入广告" class="headerlink" title="插入广告"></a>插入广告</h2><h3 id="Google广告"><a href="#Google广告" class="headerlink" title="Google广告"></a>Google广告</h3><p>传送门：<a target="_blank" rel="noopener" href="https://www.google.com/adsense/">Google Adasense</a></p>
 <blockquote>
@@ -266,7 +405,7 @@
 </blockquote>
 <h2 id="各种外链"><a href="#各种外链" class="headerlink" title="各种外链"></a>各种外链</h2><p><strong>普通外链</strong></p>
 <p><strong>邮件</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mailto:809021823@qq.com</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">mailto:809021823@qq.com</code></pre>
 
 <p>其它请求参数</p>
 <ul>
@@ -274,21 +413,23 @@
 <li>body：邮件正文</li>
 </ul>
 <p><strong>QQ临时会话</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tencent://message/?Menu=yes&amp;uin=809021823&amp;Service=300</span><br><span class="line">或者</span><br><span class="line">https://wpa.qq.com/msgrd?v=3&amp;uin=809021823&amp;site=qq&amp;menu=yes</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">tencent://message/?Menu=yes&amp;uin=809021823&amp;Service=300
+或者
+https://wpa.qq.com/msgrd?v=3&amp;uin=809021823&amp;site=qq&amp;menu=yes</code></pre>
 
 <p>参数</p>
 <ul>
 <li>uin：要进行会话的QQ号码</li>
 </ul>
 <p><strong>QQ添加好友</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tencent://AddContact/?fromId=1&amp;fromSubId=1&amp;subcmd=all&amp;uin=809021823&amp;website=www.oicqzone.com</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">tencent://AddContact/?fromId=1&amp;fromSubId=1&amp;subcmd=all&amp;uin=809021823&amp;website=www.oicqzone.com</code></pre>
 
 <p>参数</p>
 <ul>
 <li>uin：要添加的QQ号码</li>
 </ul>
 <p><strong>分享到QQ空间</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=URL&amp;title=Title&amp;desc=Desc&amp;summary=Summary&amp;site=</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=URL&amp;title=Title&amp;desc=Desc&amp;summary=Summary&amp;site=</code></pre>
 
 <p>参数：</p>
 <ul>
@@ -299,7 +440,7 @@
 <li>site：</li>
 </ul>
 <p><strong>分享到微博</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://service.weibo.com/share/share.php?url=URL&amp;title=Title&amp;pic=&amp;appkey=</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">http://service.weibo.com/share/share.php?url=URL&amp;title=Title&amp;pic=&amp;appkey=</code></pre>
 
 <p>参数：</p>
 <ul>
@@ -307,14 +448,19 @@
 <li>title：标题</li>
 </ul>
 <p><strong>分享到豆瓣</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.douban.com/share/service?href=链接&amp;name=标题&amp;text=文本描述&amp;image=图片地址&amp;starid=0&amp;aid=0&amp;style=11</span><br></pre></td></tr></table></figure></div>
-<div>END</div></main>
+<pre><code class="hljs plaintext">https://www.douban.com/share/service?href=链接&amp;name=标题&amp;text=文本描述&amp;image=图片地址&amp;starid=0&amp;aid=0&amp;style=11</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

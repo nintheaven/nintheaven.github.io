@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,23 +75,42 @@
     
 </header>
 
-    <main><h1>zookeeper安装与部署</h1>
+    <main><div class="post">
+    <h1>zookeeper安装与部署</h1>
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p><strong>单机启动多个独立的（非集群）zookeeper</strong></p>
 <p>分别配置 <code>clientPort</code> 和 <code>admin.serverPort</code>，以及data与log目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 默认 /tmp/zookeeper</span><br><span class="line">dataDir=path/to/data</span><br><span class="line">dataLogDir=path/to/log</span><br><span class="line"></span><br><span class="line"># 默认2181</span><br><span class="line">clientPort=2181</span><br><span class="line"></span><br><span class="line"># 默认8080</span><br><span class="line">admin.serverPort=8080</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext"># 默认 /tmp/zookeeper
+dataDir=path/to/data
+dataLogDir=path/to/log
+
+# 默认2181
+clientPort=2181
+
+# 默认8080
+admin.serverPort=8080</code></pre>
 
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

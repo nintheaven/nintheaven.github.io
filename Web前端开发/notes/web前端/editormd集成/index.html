@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>集成editormd | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h1>集成editormd</h1>
+
+    <div>
+        
+
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
+
+<p><a target="_blank" rel="noopener" href="https://pandao.github.io/editor.md/">https://pandao.github.io/editor.md/</a></p>
+<p>下载文件后，将需要用到的文件复制到项目的相关目录下,目录结构如下</p>
+<p><img src="/images/editormd.png"></p>
+<h2 id="添加编辑器"><a href="#添加编辑器" class="headerlink" title="添加编辑器"></a>添加编辑器</h2><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/css&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/editormd/css/editormd.min.css&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;editor&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;markdown&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;display:none;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/js/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/editormd/editormd.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span>
+<span class="language-javascript">        $(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;</span>
+<span class="language-javascript">            <span class="hljs-keyword">var</span> editor = <span class="hljs-title function_">editormd</span>(<span class="hljs-string">&quot;editor&quot;</span>, &#123;</span>
+<span class="language-javascript">                <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;100%&quot;</span>,</span>
+<span class="language-javascript">                <span class="hljs-attr">height</span>: <span class="hljs-string">&quot;100vh&quot;</span>,</span>
+<span class="language-javascript">                <span class="hljs-attr">markdown</span>: <span class="hljs-string">&quot;&quot;</span>,     <span class="hljs-comment">// 可以使用js动态设置markdown的内容</span></span>
+<span class="language-javascript">                path : <span class="hljs-string">&quot;/editormd/lib/&quot;</span>  <span class="hljs-comment">// Autoload modules mode, codemirror, marked... dependents libs path</span></span>
+<span class="language-javascript">            &#125;);</span>
+<span class="language-javascript">        &#125;);</span>
+<span class="language-javascript">    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+<h2 id="显示渲染结果"><a href="#显示渲染结果" class="headerlink" title="显示渲染结果"></a>显示渲染结果</h2><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/css&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/editormd/css/editormd.preview.min.css&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;markdown-view&quot;</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Server-side output Markdown text --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;display:none;&quot;</span>&gt;</span>静态设置的markdown内容<span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/js/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/editormd/editormd.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/editormd/lib/marked.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/editormd/lib/prettify.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span>
+<span class="language-javascript">        $(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;</span>
+<span class="language-javascript">            <span class="hljs-keyword">var</span> mdView = editormd.<span class="hljs-title function_">markdownToHTML</span>(<span class="hljs-string">&quot;markdown-view&quot;</span>, &#123;</span>
+<span class="language-javascript">                markdown : <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-comment">// 可以使用js动态设置要显示的内容</span></span>
+<span class="language-javascript">                htmlDecode : <span class="hljs-literal">true</span>,  <span class="hljs-comment">// Enable / disable HTML tag encode.</span></span>
+<span class="language-javascript">                <span class="hljs-comment">//htmlDecode : &quot;style,script,iframe&quot;,  // Note: If enabled, you should filter some dangerous HTML tags for website security.</span></span>
+<span class="language-javascript">            &#125;);</span>
+<span class="language-javascript">        &#125;);</span>
+<span class="language-javascript">    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+<h2 id="图片上传"><a href="#图片上传" class="headerlink" title="图片上传"></a>图片上传</h2><p>在js中添加以下配置选项</p>
+<pre><code class="hljs js">imageUpload          : <span class="hljs-literal">true</span>,          <span class="hljs-comment">// 开启本地图片上传功能</span>
+imageFormats         : [<span class="hljs-string">&quot;jpg&quot;</span>, <span class="hljs-string">&quot;jpeg&quot;</span>, <span class="hljs-string">&quot;gif&quot;</span>, <span class="hljs-string">&quot;png&quot;</span>, <span class="hljs-string">&quot;bmp&quot;</span>, <span class="hljs-string">&quot;webp&quot;</span>],
+imageUploadURL       : <span class="hljs-string">&quot;/admin/articles/image/upload&quot;</span>,             <span class="hljs-comment">// 处理图片上传的后端接口URL</span>
+crossDomainUpload    : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Enable/disable Cross-domain upload</span>
+uploadCallbackURL    : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Cross-domain upload callback url</span></code></pre>
+
+<p>图片表单字段的name为 <em>editormd-image-file</em> 后端控制器中，接收图片数据</p>
+<pre><code class="hljs java"><span class="hljs-meta">@PostMapping(&quot;/image/upload&quot;)</span>
+<span class="hljs-meta">@ResponseBody</span>
+<span class="hljs-keyword">public</span> ResponseEntity&lt;Map&lt;String,Object&gt;&gt; <span class="hljs-title function_">doUploadImage</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;editormd-image-file&quot;)</span> MultipartFile image)</span>
+&#123;
+    String imageUrl=<span class="hljs-literal">null</span>;
+    <span class="hljs-comment">// 保存图片到本地或云端,返回图片url</span>
+    <span class="hljs-comment">// ...</span>
+
+    Map&lt;String,Object&gt; map=<span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();
+    <span class="hljs-keyword">if</span>(imageUrl!=<span class="hljs-literal">null</span>)
+    &#123;
+        map.put(<span class="hljs-string">&quot;success&quot;</span>,<span class="hljs-number">1</span>);
+        map.put(<span class="hljs-string">&quot;message&quot;</span>,<span class="hljs-string">&quot;上传成功&quot;</span>);
+        map.put(<span class="hljs-string">&quot;url&quot;</span>,imageUrl);
+    &#125;
+    <span class="hljs-keyword">else</span>
+    &#123;
+        map.put(<span class="hljs-string">&quot;success&quot;</span>,<span class="hljs-number">0</span>);
+        map.put(<span class="hljs-string">&quot;message&quot;</span>,<span class="hljs-string">&quot;上传失败&quot;</span>);
+    &#125;
+    <span class="hljs-keyword">return</span> ResponseEntity.ok(map);
+&#125;</code></pre>
+
+<p>响应为体格式</p>
+<pre><code class="hljs js">&#123;
+    success : <span class="hljs-number">0</span> | <span class="hljs-number">1</span>,           <span class="hljs-comment">// 0 表示上传失败，1 表示上传成功</span>
+    message : <span class="hljs-string">&quot;提示的信息，上传成功或上传失败及错误信息等。&quot;</span>,
+    url     : <span class="hljs-string">&quot;图片地址&quot;</span>        <span class="hljs-comment">// 上传成功时才返回</span>
+&#125;</code></pre>
+
+<p>报错403</p>
+<pre><code class="hljs plaintext">Failed to load resource: the server responded with a status of 403 ()
+chrome-error://chromewebdata/:1 Refused to display &#x27;http://localhost:8080/&#x27; in a frame because it set &#x27;X-Frame-Options&#x27; to &#x27;deny&#x27;.</code></pre>
+
+<p>是因为使用了spring-security，在SercurityConfig中，添加以下配置</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception
+&#123;
+    http.headers().frameOptions().disable();
+&#125;</code></pre>
+
+<p>依然报错403</p>
+<pre><code class="hljs plaintext">Uncaught SyntaxError: Unexpected token F in JSON at position 14</code></pre>
+
+<p>是因为spring-security开启了csrf保护，表单提交需要token，但是editor.md中没有，解决办法就是对上传图片的url关闭csrf保护</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception
+&#123;
+    http.headers().csrf().ignoringAntMatchers(<span class="hljs-string">&quot;/admin/articles/image/upload&quot;</span>)
+&#125;</code></pre>
+
+<h1 id="配置及其默认值"><a href="#配置及其默认值" class="headerlink" title="配置及其默认值"></a>配置及其默认值</h1><pre><code class="hljs javascript">&#123;
+    mode                 : <span class="hljs-string">&quot;gfm&quot;</span>,          <span class="hljs-comment">// gfm or markdown</span>
+    name                 : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Form element name for post</span>
+    value                : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// value for CodeMirror, if mode not gfm/markdown</span>
+    theme                : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Editor.md self themes, before v1.5.0 is CodeMirror theme, default empty</span>
+    editorTheme          : <span class="hljs-string">&quot;default&quot;</span>,      <span class="hljs-comment">// Editor area, this is CodeMirror theme at v1.5.0</span>
+    previewTheme         : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Preview area theme, default empty</span>
+    markdown             : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Markdown source code</span>
+    appendMarkdown       : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// if in init textarea value not empty, append markdown to textarea</span>
+    width                : <span class="hljs-string">&quot;100%&quot;</span>,
+    height               : <span class="hljs-string">&quot;100%&quot;</span>,
+    path                 : <span class="hljs-string">&quot;./lib/&quot;</span>,       <span class="hljs-comment">// Dependents module file directory</span>
+    pluginPath           : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// If this empty, default use settings.path + &quot;../plugins/&quot;</span>
+    delay                : <span class="hljs-number">300</span>,            <span class="hljs-comment">// Delay parse markdown to html, Uint : ms</span>
+    autoLoadModules      : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Automatic load dependent module files</span>
+    watch                : <span class="hljs-literal">true</span>,
+    placeholder          : <span class="hljs-string">&quot;Enjoy Markdown! coding now...&quot;</span>,
+    gotoLine             : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Enable / disable goto a line</span>
+    codeFold             : <span class="hljs-literal">false</span>,
+    autoHeight           : <span class="hljs-literal">false</span>,
+    autoFocus            : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Enable / disable auto focus editor left input area</span>
+    autoCloseTags        : <span class="hljs-literal">true</span>,
+    searchReplace        : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Enable / disable (CodeMirror) search and replace function</span>
+    syncScrolling        : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// options: true | false | &quot;single&quot;, default true</span>
+    readOnly             : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Enable / disable readonly mode</span>
+    tabSize              : <span class="hljs-number">4</span>,
+    indentUnit           : <span class="hljs-number">4</span>,
+    lineNumbers          : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Display editor line numbers</span>
+    lineWrapping         : <span class="hljs-literal">true</span>,
+    autoCloseBrackets    : <span class="hljs-literal">true</span>,
+    showTrailingSpace    : <span class="hljs-literal">true</span>,
+    matchBrackets        : <span class="hljs-literal">true</span>,
+    indentWithTabs       : <span class="hljs-literal">true</span>,
+    styleSelectedText    : <span class="hljs-literal">true</span>,
+    matchWordHighlight   : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// options: true, false, &quot;onselected&quot;</span>
+    styleActiveLine      : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Highlight the current line</span>
+    dialogLockScreen     : <span class="hljs-literal">true</span>,
+    dialogShowMask       : <span class="hljs-literal">true</span>,
+    dialogDraggable      : <span class="hljs-literal">true</span>,
+    dialogMaskBgColor    : <span class="hljs-string">&quot;#fff&quot;</span>,
+    dialogMaskOpacity    : <span class="hljs-number">0.1</span>,
+    fontSize             : <span class="hljs-string">&quot;13px&quot;</span>,
+    saveHTMLToTextarea   : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// If enable, Editor will create a &lt;textarea name=&quot;&#123;editor-id&#125;-html-code&quot;&gt; tag save HTML code for form post to server-side.</span>
+    disabledKeyMaps      : [],
+    
+    onload               : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onresize             : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onchange             : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onwatch              : <span class="hljs-literal">null</span>,
+    onunwatch            : <span class="hljs-literal">null</span>,
+    onpreviewing         : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onpreviewed          : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onfullscreen         : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onfullscreenExit     : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onscroll             : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    onpreviewscroll      : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;,
+    
+    imageUpload          : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Enable/disable upload</span>
+    imageFormats         : [<span class="hljs-string">&quot;jpg&quot;</span>, <span class="hljs-string">&quot;jpeg&quot;</span>, <span class="hljs-string">&quot;gif&quot;</span>, <span class="hljs-string">&quot;png&quot;</span>, <span class="hljs-string">&quot;bmp&quot;</span>, <span class="hljs-string">&quot;webp&quot;</span>],
+    imageUploadURL       : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Upload url</span>
+    crossDomainUpload    : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Enable/disable Cross-domain upload</span>
+    uploadCallbackURL    : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Cross-domain upload callback url</span>
+
+    toc                  : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Table of contents</span>
+    tocm                 : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Using [TOCM], auto create ToC dropdown menu</span>
+    tocTitle             : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// for ToC dropdown menu button</span>
+    tocDropdown          : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Enable/disable Table Of Contents dropdown menu</span>
+    tocContainer         : <span class="hljs-string">&quot;&quot;</span>,             <span class="hljs-comment">// Custom Table Of Contents Container Selector</span>
+    tocStartLevel        : <span class="hljs-number">1</span>,              <span class="hljs-comment">// Said from H1 to create ToC</span>
+    htmlDecode           : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Open the HTML tag identification </span>
+    pageBreak            : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Enable parse page break [========]</span>
+    atLink               : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// for @link</span>
+    emailLink            : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// for email address auto link</span>
+    taskList             : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Enable Github Flavored Markdown task lists</span>
+    emoji                : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// :emoji: , Support Github emoji, Twitter Emoji (Twemoji);</span>
+                                           <span class="hljs-comment">// Support FontAwesome icon emoji :fa-xxx: &gt; Using fontAwesome icon web fonts;</span>
+                                           <span class="hljs-comment">// Support Editor.md logo icon emoji :editormd-logo: :editormd-logo-1x: &gt; 1~8x;</span>
+    tex                  : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// TeX(LaTeX), based on KaTeX</span>
+    flowChart            : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// flowChart.js only support IE9+</span>
+    sequenceDiagram      : <span class="hljs-literal">false</span>,          <span class="hljs-comment">// sequenceDiagram.js only support IE9+</span>
+    previewCodeHighlight : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Enable / disable code highlight of editor preview area</span>
+
+    toolbar              : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// show or hide toolbar</span>
+    toolbarAutoFixed     : <span class="hljs-literal">true</span>,           <span class="hljs-comment">// on window scroll auto fixed position</span>
+    toolbarIcons         : <span class="hljs-string">&quot;full&quot;</span>,         <span class="hljs-comment">// Toolbar icons mode, options: full, simple, mini, See `editormd.toolbarModes` property.</span>
+    toolbarTitles        : &#123;&#125;,
+    toolbarHandlers      : &#123;
+        ucwords : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;
+            <span class="hljs-keyword">return</span> editormd.<span class="hljs-property">toolbarHandlers</span>.<span class="hljs-property">ucwords</span>;
+        &#125;,
+        lowercase : <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;
+            <span class="hljs-keyword">return</span> editormd.<span class="hljs-property">toolbarHandlers</span>.<span class="hljs-property">lowercase</span>;
+        &#125;
+    &#125;,
+    toolbarCustomIcons   : &#123;               <span class="hljs-comment">// using html tag create toolbar icon, unused default &lt;a&gt; tag.</span>
+        lowercase        : <span class="hljs-string">&quot;&lt;a href=\&quot;javascript:;\&quot; title=\&quot;Lowercase\&quot; unselectable=\&quot;on\&quot;&gt;&lt;i class=\&quot;fa\&quot; name=\&quot;lowercase\&quot; style=\&quot;font-size:24px;margin-top: -10px;\&quot;&gt;a&lt;/i&gt;&lt;/a&gt;&quot;</span>,
+        <span class="hljs-string">&quot;ucwords&quot;</span>        : <span class="hljs-string">&quot;&lt;a href=\&quot;javascript:;\&quot; title=\&quot;ucwords\&quot; unselectable=\&quot;on\&quot;&gt;&lt;i class=\&quot;fa\&quot; name=\&quot;ucwords\&quot; style=\&quot;font-size:20px;margin-top: -3px;\&quot;&gt;Aa&lt;/i&gt;&lt;/a&gt;&quot;</span>
+    &#125;,
+    toolbarIconTexts     : &#123;&#125;,
+    
+    lang : &#123;  <span class="hljs-comment">// Language data, you can custom your language.</span>
+        name        : <span class="hljs-string">&quot;zh-cn&quot;</span>,
+        description : <span class="hljs-string">&quot;开源在线Markdown编辑器&lt;br/&gt;Open source online Markdown editor.&quot;</span>,
+        tocTitle    : <span class="hljs-string">&quot;目录&quot;</span>,
+        toolbar     : &#123;
+            <span class="hljs-comment">//...</span>
+        &#125;,
+        <span class="hljs-attr">button</span>: &#123;
+            <span class="hljs-comment">//...</span>
+        &#125;,
+        dialog : &#123;
+            <span class="hljs-comment">//...</span>
+        &#125;
+        <span class="hljs-comment">//...</span>
+    &#125;
+&#125;</code></pre></div>
+</div>
+
+<div class="post-end">END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>xss攻击</h1>
+    <main><div class="post">
+    <h1>xss攻击</h1>
 
-<span>计算机网络技术</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p>XSS(Cross Site Script),跨站点脚本攻击</p>
 <p>客户端攻击技术，针对的是其它用户。</p>
@@ -93,7 +101,10 @@
 <hr>
 <p><strong>XSS漏洞查找与利用</strong></p>
 <p>在请求参数中提交以下验证攻击字符串，如果响应中出现攻击字符串，几乎可以肯定应用程序存在XSS漏洞</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;</span><br><span class="line">&gt;&lt;ScRiPt&gt;alert(document.cookie)&lt;/ScRiPt&gt;</span><br><span class="line">%3E%3Cscript%3Ealert(document.cookie)%3C/script%3E</span><br><span class="line">&gt;&lt;scr&lt;script&gt;ipt&gt;alert(document.cookie)&lt;/sc&lt;/script&gt;ript&gt;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+&gt;&lt;ScRiPt&gt;alert(document.cookie)&lt;/ScRiPt&gt;
+%3E%3Cscript%3Ealert(document.cookie)%3C/script%3E
+&gt;&lt;scr&lt;script&gt;ipt&gt;alert(document.cookie)&lt;/sc&lt;/script&gt;ript&gt;</code></pre>
 
 <hr>
 <p><strong>XSS分类</strong></p>
@@ -120,13 +131,18 @@
 <li>消除危险的插入点</li>
 </ul>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>

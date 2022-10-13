@@ -14,8 +14,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         
-<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
 
     
 <meta name="generator" content="Hexo 6.3.0"></head>
@@ -71,12 +75,16 @@
     
 </header>
 
-    <main><h1>linux装机必备软件</h1>
+    <main><div class="post">
+    <h1>linux装机必备软件</h1>
 
-<span>linux</span>
+    <div>
+        
 
-<span>2022-10-11</span>
-<div><span id="more"></span>
+        <span>2022-10-11</span>
+    </div>
+
+    <div><span id="more"></span>
 
 <p><strong>tree</strong></p>
 <p><code>apt install tree</code></p>
@@ -99,10 +107,14 @@
 <p><strong>搜狗输入法</strong></p>
 <p><strong>百度输入法</strong></p>
 <p><strong>shutter</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:linuxuprising/shutter</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt install shutter</span><br><span class="line">sudo apt install gnome-web-photo</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">sudo add-apt-repository ppa:linuxuprising/shutter
+sudo apt-get update
+sudo apt install shutter
+sudo apt install gnome-web-photo</code></pre>
 
 <p><strong>GIMP</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flatpak install https://flathub.org/repo/appstream/org.gimp.GIMP.flatpakref</span><br><span class="line">flatpak run org.gimp.GIMP//stable</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plaintext">flatpak install https://flathub.org/repo/appstream/org.gimp.GIMP.flatpakref
+flatpak run org.gimp.GIMP//stable</code></pre>
 
 <p><strong>make</strong></p>
 <p><code>apt install make</code></p>
@@ -124,13 +136,18 @@
 <p><strong>redis</strong></p>
 <p><strong>mongodb</strong></p>
 </div>
-<div>END</div></main>
+</div>
+
+<div class="post-end">END</div></main>
 
     <footer>
 页底
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
     
 </body>
 </html>
