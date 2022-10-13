@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>浏览器请求中的跨域问题 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>浏览器请求中的跨域问题</h1>
+
+<span>计算机网络技术</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>同源请求</p>
+<p>协议，域名，端口号一致的请求。</p>
+<blockquote>
+<p>http和https也属于不同协议，http协议默认端口80,https协议默认端口443</p>
+</blockquote>
+<p>跨域请求</p>
+<p>浏览器的同源安全策略规定，只允许请求当前域的资源，非同源请求不允许。</p>
+<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><h1 id="解决跨域的方案"><a href="#解决跨域的方案" class="headerlink" title="解决跨域的方案"></a>解决跨域的方案</h1><h3 id="nginx代理"><a href="#nginx代理" class="headerlink" title="nginx代理"></a>nginx代理</h3><h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>(跨域资源共享，Cross-origin resource sharing)</p>
+<p>客户端请求附带 <em>Origin</em> 头信息，服务端对其进行检查，如果允许，响应头中设置 <em>Access-Control-Allow-Origin</em> 头信息。</p>
+<p>支持所有HTTP请求方式。</p>
+<h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>仅支持HTTP GET请求方式</p>
+<h3 id="vue-cli-proxy"><a href="#vue-cli-proxy" class="headerlink" title="vue-cli proxy"></a>vue-cli proxy</h3><blockquote>
+<p>本质上是使用了CORS的方式</p>
+</blockquote>
+<p>在根目录下(与pakage.json同级)，创建配置文件 <em>vue.config.js</em> ，内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        port: 3000,</span><br><span class="line">        proxy: &#123;</span><br><span class="line">            &#x27;/api&#x27;: &#123;</span><br><span class="line">                target: &#x27;http://localhost:8080&#x27;,</span><br><span class="line">                ws: false,</span><br><span class="line">                changeOrigin: true,</span><br><span class="line">                pathRewrite: &#123;</span><br><span class="line">                    &#x27;^/api&#x27;: &#x27;/api/v3&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上配置可以将 <a target="_blank" rel="noopener" href="http://localhost:3000/api">http://localhost:3000/api</a> 转发到 <a target="_blank" rel="noopener" href="http://localhost:8080/api/v3">http://localhost:8080/api/v3</a></p>
+<p>参数</p>
+<ul>
+<li>‘&#x2F;api’,表示以 <a target="_blank" rel="noopener" href="http://localhost:3000/api">http://localhost:3000/api</a> 开头的请求</li>
+<li>‘target’,表示代理将要转发的目标域，也就是将 ‘<a href="http://localhost:3000&#39;">http://localhost:3000&#39;</a> 替换为 ‘<a href="http://localhost:8080&#39;">http://localhost:8080&#39;</a></li>
+<li>‘ws’,是否启用WebSocket</li>
+<li>‘changeOrigin’,表示是否开启跨域</li>
+<li>‘pathRewrite’,表示URL路径重写，将 ‘&#x2F;api’ 替换为 ‘&#x2F;api&#x2F;v3’</li>
+</ul>
+<p>在服务端，例如Spring-Boot，也要相应的开启CORS. </p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

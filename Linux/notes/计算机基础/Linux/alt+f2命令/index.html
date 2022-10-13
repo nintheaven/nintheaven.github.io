@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>alt+f2命令 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>alt+f2命令</h1>
+
+<span>Linux</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<p><code>alt+f2</code>应该是linux桌面中最好用的快捷键了。</p>
+<p><strong>常用命令</strong></p>
+<p>启动命令行：<code>gnome-terminal</code></p>
+<p>启动VSCode：<code>code</code></p>
+<p><strong>自定义命令</strong></p>
+<p><code>alt+f2</code>命令会从PATH环境变量中查找可执行程序。在ubuntu中，~&#x2F;.profile 文件内容如下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/.profile: executed by the command interpreter for login shells.</span></span><br><span class="line"><span class="comment"># This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login</span></span><br><span class="line"><span class="comment"># exists.</span></span><br><span class="line"><span class="comment"># see /usr/share/doc/bash/examples/startup-files for examples.</span></span><br><span class="line"><span class="comment"># the files are located in the bash-doc package.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># the default umask is set in /etc/profile; for setting the umask</span></span><br><span class="line"><span class="comment"># for ssh logins, install and configure the libpam-umask package.</span></span><br><span class="line"><span class="comment">#umask 022</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># if running bash</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$BASH_VERSION</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># include .bashrc if it exists</span></span><br><span class="line">    <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$HOME</span>/.bashrc&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">	. <span class="string">&quot;<span class="variable">$HOME</span>/.bashrc&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set PATH so it includes user&#x27;s private bin if it exists</span></span><br><span class="line"><span class="keyword">if</span> [ -d <span class="string">&quot;<span class="variable">$HOME</span>/bin&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    PATH=<span class="string">&quot;<span class="variable">$HOME</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set PATH so it includes user&#x27;s private bin if it exists</span></span><br><span class="line"><span class="keyword">if</span> [ -d <span class="string">&quot;<span class="variable">$HOME</span>/.local/bin&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    PATH=<span class="string">&quot;<span class="variable">$HOME</span>/.local/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>可以发现，除了会加载 ~&#x2F;.bashrc 中的配置外，还会从 ~&#x2F;bin&#x2F; 和 ~&#x2F;.local&#x2F;bin 中查找可执行的命令。</p>
+<p>所以，只要在这两个目录中的可执行脚本文件，都可以使用 <code>alt+f2</code> 快速执行。</p>
+<p>以启动idea为例，idea安装在 &#x2F;opt&#x2F; 目录下，操作如下：</p>
+<p><code>cd ~/.local/bin</code></p>
+<p><code>touch idea</code></p>
+<p><code>vim idea</code></p>
+<p>内容如下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /opt/idea-IU-212.5284.40/bin/</span><br><span class="line"><span class="built_in">nohup</span> /imagesdea.sh &amp;</span><br></pre></td></tr></table></figure>
+
+<p><code>chmod +x idea</code></p>
+<p>注销，登录后，就可以使用 <code>alt+f2</code> 快捷键启动 <code>idea</code> 了。</p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

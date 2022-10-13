@@ -1,0 +1,29 @@
+.project-list {
+
+}
+
+.project-list a {
+    text-decoration: none;
+}
+
+.project-list section {
+    margin: 0 0 2em;
+}
+
+.project-list img {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+}
+
+.project-list h5 {
+    text-align: center;
+    margin: 1em 0 0;
+    color: #000;
+    font-weight: 700;
+}
+
+.project-list p {
+    margin: 1em 0 0;
+    color: #555;
+}

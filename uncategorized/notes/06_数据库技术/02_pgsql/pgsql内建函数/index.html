@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>pgsql内建函数 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>pgsql内建函数</h1>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h2 id="数据类型格式化函数"><a href="#数据类型格式化函数" class="headerlink" title="数据类型格式化函数"></a>数据类型格式化函数</h2><p><a target="_blank" rel="noopener" href="http://www.postgres.cn/docs/12/functions-formatting.html">http://www.postgres.cn/docs/12/functions-formatting.html</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> to_char(<span class="built_in">current_timestamp</span>, <span class="string">&#x27;HH24:MI:SS&#x27;</span>) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="keyword">SELECT</span> to_date(<span class="string">&#x27;20220505&#x27;</span>, <span class="string">&#x27;YYYYMMDD&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> to_timestamp(<span class="string">&#x27;20220505&#x27;</span>, <span class="string">&#x27;YYYYMMDD&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> to_char(to_date(<span class="string">&#x27;20220524&#x27;</span>, <span class="string">&#x27;YYYYMMDD&#x27;</span>), <span class="string">&#x27;ID&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="返回集合数据的函数"><a href="#返回集合数据的函数" class="headerlink" title="返回集合数据的函数"></a>返回集合数据的函数</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> generate_series(<span class="number">1</span>,<span class="number">10</span>);</span><br><span class="line"><span class="keyword">SELECT</span> generate_series(<span class="number">1</span>,<span class="number">10</span>,<span class="number">2</span>);</span><br><span class="line"><span class="keyword">SELECT</span> generate_series(to_date(<span class="string">&#x27;20220501&#x27;</span>, <span class="string">&#x27;YYYYMMDD&#x27;</span>), to_date(<span class="string">&#x27;20220505&#x27;</span>, <span class="string">&#x27;YYYYMMDD&#x27;</span>), <span class="string">&#x27;1 day&#x27;</span>::<span class="type">interval</span>);</span><br></pre></td></tr></table></figure></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

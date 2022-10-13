@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>MySQL编程篇-数据库和表 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>MySQL编程篇-数据库和表</h1>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h2 id="操作数据库"><a href="#操作数据库" class="headerlink" title="操作数据库"></a>操作数据库</h2><p><strong>创建数据库</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建数据库，如果已存在同名的数据库，报错</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE example;</span><br><span class="line"><span class="comment">-- 创建数据库，如果已存在同名的数据库，忽略此条SQL语句</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> example;</span><br></pre></td></tr></table></figure>
+
+<p><strong>切换(使用)数据库</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USE example;</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看数据库</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 列出全部数据库</span></span><br><span class="line"><span class="keyword">SHOW</span> DATABASES;</span><br><span class="line"><span class="comment">-- 查看当前使用的是哪一个数据库，使用 DATABASE() 函数</span></span><br><span class="line"><span class="keyword">SELECT</span> DATABASE();</span><br></pre></td></tr></table></figure>
+
+<p>查看创建数据库的SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> DATABASE example;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除数据库</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> DATABASE example;</span><br><span class="line"><span class="keyword">DROP</span> DATABASE IF <span class="keyword">EXISTS</span> example;</span><br></pre></td></tr></table></figure>
+
+<p><strong>数据库编码</strong></p>
+<p>在创建数据库时，MySQL默认使用配置文件（my.conf 或 my.ini）中设置的编码。</p>
+<p>查看数据库默认编码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;%character_set_database%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>也可以在创建数据库时，显式的设置编码，覆盖默认的配置</p>
+<blockquote>
+<p>注意：utf8和utf8mb4是不同的编码格式，推荐使用后者。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE example <span class="keyword">DEFAULT</span> <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8mb4;</span><br></pre></td></tr></table></figure>
+
+<p>还可以在数据库创建后，再修改编码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> DATABASE example <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="数据库设计3大范式"><a href="#数据库设计3大范式" class="headerlink" title="数据库设计3大范式"></a>数据库设计3大范式</h2><p>设计数据库（表）时，推荐遵循一定的规则，这些规则称为范式(NF, Normal Form)。</p>
+<p>一共有6种范式，它们是层层递进的，一般只需要遵循前3个范式就可以了，这3个范式称为3大范式。</p>
+<ul>
+<li>第1范式（1NF）：要求表中的每列都是不可再分的数据单元。</li>
+<li>第2范式（2NF）：在满足第1范式的基础上，要求表中每列都与主键相关，保证实体的唯一性。</li>
+<li>第3范式（3NF）：在满足第2范式的基础上，要求表中的每列都与主键<strong>直接相关</strong>，避免列的冗余。</li>
+</ul>
+<hr>
+<h2 id="SQL约束"><a href="#SQL约束" class="headerlink" title="SQL约束"></a>SQL约束</h2><p>在定义数据表的时候，可以为其设置约束（Constraints）。</p>
+<p><strong>NOT NULL</strong></p>
+<p>非空约束，限制列数据不能为NULL。</p>
+<p><strong>UNIQUE</strong></p>
+<p>唯一约束，限制列数据唯一。</p>
+<p><strong>PRIMARY KEY</strong></p>
+<p>主键约束，设置列为主键。可以使用一列或多列（联合主键）充当主键，主键列或联合主键列的组合必须<strong>非空且唯一</strong>。</p>
+<p><strong>FOREIGN KEY</strong></p>
+<p>外键约束，设置某列关联另一张表中的一条记录。</p>
+<p><strong>DEFAULT</strong></p>
+<p>默认值约束，设置列的默认值。</p>
+<p><strong>CHECK</strong></p>
+<p>CHECK约束用于限制列的取值范围。</p>
+<hr>
+<h2 id="操作数据表"><a href="#操作数据表" class="headerlink" title="操作数据表"></a>操作数据表</h2><p>操作数据表的SQL语句属于DDL语句，支持表的创建、修改、删除等操作。</p>
+<p>这里以一个简易的员工信息管理系统为例进行说明。</p>
+<p>员工信息管理系统包括公司部门表、职位表、员工表、工资表、项目表。E-R图如下</p>
+<p><img src="/images/001.png"></p>
+<p>其中，</p>
+<ul>
+<li>一个部门中可以有多个职位，其关系为：1-N</li>
+<li>一个职位可以有多个员工，其关系为：1-N</li>
+<li>一个员工只能有一个工资记录，其关系为：1-1</li>
+<li>一个项目中包括多个员工，一个员工也可以参与多个项目，其关系为：M-N</li>
+</ul>
+<h3 id="创建数据表"><a href="#创建数据表" class="headerlink" title="创建数据表"></a>创建数据表</h3><p>创建数据表使用 <code>CREATE TABLE</code> 语句，其格式如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span></span><br><span class="line">(</span><br><span class="line">    <span class="operator">&lt;</span>列名<span class="number">1</span><span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="operator">&lt;</span>列约束<span class="operator">&gt;</span>,</span><br><span class="line">    <span class="operator">&lt;</span>列名<span class="number">2</span><span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="operator">&lt;</span>列约束<span class="operator">&gt;</span>,</span><br><span class="line">    <span class="operator">&lt;</span>列名<span class="number">3</span><span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="operator">&lt;</span>列约束<span class="operator">&gt;</span>,</span><br><span class="line">    ...</span><br><span class="line">    <span class="operator">&lt;</span>表约束<span class="number">1</span><span class="operator">&gt;</span>,</span><br><span class="line">    <span class="operator">&lt;</span>表约束<span class="number">2</span><span class="operator">&gt;</span>,</span><br><span class="line">    ...</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>对于关系表，可以使用外键（<code>FOREIGN KEY</code>）进行关联：</p>
+<ul>
+<li><p>1-N关系中，在N的表中定义外键，指向1的表中的主键</p>
+</li>
+<li><p>1-1关系中，在任意一个表中定义唯一（<code>UNIQUE</code>）外键，指向另一张表中的主键</p>
+</li>
+<li><p>M-N关系中，需要引入第3张表（关系表），在其中定义2个外键，分别指向2张表中的主键</p>
+</li>
+</ul>
+<p>员工管理信息系统的数据表定义SQL语句如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE example;</span><br><span class="line">USE example;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*部门表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Department</span><br><span class="line">(</span><br><span class="line">    id   <span class="type">CHAR</span>(<span class="number">4</span>)     <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;部门编号&#x27;</span>,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;部门名称&#x27;</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*职位表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="built_in">Position</span></span><br><span class="line">(</span><br><span class="line">    id      <span class="type">CHAR</span>(<span class="number">4</span>)     <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;职位编号&#x27;</span>,</span><br><span class="line">    dept_id <span class="type">CHAR</span>(<span class="number">4</span>)     <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;所属部门编号&#x27;</span>,</span><br><span class="line">    name    <span class="type">VARCHAR</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;职位名称&#x27;</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (dept_id) <span class="keyword">REFERENCES</span> Department (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*员工表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Employee</span><br><span class="line">(</span><br><span class="line">    id           <span class="type">CHAR</span>(<span class="number">4</span>)     <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;员工编号&#x27;</span>,</span><br><span class="line">    position_id  <span class="type">CHAR</span>(<span class="number">4</span>)     <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;所属职位编号&#x27;</span>,</span><br><span class="line">    first_name   <span class="type">VARCHAR</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;员工名字&#x27;</span>,</span><br><span class="line">    last_name    <span class="type">VARCHAR</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;员工姓氏&#x27;</span>,</span><br><span class="line">    age          <span class="type">INTEGER</span>     <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> COMMENT <span class="string">&#x27;员工年龄&#x27;</span>,</span><br><span class="line">    sex          <span class="type">VARCHAR</span>(<span class="number">7</span>)  <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;unknown&#x27;</span> COMMENT <span class="string">&#x27;性别：male,female,unknown&#x27;</span>,</span><br><span class="line">    id_number    <span class="type">CHAR</span>(<span class="number">18</span>)    <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;身份证号码&#x27;</span>,</span><br><span class="line">    phone_number <span class="type">CHAR</span>(<span class="number">11</span>)    <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;手机号码&#x27;</span>,</span><br><span class="line">    email        <span class="type">VARCHAR</span>(<span class="number">32</span>) <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;邮箱&#x27;</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (position_id) <span class="keyword">REFERENCES</span> <span class="built_in">Position</span> (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*工资表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Salary</span><br><span class="line">(</span><br><span class="line">    id     <span class="type">CHAR</span>(<span class="number">4</span>)       <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;工资编号&#x27;</span>,</span><br><span class="line">    emp_id <span class="type">CHAR</span>(<span class="number">4</span>)       <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;所属员工编号&#x27;</span>, <span class="comment">-- 唯一外键</span></span><br><span class="line">    basic  <span class="type">DECIMAL</span>(<span class="number">8</span>, <span class="number">2</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> COMMENT <span class="string">&#x27;基础工资&#x27;</span>,</span><br><span class="line">    bonus  <span class="type">DECIMAL</span>(<span class="number">8</span>, <span class="number">2</span>) <span class="keyword">NULL</span>     <span class="keyword">DEFAULT</span> <span class="number">0</span> COMMENT <span class="string">&#x27;奖金&#x27;</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (emp_id) <span class="keyword">REFERENCES</span> Employee (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*项目表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Project</span><br><span class="line">(</span><br><span class="line">    id       <span class="type">CHAR</span>(<span class="number">4</span>)     <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span> COMMENT <span class="string">&#x27;项目编号&#x27;</span>,</span><br><span class="line">    name     <span class="type">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;项目名称&#x27;</span>,</span><br><span class="line">    start_at <span class="type">DATE</span>        <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;项目开始日期&#x27;</span>,</span><br><span class="line">    end_at   <span class="type">DATE</span>        <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;项目结束日期&#x27;</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*员工-项目表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Project_Employee</span><br><span class="line">(</span><br><span class="line">    project_id <span class="type">CHAR</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;项目编号&#x27;</span>,</span><br><span class="line">    emp_id     <span class="type">CHAR</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;员工编号&#x27;</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (project_id, emp_id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (project_id) <span class="keyword">REFERENCES</span> Project (id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (emp_id) <span class="keyword">REFERENCES</span> Employee (id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>执行以上SQL语句后，使用 <code>SHOW TABLES</code> 查看当前数据库中的所有表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> TABLES;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+</span></span><br><span class="line"><span class="operator">|</span> Tables_in_example <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+</span></span><br><span class="line"><span class="operator">|</span> department        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> employee          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> position          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> project           <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> project_employee  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> salary            <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+</span></span><br><span class="line"><span class="number">6</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>DESCRIBE 表名</code>  或其简写形式 <code>DESC 表名</code> 查看某张表的结构</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">DESC</span> Employee;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> Field        <span class="operator">|</span> Type        <span class="operator">|</span> <span class="keyword">Null</span> <span class="operator">|</span> Key <span class="operator">|</span> <span class="keyword">Default</span> <span class="operator">|</span> Extra <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> id           <span class="operator">|</span> <span class="type">char</span>(<span class="number">4</span>)     <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span> PRI <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> position_id  <span class="operator">|</span> <span class="type">char</span>(<span class="number">4</span>)     <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span> MUL <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> first_name   <span class="operator">|</span> <span class="type">varchar</span>(<span class="number">16</span>) <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span>     <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> last_name    <span class="operator">|</span> <span class="type">varchar</span>(<span class="number">16</span>) <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span>     <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> age          <span class="operator">|</span> <span class="type">int</span>(<span class="number">11</span>)     <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span>     <span class="operator">|</span> <span class="number">0</span>       <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> sex          <span class="operator">|</span> <span class="type">varchar</span>(<span class="number">7</span>)  <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span>     <span class="operator">|</span> <span class="literal">unknown</span> <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> id_number    <span class="operator">|</span> <span class="type">char</span>(<span class="number">18</span>)    <span class="operator">|</span> YES  <span class="operator">|</span> UNI <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> phone_number <span class="operator">|</span> <span class="type">char</span>(<span class="number">11</span>)    <span class="operator">|</span> YES  <span class="operator">|</span> UNI <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> email        <span class="operator">|</span> <span class="type">varchar</span>(<span class="number">32</span>) <span class="operator">|</span> YES  <span class="operator">|</span> UNI <span class="operator">|</span> <span class="keyword">NULL</span>    <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="number">9</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>SHOW CREATE TABLE 表名</code> 可以查看创建表的SQL语句。</p>
+<h3 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h3><p>修改表使用 <code>ALTER TABLE</code> 语句，可以在已存在的表的基础上，修改表名称、为其添加列、修改列、删除列。</p>
+<p>修改表名称：将员工表重命名为 <em>Emp</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Employee RENAME <span class="keyword">TO</span> Emp;</span><br></pre></td></tr></table></figure>
+
+<p>添加列：给员工表添加一个列，表示入职日期</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Employee <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> hiredayy DATETIME;</span><br></pre></td></tr></table></figure>
+
+<p>修改列名称：入职日期列名多写了一个y，修改为 <em>hireday</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Employee CHANGE hiredayy hireday DATETIME;</span><br></pre></td></tr></table></figure>
+
+<p>修改列数据类型：修改入职日期列数据类型为 <code>DATE</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Employee MODIFY <span class="keyword">COLUMN</span> hireday <span class="type">DATE</span>;</span><br></pre></td></tr></table></figure>
+
+<p>删除列：删除入职日期列</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Employee <span class="keyword">DROP</span> <span class="keyword">COLUMN</span> hireday;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除数据表"><a href="#删除数据表" class="headerlink" title="删除数据表"></a>删除数据表</h3><p>删除数据表使用 <code>DROP TABLE</code> 语句。</p>
+<blockquote>
+<p>注意：此操作不可逆！</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Employee_Copy;</span><br></pre></td></tr></table></figure>
+
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

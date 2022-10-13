@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>hugo搭建静态站点 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>hugo搭建静态站点</h1>
+
+<span>建站</span>
+
+<span>2021-03-01</span>
+<div><p>hugo中文文档：<a target="_blank" rel="noopener" href="https://www.gohugo.org/">https://www.gohugo.org/</a></p>
+<p>Hugo In Action在线图书：<a target="_blank" rel="noopener" href="https://livebook.manning.com/book/hugo-in-action/">https://livebook.manning.com/book/hugo-in-action/</a></p>
+<span id="more"></span>
+
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p><strong>下载安装</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/spf13/hugo/releases">https://github.com/spf13/hugo/releases</a></p>
+<p>最简单的方式是，只需要下载对应操作系统的2进制文件，将其配置到PATH环境变量即可。</p>
+<p><strong>生成站点</strong></p>
+<p><code>hugo new site E:\blog</code></p>
+<p><strong>创建内容页</strong></p>
+<p><code>hugo new about.md</code></p>
+<p>新建的页面位于content目录下。</p>
+<p><code>hugo new posts/hello.md</code></p>
+<p>使用同样的命令，在content&#x2F;posts目录下，添加了一篇文章。</p>
+<p><strong>使用主题皮肤</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.gohugo.org/theme/">https://www.gohugo.org/theme/</a></p>
+<p>将喜欢的主题，例如ananke，通过git下载到themes目录下，文件夹名称与主题名称保持一致。</p>
+<p><code>git clone git@github.com:theNewDynamic/gohugo-theme-ananke.git themes/ananke</code></p>
+<p><strong>运行hugo本地服务器</strong></p>
+<p><code>hugo server --theme=ananke --buildDrafts</code></p>
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:1313/">http://localhost:1313/</a> 即可看到一个静态站点成功创建了。</p>
+<p><strong>基础配置</strong></p>
+<p>hugo支持的配置文件格式依次是toml,yaml,json。这里使用yaml进行配置。</p>
+<p>修改config.toml为config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">config:</span> <span class="string">&quot;config.yml&quot;</span></span><br><span class="line"><span class="attr">watch:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基础url，必须以斜杠结尾，否则静态资源文件路径会拼接错误，导致404.</span></span><br><span class="line"><span class="attr">baseURL:</span> <span class="string">&#x27;https://lypzzz.github.io/&#x27;</span></span><br><span class="line"><span class="attr">languageCode:</span> <span class="string">&#x27;zh-cn&#x27;</span> <span class="comment">#&#x27;en-us&#x27;</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">&#x27;我的博客&#x27;</span></span><br><span class="line"><span class="comment"># 配置默认主题</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">&quot;ananke&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>构建</strong></p>
+<p>修改content目录及其子目录下的文章，将文章头部的draft修改为false；</p>
+<p>执行以下命令，将在public目录中，生成网站内容</p>
+<p><code>hugo -D</code></p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p><strong>部署到github</strong></p>
+<p>在github上创建一个公开的仓库，名称为 lypzzz.github.io ，lypzzz为github用户名；</p>
+<p>将public目录下的文件，全部推送到github仓库</p>
+<p><code>cd public</code></p>
+<p><code>git init</code></p>
+<p><code>git remote add github git@github.com:lypzzz/lypzzz.github.io.git</code></p>
+<p><code>git add --all</code></p>
+<p><code>git commit -m &quot;deploy&quot;</code></p>
+<p><code>git push -u github main</code></p>
+<p>访问 <a target="_blank" rel="noopener" href="https://lypzzz.github.io/">https://lypzzz.github.io/</a> 即可看到成功部署站点到了github pages。</p>
+<p><strong>部署到gitee</strong></p>
+<p>gitee仓库名与github仓库名有点不一样，只需要使用用户名即可。</p>
+<p>将gitee仓库添加为本地git仓库的远程仓库，然后push</p>
+<p><code>git remote add gitee git@gitee.com:lypzzzzz/lypzzzzz.git</code></p>
+<p><code>git push -u gitee main</code></p>
+<p>然后，需要到gitee pages中，启动服务。之后有更新后，也需要去gitee pages中进行更新操作。</p>
+<h2 id="hugo常用命令"><a href="#hugo常用命令" class="headerlink" title="hugo常用命令"></a>hugo常用命令</h2><p>查看命令帮助</p>
+<p><code>hugo help</code></p>
+<p>查看配置</p>
+<p><code>hugo config</code></p>
+<p>启动hugo服务器</p>
+<p><code>hugo server</code></p>
+<p>构建内容</p>
+<p><code>hugo -D</code></p>
+<h2 id="hugo目录结构"><a href="#hugo目录结构" class="headerlink" title="hugo目录结构"></a>hugo目录结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">─archetypes</span><br><span class="line">├─assets</span><br><span class="line">├─content</span><br><span class="line">├─data</span><br><span class="line">├─i18n</span><br><span class="line">├─layouts</span><br><span class="line">├─public</span><br><span class="line">├─resources</span><br><span class="line">├─static</span><br><span class="line">├─themes</span><br><span class="line">├─config.yml</span><br></pre></td></tr></table></figure>
+
+<p><strong>archetypes</strong></p>
+<p>该目录下的default.md是一个默认的内容模板文件，用于在使用 <code>hugo new</code> 添加页面时，自动生成预定义的信息。</p>
+<p>默认生成以下内容</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &quot;&#123;&#123; replace .Name &quot;-&quot; &quot; &quot; | title &#125;&#125;&quot;</span><br><span class="line">date: &#123;&#123; .Date &#125;&#125;</span><br><span class="line"><span class="section">draft: true</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>可以添加其它头部信息</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">draft: false</span><br><span class="line">title: &quot;&#123;&#123; replace .Name &quot;-&quot; &quot; &quot; | title &#125;&#125;&quot;</span><br><span class="line">date: &#123;&#123; .Date &#125;&#125;</span><br><span class="line">categories:</span><br><span class="line">tags:</span><br><span class="line">keywords:</span><br><span class="line">description: </span><br><span class="line"><span class="section">slug:</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>还可以添加新的模板文件</p>
+<p><strong>assets</strong></p>
+<p><strong>content</strong></p>
+<p>保存自己创建的内容的地方。</p>
+<p><strong>data</strong></p>
+<p><strong>layouts</strong></p>
+<p><strong>public</strong></p>
+<p><strong>resources</strong></p>
+<p><strong>static</strong></p>
+<p><strong>themes</strong></p>
+<p><strong>config.yml</strong></p>
+<p>配置文件。</p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

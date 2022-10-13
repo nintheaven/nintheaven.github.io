@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java实现数据结构：链表及其操作 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>Java实现数据结构：链表及其操作</h1>
+
+<span>数据结构与算法</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h2 id="链表介绍"><a href="#链表介绍" class="headerlink" title="链表介绍"></a>链表介绍</h2><p>数组和链表是最基本的数据结构，是实现其他数据结构的基础。。</p>
+<p>链表本质上是串在一起的一个个节点。</p>
+<p>链表的每个节点必须有一个表示其内容的变量，一般命名为 <code>key</code> 或 <code>val</code>；</p>
+<p>链表的每个节点至少要有1或2个表示其指向的变量：<code>prev</code> 和 <code>next</code>，<code>prev</code>指向指向它的<strong>前驱元素</strong>，<code>next</code>指向它的<strong>后继元素</strong>；</p>
+<p>链表的每个节点中可能还有其它辅助数据，称为<strong>卫星数据</strong>。</p>
+<p>链表的头结点一般称为 <code>head</code>，尾节点称为 <code>tail</code></p>
+<p>链表包括单向链表、双向链表、循环链表。</p>
+<p><strong>单向链表</strong>只有指向后继元素的 <code>next</code> 指针，<strong>双向链表</strong> <code>next</code> 和 <code>prev</code> 都有，<strong>循环链表</strong>在双向链表的基础上，将 <code>head.prev</code> 指向 <code>tail</code>，并将 <code>tail.next</code> 指向 <code>head</code>。</p>
+<h2 id="构造链表"><a href="#构造链表" class="headerlink" title="构造链表"></a>构造链表</h2><p>构造单向链表使用如下的数据结构</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SinglyNode</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> E val;</span><br><span class="line">    <span class="keyword">public</span> SinglyNode&lt;E&gt; next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">SinglyNode</span><span class="params">(E val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构造双向链表和循环链表使用如下的数据结构</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DoublyNode</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> E val;</span><br><span class="line">    <span class="keyword">public</span> SinglyNode&lt;E&gt; prev;</span><br><span class="line">    <span class="keyword">public</span> SinglyNode&lt;E&gt; next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DoublyNode</span><span class="params">(E val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="链表常见操作"><a href="#链表常见操作" class="headerlink" title="链表常见操作"></a>链表常见操作</h2><blockquote>
+<p>非特殊说明，以下操作均使用双向链表。</p>
+</blockquote>
+<p><strong>在表头插入元素</strong></p>
+<p><strong>从表头删除元素</strong></p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

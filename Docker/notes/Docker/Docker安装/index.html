@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Docker安装 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>Docker安装</h1>
+
+<span>Docker</span>
+
+<span>2022-10-11</span>
+<div><p><a target="_blank" rel="noopener" href="https://docs.docker.com/get-docker/">https://docs.docker.com/get-docker/</a></p>
+<span id="more"></span>
+
+<h2 id="Ubuntu系统安装Docker"><a href="#Ubuntu系统安装Docker" class="headerlink" title="Ubuntu系统安装Docker"></a>Ubuntu系统安装Docker</h2><p>参考：<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/ubuntu/">https://docs.docker.com/engine/install/ubuntu/</a></p>
+<h3 id="卸载旧版本的docker"><a href="#卸载旧版本的docker" class="headerlink" title="卸载旧版本的docker"></a>卸载旧版本的docker</h3><p>如果之前安装过旧版本的docker，使用以下命令卸载</p>
+<p><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
+<h3 id="推荐-使用docker-repository进行安装"><a href="#推荐-使用docker-repository进行安装" class="headerlink" title="(推荐)使用docker repository进行安装"></a>(推荐)使用docker repository进行安装</h3><p>更新apt源，并安装相关库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line">sudo apt-get install \</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg \</span><br><span class="line">    lsb-release</span><br></pre></td></tr></table></figure>
+
+<p>添加docker官方的GPG Key</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br></pre></td></tr></table></figure>
+
+<p>设置apt respository</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo \</span><br><span class="line">  &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \</span><br><span class="line"><span class="meta prompt_">  $</span><span class="language-bash">(lsb_release -cs) stable<span class="string">&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span></span></span><br></pre></td></tr></table></figure>
+
+<p>安装docker引擎，容器，客户端</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+
+<p>最好使用非root用户来使用docker。将非root用户添加到本地docker unix组中</p>
+<p><code>sudo usermod -aG docker lyp</code></p>
+<p><code>cat /etc/group | grep docker</code></p>
+<p>输出 <em>docker:x:998:lyp</em></p>
+<p>重启一下电脑。</p>
+<p>验证是否安装成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker --version</span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用deb包进行安装"><a href="#使用deb包进行安装" class="headerlink" title="使用deb包进行安装"></a>使用deb包进行安装</h3><p>下载deb包，安装即可。</p>
+<p><strong>使用脚本进行安装</strong></p>
+<ol>
+<li><p>在shell中运行命令 <em>wget -qO- <a target="_blank" rel="noopener" href="https://get.docker.com/">https://get.docker.com/</a> | sh</em></p>
+<p> 获取并运行docker安装脚本，然后使用管道的方式来执行这个脚本</p>
+</li>
+<li><p>最好使用非root用户来使用docker。将非root用户添加到本地docker unix组中</p>
+<p> <code>sudo usermod -aG docker lyp</code></p>
+<p> <code>cat /etc/group | grep docker</code></p>
+<p> 输出 <em>docker:x:998:lyp</em></p>
+<p> 重启一下电脑。</p>
+</li>
+<li><p>安装完成，确认一下</p>
+<p> <em>docker –version</em></p>
+</li>
+</ol>
+<p>升级docker引擎</p>
+<ol>
+<li><p>更新apt包列表 </p>
+<p> <code>apt update</code></p>
+</li>
+<li><p>卸载当前的docker</p>
+<p> <code>apt remove docker docker-engine docker-ce docker.io -y</code></p>
+</li>
+<li><p>安装新版本的docker</p>
+</li>
+<li><p>将docker配置为开机自启动</p>
+<p> <code>systemctl enable  docker</code></p>
+<p> <code>systemctl is-enabled docker</code></p>
+</li>
+<li><p>检查并确保每一个容器和服务器都已经重启成功</p>
+<p> <code>docker container ls</code></p>
+</li>
+</ol>
+<h2 id="Window10系统安装Docker"><a href="#Window10系统安装Docker" class="headerlink" title="Window10系统安装Docker"></a>Window10系统安装Docker</h2><p>参考：<a target="_blank" rel="noopener" href="https://docs.docker.com/desktop/windows/install/">https://docs.docker.com/desktop/windows/install/</a></p>
+<p><strong>安装windows子系统WSL</strong></p>
+<p>方式1：</p>
+<p>查看可用的linux发行版</p>
+<p><code>wsl --list --online</code></p>
+<p>安装</p>
+<p><code>wsl --install -d Ubuntu-20.04</code></p>
+<p>方式2：</p>
+<p>Docker Windows版本需要运行在Linux内核上，因此，Windows上需要先有Linux内核。这里安装WSL2。</p>
+<p>打开这个网页：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/wsl/install-manual">https://docs.microsoft.com/zh-cn/windows/wsl/install-manual</a></p>
+<p>下载Ubuntu发行版，然后打开Windows Power Shell，cd到下载目录，运行以下命令</p>
+<p><code>Add-AppPackage .\Ubuntu_2004.2020.424.0_x64.appx</code></p>
+<p>等待安装完成后，点击Window开始菜单，单击新添加的Ubuntu系统应用，完成WSL的后续安装(设置用户名和密码)。</p>
+<p>以管理员身份打开Windows Power Shell 或 CMD，运行以下命令更新wsl内核(否则可能报错：<em>WSL 2 installation is incomplete</em>)</p>
+<p><code>wsl --update</code></p>
+<p>然后重启wsl</p>
+<p><code>wsl --shutdown</code></p>
+<p><strong>安装Docker</strong></p>
+<p>下载，安装，双击图标启动docker。。</p>
+<p>然后，最好将当前用户加到docker用户组中，否则，docker操作需要管理员权限。</p>
+<p>在Win10中，右键开始菜单-&gt;计算机管理-&gt;本地用户和组-&gt;组，右键docker-users组，将当前用户添加到组中，重启电脑，ok！</p>
+<p>打开Windows Power Shell 或 CMD，查看docker版本</p>
+<p><code>docker --version</code></p>
+<p>运行getting-started镜像</p>
+<p><code>docker run -d -p 80:80 docker/getting-started</code></p>
+<h2 id="管理Docker服务"><a href="#管理Docker服务" class="headerlink" title="管理Docker服务"></a>管理Docker服务</h2><p>linux系统就用 <code>service</code> 或者 <code>systemctl</code> 命令即可。</p>
+<p>windows系统的话，必须启动docker桌面程序(Docker Desktop Service)，它会自动启动docker服务的。或者使用命令 <code>net start com.docker.service</code> 进行启动。</p>
+<p>在windows中，启动docker桌面程序时，如果一直处于启动状态，尝试运行以下2条命令</p>
+<p><code>wsl --unregister docker-desktop</code></p>
+<p><code>wsl --unregister docker-desktop-data</code></p>
+<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/43041331/docker-forever-in-docker-is-starting-at-windows-task">https://stackoverflow.com/questions/43041331/docker-forever-in-docker-is-starting-at-windows-task</a></p>
+</blockquote>
+<p>如果之前启动成功过，但是突然出现这个问题，尝试重启电脑试试。。我就是这样解决的。。</p>
+<h2 id="Docker镜像加速"><a href="#Docker镜像加速" class="headerlink" title="Docker镜像加速"></a>Docker镜像加速</h2><p>docker镜像仓库</p>
+<ul>
+<li><p>官方仓库地址：<a target="_blank" rel="noopener" href="https://registry.hub.docker.com/">https://registry.hub.docker.com/</a></p>
+</li>
+<li><p>阿里云镜像仓库：https:&#x2F;&#x2F;你的id.mirror.aliyuncs.com</p>
+<blockquote>
+<p>阿里云控制台-&gt;登录阿里账号-&gt;容器服务-&gt;容器镜像服务-&gt;镜像工具-&gt;镜像加速器，复制加速器地址</p>
+</blockquote>
+</li>
+<li><p>网易镜像仓库：<a target="_blank" rel="noopener" href="https://hub-mirror.c.163.com/">https://hub-mirror.c.163.com</a></p>
+</li>
+<li><p>百度镜像仓库：<a target="_blank" rel="noopener" href="https://mirror.baidubce.com/">https://mirror.baidubce.com</a></p>
+</li>
+</ul>
+<p><strong>linux系统</strong></p>
+<p>通过修改 <em>&#x2F;etc&#x2F;docker&#x2F;daemon.json</em> 文件，设置镜像仓库地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://8zw1mbyp0.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p><strong>windows系统</strong></p>
+<p>在docker桌面程序中打开设置，或者右键右下角托盘图标，选择Settings，选择Docker Engine，修改json配置文件，在registry-mirrors配置项中添加镜像地址。或者直接打开 <em>~&#x2F;.docker&#x2F;daemon.json</em> 配置文件进行修改</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;https://8zw1mbyp.mirror.aliyuncs.com&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;insecure-registries&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;debug&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;experimental&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;buildkit&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;builder&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;gc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;defaultKeepStorage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;20GB&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>重启服务。</p>
+<p><strong>检查镜像配置是否生效</strong></p>
+<p><code>docker info</code></p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

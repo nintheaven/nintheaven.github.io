@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>springboot使用原生Servlet中的3大组件 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>springboot使用原生Servlet中的3大组件</h1>
+
+<span>SpringBoot</span>
+
+<span>2022-10-11</span>
+<div><p>参考官方文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.servlet.embedded-container">https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.servlet.embedded-container</a></p>
+<p>springboot中可以使用原生的Servlet三大组件 <code>Servlet</code>、<code>Filter</code>、<code>Listener</code>，使用方式有下面2种方式：</p>
+<ul>
+<li>使用 <code>@WebServlet</code>、 <code>@WebFilter</code>、<code>@WebListener</code> 注解标注组件，然后在springboot配置类中使用 <code>@ServletComponentScan</code> 注解启用Servlet组件扫描</li>
+<li>如果觉得使用注解的方式不够灵活，可以向spring容器中手动注册  <code>ServletRegistrationBean</code>、<code>FilterRegistrationBean</code>、<code>ServletListenerRegistrationBean</code>  bean对象</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="使用Servlet"><a href="#使用Servlet" class="headerlink" title="使用Servlet"></a>使用<code>Servlet</code></h2><p>在springboot中使用<code>servlet</code>最简单的方式是使用注解的方式。</p>
+<p>创建sevlet类，并使用 <code>@WebServlet</code> 注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="meta">@WebServlet(&quot;/my&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">servletPath</span> <span class="operator">=</span> req.getServletPath();</span><br><span class="line">        resp.getWriter().println(servletPath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在配置类中使用注解 <code>@ServletComponentScan</code> 开启servlet组件扫描</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.web.servlet.ServletComponentScan;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@ServletComponentScan</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">App</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(App.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者，不用注解，而是手动向spring容器中注入 <code>ServletRegistrationBean&lt;T&gt;</code> 对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> ServletRegistrationBean&lt;MyServlet&gt; <span class="title function_">myServletServletRegistrationBean</span><span class="params">()</span>&#123;</span><br><span class="line">    ServletRegistrationBean&lt;MyServlet&gt; registrationBean = <span class="keyword">new</span> <span class="title class_">ServletRegistrationBean</span>&lt;&gt;();</span><br><span class="line">    registrationBean.setServlet(<span class="keyword">new</span> <span class="title class_">MyServlet</span>());</span><br><span class="line">    registrationBean.addUrlMappings(<span class="string">&quot;/my&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> registrationBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用Filter"><a href="#使用Filter" class="headerlink" title="使用Filter"></a>使用<code>Filter</code></h2><p>在springboot中使用<code>filter</code>最简单的方式是使用注解的方式。</p>
+<p>创建filter类，并使用 <code>@WebFilter</code> 注解进行标注</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@WebFilter(urlPatterns = &quot;/my/*&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">        log.info(getClass().getName()+<span class="string">&quot;: init()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        log.info(getClass().getName() + <span class="string">&quot;: doFilter()&quot;</span>);</span><br><span class="line">        chain.doFilter(request,response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">        log.info(getClass().getName()+<span class="string">&quot;: destroy()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与servlet一样，在配置类中使用注解 <code>@ServletComponentScan</code> 开启servlet组件扫描即可。</p>
+<p><strong>使用注解的方式有一个问题，就是无法指定过滤器的执行顺序</strong>（尝试了使用 <code>@Order</code> 注解，或者实现 <code>Ordered</code> 或 <code>OrderedFilter</code>接口均不好使，原因未知。。）。</p>
+<p>springboot还有另一种使用过滤器的方式，就是手动向spring容器注入 <code>FilterRegistrationBean&lt;T&gt;</code> 对象，这种方式指定过滤器执行顺序有效，过滤器按照 <code>order</code> 值从小到大依次执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> FilterRegistrationBean&lt;MyFilter&gt; <span class="title function_">myFilterFilterRegistrationBean</span><span class="params">()</span>&#123;</span><br><span class="line">    FilterRegistrationBean&lt;MyFilter&gt; registrationBean = <span class="keyword">new</span> <span class="title class_">FilterRegistrationBean</span>&lt;&gt;();</span><br><span class="line">    registrationBean.setFilter(<span class="keyword">new</span> <span class="title class_">MyFilter</span>());</span><br><span class="line">    registrationBean.setOrder(<span class="number">2</span>);</span><br><span class="line">    registrationBean.addUrlPatterns(<span class="string">&quot;/my/*&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> registrationBean;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> FilterRegistrationBean&lt;MyFilter2&gt; <span class="title function_">myFilter2FilterRegistrationBean</span><span class="params">()</span>&#123;</span><br><span class="line">    FilterRegistrationBean&lt;MyFilter2&gt; registrationBean = <span class="keyword">new</span> <span class="title class_">FilterRegistrationBean</span>&lt;&gt;();</span><br><span class="line">    registrationBean.setFilter(<span class="keyword">new</span> <span class="title class_">MyFilter2</span>());</span><br><span class="line">    registrationBean.setOrder(<span class="number">1</span>);</span><br><span class="line">    registrationBean.addUrlPatterns(<span class="string">&quot;/my/*&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> registrationBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>/my/</code> 地址，日志打印如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INFO 15452 --- [nio-8080-exec-1] com.lypzz.filter.MyFilter2: com.lypzz.filter.MyFilter2: doFilter()</span><br><span class="line">INFO 15452 --- [nio-8080-exec-1] com.lypzz.filter.MyFilter: com.lypzz.filter.MyFilter: doFilter()</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用Listener"><a href="#使用Listener" class="headerlink" title="使用Listener"></a>使用<code>Listener</code></h2><p>springboot种使用servlet监听器最简单的方式是注解的方式。</p>
+<p>创建listener类，使用 <code>@WebListener</code> 注解进行标注</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.ServletContextEvent;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletContextListener;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebListener;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@WebListener</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyServletContextListener</span> <span class="keyword">implements</span> <span class="title class_">ServletContextListener</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">contextInitialized</span><span class="params">(ServletContextEvent sce)</span> &#123;</span><br><span class="line">        log.info(getClass().getName() + <span class="string">&quot;: contextInitialized()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">contextDestroyed</span><span class="params">(ServletContextEvent sce)</span> &#123;</span><br><span class="line">        log.info(getClass().getName() + <span class="string">&quot;: contextDestroyed()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，在配置类中使用注解 <code>@ServletComponentScan</code> 开启servlet组件扫描即可。</p>
+<p>当然，也可以不使用注解，而是手动向spring容器注入 <code>ServletListenerRegistrationBean&lt;T&gt;</code> 对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> ServletListenerRegistrationBean&lt;MyServletContextListener&gt; <span class="title function_">myServletContextListenerServletListenerRegistrationBean</span><span class="params">()</span>&#123;</span><br><span class="line">    ServletListenerRegistrationBean&lt;MyServletContextListener&gt; registrationBean = <span class="keyword">new</span> <span class="title class_">ServletListenerRegistrationBean</span>&lt;&gt;();</span><br><span class="line">    registrationBean.setListener(<span class="keyword">new</span> <span class="title class_">MyServletContextListener</span>());</span><br><span class="line">    <span class="keyword">return</span> registrationBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

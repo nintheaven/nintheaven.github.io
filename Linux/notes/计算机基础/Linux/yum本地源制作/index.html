@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>yum本地源制作 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>yum本地源制作</h1>
+
+<span>Linux</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h1 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h1><p><code>yum install yum-utils</code></p>
+<p><code>yum install createrepo</code></p>
+<p>其中，<br>createrepo工具用于生成软件之间的依赖索引；<br>yum-utils提供了一个yumdownloader命令，可以下载rpm软件包，而不需要进行安装。</p>
+<h1 id="制作特定软件的yum源"><a href="#制作特定软件的yum源" class="headerlink" title="制作特定软件的yum源"></a>制作特定软件的yum源</h1><p>在一台可以联网的centos机上操作。</p>
+<p>以安装gcc8+为例。</p>
+<p>1.创建文件夹，用于存放相关软件包以及生成的repodata索引文件</p>
+<p><code>mkdir -p ~/repo/gcc</code></p>
+<p>2.使用yumdownloader命令下载rpm软件包，包括依赖的包</p>
+<p><code>yumdownloader --resolve --destdir=./ centos-release-scl</code></p>
+<p><code>yumdownloader --resolve --destdir=./ devtoolset-8-gcc*</code></p>
+<p>参数说明：</p>
+<p>–resolve意思是自动解析包依赖关系</p>
+<p>–destdir用于指定软件包下载目录</p>
+<p>查看下载的rpm包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost gcc]# ls</span><br><span class="line">centos-release-scl-2-3.el7.centos.noarch.rpm          devtoolset-8-gcc-gfortran-8.3.1-3.2.el7.x86_64.rpm       libgfortran5-8.3.1-2.1.1.el7.x86_64.rpm</span><br><span class="line">centos-release-scl-rh-2-3.el7.centos.noarch.rpm       devtoolset-8-gcc-plugin-devel-8.3.1-3.2.el7.x86_64.rpm   libmpc-devel-1.0.1-3.el7.x86_64.rpm</span><br><span class="line">devtoolset-8-binutils-2.30-55.el7.2.x86_64.rpm        devtoolset-8-libquadmath-devel-8.3.1-3.2.el7.x86_64.rpm  libquadmath-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">devtoolset-8-gcc-8.3.1-3.2.el7.x86_64.rpm             devtoolset-8-libstdc++-devel-8.3.1-3.2.el7.x86_64.rpm    mpfr-devel-3.1.1-4.el7.x86_64.rpm</span><br><span class="line">devtoolset-8-gcc-c++-8.3.1-3.2.el7.x86_64.rpm         devtoolset-8-runtime-8.1-1.el7.x86_64.rpm</span><br><span class="line">devtoolset-8-gcc-gdb-plugin-8.3.1-3.2.el7.x86_64.rpm  gmp-devel-6.0.0-15.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<p>3.生成repodata索引文件</p>
+<p><code>createrep ./</code></p>
+<p>会在当前目录下生成repodata目录，其中包括依赖包的索引文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost gcc]# ll repodata/</span><br><span class="line">total 76</span><br><span class="line">-rw-r--r--. 1 root root  5293 Jun 21 23:46 299da233b4c36531791e9491280601ed272acff5a08b21cf28596a4f36b12b76-other.xml.gz</span><br><span class="line">-rw-r--r--. 1 root root  8317 Jun 21 23:46 600ba7eee6f5a22519a49e0746de08e1cebcb872e76d31dc974544d2434e55dc-other.sqlite.bz2</span><br><span class="line">-rw-r--r--. 1 root root 12623 Jun 21 23:46 828c7543c37266310f3d343e33ffaa73b5db0197a5eb506ab38b93e63447a810-filelists.xml.gz</span><br><span class="line">-rw-r--r--. 1 root root  5174 Jun 21 23:46 959189d3575aa6784866421e7d1f5d3d3a9210a83571b3d1a844353bdc352bb0-primary.xml.gz</span><br><span class="line">-rw-r--r--. 1 root root 11762 Jun 21 23:46 b2ee3b7d87d25b7e7a5dbf5b55ecfa419009ae499300df14e0b5db1ab4c60179-primary.sqlite.bz2</span><br><span class="line">-rw-r--r--. 1 root root 16013 Jun 21 23:46 e1a80b67e960f6e454ff37dc95d12b3b28f236219c403bd9fae1e2fac4b85dbe-filelists.sqlite.bz2</span><br><span class="line">-rw-r--r--. 1 root root  2979 Jun 21 23:46 repomd.xml</span><br></pre></td></tr></table></figure>
+
+<p>制作好本地yum源后，将其打包，方便上传到内网服务器上。</p>
+<p><code>tar -zcvf gcc-repo.tar.gz gcc/</code></p>
+<h1 id="制作全量yum源"><a href="#制作全量yum源" class="headerlink" title="制作全量yum源"></a>制作全量yum源</h1><p>可以通过全量下载官方或其它的yum源的方式，制作全量yum本地源。</p>
+<p>1.创建保存rpm包的文件夹</p>
+<p><code>mkdir /home/lyp/minerepo/</code></p>
+<p>1.查看已有repo的id</p>
+<p><code>yum repolist all</code></p>
+<p>2.全量下载rpm包</p>
+<p><code>reposync -r base -p /home/lyp/minerepo/</code></p>
+<p>参数说明：</p>
+<p>-r, –repoid&#x3D;REPOID</p>
+<p>-p, –download_path&#x3D;DESTDIR</p>
+<p>3.生成repodata索引文件</p>
+<p><code>createrep ./</code></p>
+<p>打个包</p>
+<p><code>tar -zcvf minerepo.tar.gz /home/lyp/minerepo/</code></p>
+<h1 id="使用yum源"><a href="#使用yum源" class="headerlink" title="使用yum源"></a>使用yum源</h1><p>1.解压上传的yum本地源tar包</p>
+<p><code>tar -zxvf gcc-repo.tar.gz</code></p>
+<p>2.设置yum源为本地源</p>
+<p>备份原有的yum源配置</p>
+<p><code>mkdir /etc/yum.repos.d/bak/</code></p>
+<p><code>mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak/</code></p>
+<p>创建本地源配置</p>
+<p><code>touch /etc/yum.repos.d/gcc-8.repo</code></p>
+<p>内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[gcc-8]</span><br><span class="line">name=gcc-8</span><br><span class="line">baseurl=file:///home/lyp/repo/gcc</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br></pre></td></tr></table></figure>
+
+<p>3.查看yum源列表</p>
+<p><code>yum repolist</code></p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

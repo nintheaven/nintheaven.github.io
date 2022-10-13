@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1></h1>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<p>GitHub API基础url</p>
+<p><a target="_blank" rel="noopener" href="https://api.github.com/">https://api.github.com</a></p>
+<p>token</p>
+<p>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</p>
+<p>github token不能出现在github仓库中，否则会被自动删除。如果要在项目中使用，可以在使用前先将其编码为base64字符串，在代码中解码使用。</p>
+<p>OAuth2.0认证，在请求头中设置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: token &lt;Token&gt;</span><br></pre></td></tr></table></figure>
+
+<p>查看仓库中的内容</p>
+<blockquote>
+<p>如果查看的是文件，默认会使用Base64编码，可以设置Accept请求头为 application&#x2F;vnd.github.VERSION.raw ，直接获取Base64解码后的内容</p>
+</blockquote>
+<p>&#x2F;repos&#x2F;{owner}&#x2F;{repo}&#x2F;contents&#x2F;{path}</p>
+<p><a target="_blank" rel="noopener" href="https://api.github.com/repos/lypzzz/mysite/contents">https://api.github.com/repos/lypzzz/mysite/contents</a></p>
+<p><a target="_blank" rel="noopener" href="https://api.github.com/repos/lypzzz/mysite/contents/.gitignore">https://api.github.com/repos/lypzzz/mysite/contents/.gitignore</a></p>
+<h1 id="issue"><a href="#issue" class="headerlink" title="issue"></a>issue</h1><h1 id="commonts"><a href="#commonts" class="headerlink" title="commonts"></a>commonts</h1></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

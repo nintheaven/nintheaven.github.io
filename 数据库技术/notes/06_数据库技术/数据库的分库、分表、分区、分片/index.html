@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>数据库的分库、分表、分区、分片 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>数据库的分库、分表、分区、分片</h1>
+
+<span>数据库技术</span>
+
+<span>2022-10-11</span>
+<div><h2 id="分库"><a href="#分库" class="headerlink" title="分库"></a>分库</h2><h3 id="水平切分"><a href="#水平切分" class="headerlink" title="水平切分"></a>水平切分</h3><p>每个库中的表结构相同</p>
+<h3 id="垂直切分"><a href="#垂直切分" class="headerlink" title="垂直切分"></a>垂直切分</h3><p>每个库中的表结构不同</p>
+<h2 id="分表"><a href="#分表" class="headerlink" title="分表"></a>分表</h2><h3 id="水平切分-1"><a href="#水平切分-1" class="headerlink" title="水平切分"></a>水平切分</h3><p>按行切分，数据存储到具有相同表结构的多张表中。减少了每张表行数，提高sql执行效率。</p>
+<p>常见的使用场景包括：</p>
+<p>1.订单表数据量过大，可以按照年份、月份进行水平切分</p>
+<p>2.用户表数据过大，可以按照用户的相关度进行切分</p>
+<p>3.论坛等网站的置顶、推荐内容，可以将其单独存储到一张表中</p>
+<h3 id="垂直切分-1"><a href="#垂直切分-1" class="headerlink" title="垂直切分"></a>垂直切分</h3><p>按列切分，数据存储到表结构不同的多张表中，表之间必须至少有一个相同的列，用于关联数据。</p>
+<p>常见的使用场景包括：</p>
+<p>1.将大字段存储在单独的表中，提高基础表的访问性能</p>
+<p>2.按照访问频率垂直切分</p>
+<p>3.按照业务逻辑垂直切分</p>
+<h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><h2 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h2></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

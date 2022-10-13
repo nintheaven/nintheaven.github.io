@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java实现代理模式 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>Java实现代理模式</h1>
+
+<span>软件设计模式</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h2 id="代理模式介绍"><a href="#代理模式介绍" class="headerlink" title="代理模式介绍"></a>代理模式介绍</h2><p>代理模式(Proxy Pattern) 指代理者代替被代理的主体进行一些操作的模式。</p>
+<p><strong>代理类</strong>和<strong>主体类</strong>（被代理者）拥有公用的<strong>主题</strong>（接口），主体类中可以有自己特有的方法。</p>
+<p>只有在操作主体类中特有的方法时，代理类才会创建主体类对象，让主体类亲自出马；否则，代理类对象代替主体类对象进行相关操作。</p>
+<p>当创建一个对象需要耗费很多资源，而且不是立即需要它时，就可以使用代理模式，让代理类进行大部分操作，只有在代理类无能为力时，再创建主体类对象。</p>
+<h2 id="代理模式示例"><a href="#代理模式示例" class="headerlink" title="代理模式示例"></a>代理模式示例</h2><p>以海外代购为例，国内的人想买国外的东西，要么自己飞到国外，要么通过代购：代购代理买东西这件事，但是自己收货。</p>
+<p>定义购物接口，表示一个<strong>主题</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*主题：购物*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Shopping</span> &#123;</span><br><span class="line">    <span class="comment">/*购物*/</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">buying</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">/*收货*/</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">receiving</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个表示人的类，实现购物接口，表示被代理的主体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> <span class="keyword">implements</span> <span class="title class_">Shopping</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buying</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;亲自购买&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiving</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;亲自收货&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义代理类，实现与主体类一样的接口。<code>buying()</code> 方法中，代理类自己就可以处理了，但是 <code>receiving()</code> 方法，需要主体类（人）亲自收货</p>
+<blockquote>
+<p>注意：代理类内必须要有一个主体类的引用，而且要在需要的时候才进行初始化。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Daigou</span> <span class="keyword">implements</span> <span class="title class_">Shopping</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Person person;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buying</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;代购帮买&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiving</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (person==<span class="literal">null</span>)&#123;</span><br><span class="line">            person = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        person.receiving();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Shopping</span> <span class="variable">shopping</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Daigou</span>();</span><br><span class="line">    shopping.buying();</span><br><span class="line">    shopping.receiving();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">代购帮买</span><br><span class="line">亲自收货</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>代理模式与对象适配器模式的区别？</p>
+<p>首先它们解决的问题不同：代理模式的目的是为了延迟创建主体类，适配器模式的目的是让现有类兼容目标接口；</p>
+<p>代理模式的主体，在需要的时候由代理类负责创建，而对象适配器模式的被适配者必须在客户端创建适配器的时候同时创建，并作为依赖项添加到适配器中。</p>
+</blockquote>
+<h2 id="代理模式类图"><a href="#代理模式类图" class="headerlink" title="代理模式类图"></a>代理模式类图</h2><p><img src="/images/proxy.png"></p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

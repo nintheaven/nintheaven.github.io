@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>svn基础操作 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>svn基础操作</h1>
+
+<span>版本管理工具</span>
+
+<span>2022-10-11</span>
+<div><p>下载安装：<a target="_blank" rel="noopener" href="https://subversion.apache.org/packages.html">https://subversion.apache.org/packages.html</a></p>
+<h2 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h2><p><code>svnadmin create test</code></p>
+<p><img src="/images/svn01.png"></p>
+<p>其中，conf目录下有几个重要的配置文件</p>
+<p><em>svnserve.conf</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[general]</span><br><span class="line"># 匿名用户权限:read,write,none</span><br><span class="line">anon-access = none</span><br><span class="line"># 认证用户权限</span><br><span class="line">auth-access = write</span><br><span class="line"># 配置用户名和密码的文件名</span><br><span class="line">password-db = passwd</span><br><span class="line"># 配置用户或组的权限的文件名</span><br><span class="line">authz-db = authz</span><br></pre></td></tr></table></figure>
+
+<p><em>passwd</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[users]</span><br><span class="line">admin = admin</span><br><span class="line">lyp = 123456</span><br></pre></td></tr></table></figure>
+
+<p><em>authz</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[groups]</span><br><span class="line"># harry_and_sally = harry,sally</span><br><span class="line"># harry_sally_and_joe = harry,sally,&amp;joe</span><br><span class="line">admin = admin</span><br><span class="line">users = lyp,wd</span><br><span class="line"></span><br><span class="line">[test:/]</span><br><span class="line">@admin = rw</span><br><span class="line">@users = r</span><br><span class="line">* = </span><br></pre></td></tr></table></figure>
+
+<h2 id="启动svn服务"><a href="#启动svn服务" class="headerlink" title="启动svn服务"></a>启动svn服务</h2><p><code>svnserve -d -r E:\Projects\svn --listen-port 3690</code></p>
+<p><em>-r</em> 参数用于指定版本库根目录</p>
+<h2 id="检出"><a href="#检出" class="headerlink" title="检出"></a>检出</h2><p>从中央仓库下载版本库到本地</p>
+<p><code>svn checkout svn://192.168.2.12/test --username admin --password admin</code></p>
+<p>查看版本库信息</p>
+<p><code>svn info</code></p>
+<h2 id="添加本地文件到版本管理系统"><a href="#添加本地文件到版本管理系统" class="headerlink" title="添加本地文件到版本管理系统"></a>添加本地文件到版本管理系统</h2><p>新建文件README.md，添加到版本管理系统，下次commit时会被提交到中央仓库</p>
+<p><code>svn add README.md</code></p>
+<p>查看状态</p>
+<p><code>svn status</code></p>
+<h2 id="提交本地内容到中央仓库"><a href="#提交本地内容到中央仓库" class="headerlink" title="提交本地内容到中央仓库"></a>提交本地内容到中央仓库</h2><blockquote>
+<p>提交之前，必须保证本地仓库是最新版本。最好先update再commit</p>
+</blockquote>
+<p><code>svn update</code></p>
+<p><code>svn commit -m &quot;first commit&quot;</code></p>
+<h2 id="更新本地代码"><a href="#更新本地代码" class="headerlink" title="更新本地代码"></a>更新本地代码</h2><p>从中央仓库拉取最新的版本到本地</p>
+<p><code>svn update</code></p>
+<h2 id="回退版本"><a href="#回退版本" class="headerlink" title="回退版本"></a>回退版本</h2><p>可以回退单个文件或者用-R参数回退整个目录。</p>
+<p>回退到上一次update后的版本</p>
+<p><code>svn revert README.md</code></p>
+<p><code>svn revert -R test</code></p>
+<h2 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h2><p><code>svn diff</code></p>
+<p><code>svn update</code></p>
+<p><code>svn commit</code></p>
+<h2 id="使用分支"><a href="#使用分支" class="headerlink" title="使用分支"></a>使用分支</h2><p>新建的版本库是没有trunk,branches,tags这3个目录的，按照使用SVN的惯例，在第一次checkout后，需要手动创建这3个目录，并提交到版本库中。</p>
+<p><img src="/images/svn02.png"></p>
+<p><strong>创建分支</strong></p>
+<p>从trunk主分支copy一份，就是分支。</p>
+<p><code>svn copy trunk/ branches/dev/</code></p>
+<p><strong>提交分支到版本库</strong></p>
+<p><code>svn status</code></p>
+<p><code>svn commit -m &quot;create dev branch&quot;</code></p>
+<p><strong>在分支中工作</strong></p>
+<p><code>cd branches/dev</code></p>
+<p>编辑README.md，并提交到中央仓库</p>
+<p><code>svn add README.md</code></p>
+<p><code>svn commit -m &quot;update README.md&quot;</code></p>
+<p><strong>合并分支到trunk主分支</strong></p>
+<p>切换到trunk分支，更新并合并branches&#x2F;dev分支到主分支</p>
+<p><code>cd ../../trunk</code></p>
+<p><code>svn update</code></p>
+<p><code>svn merge ../branches/dev/</code></p>
+<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

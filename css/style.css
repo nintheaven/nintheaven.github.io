@@ -1,0 +1,38 @@
+header {
+
+}
+
+main {
+    padding: 2em 1em;
+    margin: 0 auto;
+    max-width: 1024px;
+    min-height: 75vh;
+}
+
+nav.navbar {
+
+}
+
+.form-control {
+    width: auto;
+}
+
+.navbar-container {
+    margin-bottom: 56px;
+}
+
+.banner {
+    height: 15vh;
+    padding: 5vh 0;
+    text-align: center;
+}
+
+.banner h3 {
+    color: #fff;
+    font-weight: 600;
+}
+
+.banner p {
+    color: #fffa;
+}
+

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>spring-mvc之请求响应执行流程 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>spring-mvc之请求响应执行流程</h1>
+
+<span>SpringFramework</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<p><strong>spring-mvc执行流程</strong></p>
+<p><img src="/images/springframework001.png"></p>
+<blockquote>
+<p>注:Handler并不是具体的类或接口(实际上是<code>Object</code>)，而是一个概念。<br><code>Controller</code>是Handler的一种情况</p>
+</blockquote>
+<p>Spring MVC采用了前端控制器模式(the front controller pattern)，处于核心位置的<code>DispatcherServlet</code>调度其它组件完成对客户端的请求与响应。</p>
+<p>1.用户请求发送到服务器，服务器,例如Tomcat创建并初始化<code>httpServletRequest</code>和<code>httpServletResponse</code>对象，交给<code>DispatcherServlet</code>进行管理</p>
+<p>2.<code>DispatcherServlet</code>将请求委托给<code>HandlerMapping</code>进行处理，后者处理完毕后，会返回一个<code>HandlerExecutionChain</code>对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="keyword">protected</span> HandlerExecutionChain <span class="title function_">getHandler</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.handlerMappings != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (HandlerMapping mapping : <span class="built_in">this</span>.handlerMappings) &#123;</span><br><span class="line">            <span class="type">HandlerExecutionChain</span> <span class="variable">handler</span> <span class="operator">=</span> mapping.getHandler(request);</span><br><span class="line">            <span class="keyword">if</span> (handler != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> handler;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个对象包含一个Handler处理器(例如,<code>Controller</code>)对象和多个Handler拦截器(<code>HandlerInterceptor</code>)对象</p>
+<p>3.<code>DispatcherServlet</code>从所有的Handler适配器中找到可以处理当前Handler的适配器(适配器模式)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> HandlerAdapter <span class="title function_">getHandlerAdapter</span><span class="params">(Object handler)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.handlerAdapters != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (HandlerAdapter adapter : <span class="built_in">this</span>.handlerAdapters) &#123;</span><br><span class="line">            <span class="keyword">if</span> (adapter.supports(handler)) &#123;</span><br><span class="line">                <span class="keyword">return</span> adapter;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ServletException</span>(<span class="string">&quot;No adapter for handler [&quot;</span> + handler +</span><br><span class="line">            <span class="string">&quot;]: The DispatcherServlet configuration needs to include a HandlerAdapter that supports this handler&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.获取到Handler适配器后，<code>DispatcherServlet</code>委托Handler适配器，执行Handler中的代码，返回<code>ModelAndView</code>对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doDispatch</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="comment">// Actually invoke the handler.</span></span><br><span class="line">    mv = ha.handle(processedRequest, response, mappedHandler.getHandler());</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5.得到了<code>ModelAndView</code>对象后，就可以开始渲染了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">processDispatchResult</span><span class="params">(HttpServletRequest request, HttpServletResponse response,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> HandlerExecutionChain mappedHandler, <span class="meta">@Nullable</span> ModelAndView mv,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> Exception exception)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        <span class="keyword">if</span> (mv != <span class="literal">null</span> &amp;&amp; !mv.wasCleared()) &#123;</span><br><span class="line">            render(mv, request, response);</span><br><span class="line">            <span class="keyword">if</span> (errorView) &#123;</span><br><span class="line">                WebUtils.clearErrorRequestAttributes(request);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先，从<code>ModelAndView</code>对象中得到逻辑视图名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">render</span><span class="params">(ModelAndView mv, HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    View view;</span><br><span class="line">    <span class="type">String</span> <span class="variable">viewName</span> <span class="operator">=</span> mv.getViewName();</span><br><span class="line">    <span class="keyword">if</span> (viewName != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// We need to resolve the view name.</span></span><br><span class="line">        view = resolveViewName(viewName, mv.getModelInternal(), locale, request);</span><br><span class="line">        <span class="keyword">if</span> (view == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ServletException</span>(<span class="string">&quot;Could not resolve view with name &#x27;&quot;</span> + mv.getViewName() +</span><br><span class="line">                    <span class="string">&quot;&#x27; in servlet with name &#x27;&quot;</span> + getServletName() + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，根据视图名，依次尝试可用的<code>ViewResolver</code>进行视图解析，如果成功，就返回<code>View</code>对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="keyword">protected</span> View <span class="title function_">resolveViewName</span><span class="params">(String viewName, <span class="meta">@Nullable</span> Map&lt;String, Object&gt; model,</span></span><br><span class="line"><span class="params">        Locale locale, HttpServletRequest request)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.viewResolvers != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (ViewResolver viewResolver : <span class="built_in">this</span>.viewResolvers) &#123;</span><br><span class="line">            <span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> viewResolver.resolveViewName(viewName, locale);</span><br><span class="line">            <span class="keyword">if</span> (view != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> view;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>6.获取到<code>View</code>对象后，调用由模板引擎实现的的<code>render()</code>方法,将模型数据渲染到模板中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">render</span><span class="params">(ModelAndView mv, HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    view.render(mv.getModelInternal(), request, response);</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>7.返回控制权给<code>DispatcherServlet</code>,由<code>DispatcherServlet</code>将响应(通过服务器)返回给用户</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doService</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        doDispatch(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) &#123;</span><br><span class="line">            <span class="comment">// Restore the original attribute snapshot, in case of an include.</span></span><br><span class="line">            <span class="keyword">if</span> (attributesSnapshot != <span class="literal">null</span>) &#123;</span><br><span class="line">                restoreAttributesAfterInclude(request, attributesSnapshot);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ServletRequestPathUtils.setParsedRequestPath(previousRequestPath, request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

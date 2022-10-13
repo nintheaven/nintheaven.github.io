@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>华为OD机考题 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>华为OD机考题</h1>
+
+<span>面试</span>
+
+<span>2022-10-11</span>
+<div><p>7.11机考</p>
+<p>（1）计算面积</p>
+<p>输入</p>
+<blockquote>
+<p>第1行：4条纪录,x方向终点为10<br>其它行: x轴坐标，y轴偏移量，正数表示向上移，负数表示向下移  </p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">4 10</span><br><span class="line">1 1</span><br><span class="line">2 1</span><br><span class="line">3 1</span><br><span class="line">4 -2</span><br></pre></td></tr></table></figure>
+
+<p>输出由移动轨迹与x轴组成的图形的面积</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">12</span><br></pre></td></tr></table></figure>
+
+<p>（2）排序</p>
+<p>输入</p>
+<blockquote>
+<p>第1行：n个成绩<br>第2行：若干运动员id<br>第3行：若干运动员成绩<br>运动员id与成绩一一对应  </p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">13</span><br><span class="line">3,3,7,4,4,4,4,7,7,3,5,5,5</span><br><span class="line">53,80,68,24,39,76,66,16,100,55,53,80,55</span><br></pre></td></tr></table></figure>
+
+<p>输出运动员id，要求是：</p>
+<ul>
+<li>按照每个运动员最高的3个成绩之和倒序输出</li>
+<li>如果3个最高成绩之和相等，按id倒序输出</li>
+<li>忽略成绩少于3次的运动员</li>
+</ul>
+<p>（3）二叉树中序遍历</p>
+<p>输入</p>
+<blockquote>
+<p>一行字符串，用{}包含子树，用逗号分割左子树与右子树</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a&#123;b&#123;d,e&#123;g,h&#123;,i&#125;&#125;&#125;,c&#123;f&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出二叉树的中序遍历</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbjehiafc</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<p><a target="_blank" rel="noopener" href="https://www.nowcoder.com/discuss/590423">https://www.nowcoder.com/discuss/590423</a></p>
+<p>（1） 给输入的小孩数组排队，按照“高”“矮”交替的顺序排列，</p>
+<p>例如[4, 3, 5, 2, 8] ，如果第i个小孩移动到第j位，移动距离为 abs(j - i)，输出按照移动距离总和最小的排列方案排列后的小孩数组；</p>
+<p>（2）vlan池，第一行输入池中已有vlan，第二行输入要取出的vlan，按升序输出取出后的vlan池；</p>
+<p>例： 池中vlan 5, 1-3,10-13； 要取出vlan 2； 取出后vlan池为 1，3，5，10-13；</p>
+<p>（3）m个月饼分给n个人，每个人至少一个月饼，设max(k) 表示获得第k多月饼的人数， </p>
+<p>要求：max(1) - max(2) &lt;&#x3D; 3， max(n-1) - max(n) &lt;&#x3D; 3，求分配方案总数；</p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://www.nowcoder.com/discuss/672617">https://www.nowcoder.com/discuss/672617</a></p>
+<p>(1) 很简单的一道题，输入一个整型数组，找出其中出现次数超过一半以上的元素，输出该元素。</p>
+<p>(2) Leetcode1319题：连通网络的最少操作次数</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/number-of-operations-to-make-network-connected/">https://leetcode-cn.com/problems/number-of-operations-to-make-network-connected/</a></p>
+<p>(3) </p>
+<p>有 n 个互不相同的坐标点 (x,y),坐标值都为整数，存在 int[][] points 中，问由这些点可以组成多少个等腰直角三角形，其中最大的等腰直角三角形的面积是多少？</p>
+<p>输入：第一行是一个整数 n，表示有 n 个点，接下来的 n 行数据表示 n 个 (x,y) 坐标点，x 和 y 之间用空格隔开。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">3</span><br><span class="line">1 1</span><br><span class="line">1 2</span><br><span class="line">2 1</span><br></pre></td></tr></table></figure>
+<p>输出：第一个数字表示有多少个等腰直角三角形，第二个表示最大的等腰直角三角形面积（保留两位小数）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">1 0.50</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>作者：牛客614273554号<br>链接：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/discuss/625512">https://www.nowcoder.com/discuss/625512</a><br>来源：牛客网</p>
+<p>1.输入正整数T，输出T可以由连续自然数的和表示的所有情况及其数量。<br>如输入：9<br>输出：<br>9&#x3D;9<br>9&#x3D;4+5<br>9&#x3D;2+3+4<br>Result&#x3D;3<br>解释：9可以由3种形式的连续自然数的和表示，Result为3。</p>
+<p>2.第一行输入一串由逗号隔开的数字，第二行输入一个整数。若该整数可以由第一行的连续数字的和表示，输出连续数字的最大数量；若不能表示，输出-1<br>如输入：<br>2,1,3,4,2,3,1,5,7<br>12<br>输出：5<br>解释：第一行的连续数字中：2+1+3+4+2&#x3D;12，个数为5；3+4+2+3&#x3D;12，个数为4；5+7&#x3D;12，个数为2。其中5最大，输出5。<br>输入：<br>1,2,3,4<br>20<br>输出：-1<br>解释：20不能由第一行连续数字的和表示，输出-1</p>
+<p>3.（类似于迷宫吧，不会）两人野外聚餐：输入m行n列二维数组，只包含0,1,2,3。<br>0：表示可通行；<br>1：表示障碍物，不可通行；<br>2：（数组中只有两个2）一个表示小华所处位置，另一个表示小为所处位置；<br>3：表示聚餐地点（个数&gt;&#x3D;1）。<br>输出两人能够到达的聚餐地点的最大数目。<br>如输入：<br>4   5<br>2 1 1 0 3<br>0 1 1 2 1<br>0 3 0 0 1<br>1 1 0 1 1<br>输出：2<br>解释：4  5表示4行5列，而后是二维数组。输出2表示两人都可以到达数组中两个3的位置。<br>过了1、2题所有例，第3题耍赖过了一半，算不得好汉。。。</p>
+<p>(1) 最长回文字符串问题</p>
+<p>(2) 磁盘容量大小排序<br>磁盘的容量单位有M、G、T，其关系为 1T &#x3D; 1000G、1G &#x3D; 1000M，如样例所示先输入磁盘的个数，<br>再依次输入磁盘的容量大小，然后按照从小到大的顺序对磁盘容量进行排序并输出。</p>
+<p>难点说明：<br>特殊条件，小数，同类值，边界值等需要充分考虑，否则用例调试通过率很低的。以下代码仅供参考，实际情况也可能未考虑完整</p>
+<p>(3)找出一个字符串中出现次数最多的字符，并输出该字符以及它出现的次数。true区分大小写，false不分大小写<br>“dahsjkdDSKLFSds true”<br>“dasdas false”</p>
+<p>说明：还是边界值的考虑，思路自己可以扩展</p>
+<p>(1)<br>如果一个整数可以分解成两个质数的和，求这样的质数的组数，比如18可以分解成7+11、5+13，即两组。<br>支持一次输入多行，以0结束输入，输出以”end”字符串结束，下面是样例<br>输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">5</span><br><span class="line">10</span><br><span class="line">18</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">2</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<p>(2)<br>输入一个字符串 和一个标志</p>
+<p>例子：  aA1bB2cC3 1</p>
+<p>假如这个标志是 1  就把字符串中小写字母反转输出  cA1bB2aC3</p>
+<p>假如这个标志是 2  就把字符串中大写写字母反转输出  aC1bB2cA3</p>
+<p>假如这个标志是 3  就把字符串中数字的位置反转输出  aA3bB2aC1</p>
+<p>搞出一个后面就全出来了，主要是在于替换。是换成列表，删除，增加；还是源字符串上删除，增加。一定要注意处理好索引的问题</p>
+<p>(3)水仙花数<br>“水仙花数”是指一个三位数，它的各位数字的立方和等于其本身。<br>现在要求输出所有在m和n范围内的水仙花数。</p>
+<p>输入<br>300 380<br>输出<br>370 371</p>
+<p>(1)<br>给定一个正整数数组，最大为100个成员，从第一个成员开始，<br>走到数组最后一个成员最少的步骤数。第一步必须从第一元素开始，1&lt;&#x3D;步长&lt;len&#x2F;2,<br>第二步开始以所在成员的数字走相应的步数，如果目标不可达返回-1，只输出最少的步骤数。</p>
+<p>输入<br>7 5 9 4 2 6 8 3 5 4 3 9<br>输出<br>2<br>说明<br>第一步：第一个可选步长选择2，第一个成员7走第2个成员，第二步，第2个成员为9，经过9个成员到最后</p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

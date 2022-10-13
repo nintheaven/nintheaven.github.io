@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>RabbitMQ环境搭建 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>RabbitMQ环境搭建</h1>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<blockquote>
+<p>注意Erlang版本要与RabbitMQ-Server版本对应，这里erlang使用23.x，rabbitmq-server使用3.9.x。具体参见官网。</p>
+</blockquote>
+<h2 id="安装Erlang"><a href="#安装Erlang" class="headerlink" title="安装Erlang"></a>安装Erlang</h2><p><a target="_blank" rel="noopener" href="https://www.erlang.org/downloads">https://www.erlang.org/downloads</a></p>
+<p><strong>Linux</strong></p>
+<p>1.下载Erlang源码包</p>
+<p>2.解压源码包</p>
+<p><code>tar -xzvf otp_src_23.3.2.tar.gz</code></p>
+<p>3.安装erlang之前，需要确保安装了 <em>ncurses-dev</em> 软件包</p>
+<p><code>apt install ncurses-dev</code></p>
+<p>否则，运行 <code>configure</code> 时，可能报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">configure: error: No curses library functions found</span><br><span class="line">ERROR: /Downloads/otp_src_23.3.2/erts/configure failed!</span><br><span class="line">Killed</span><br></pre></td></tr></table></figure>
+
+<p>4.安装erlang</p>
+<p><code>cd otp_src_23.3.2</code></p>
+<p><code>./configure</code></p>
+<p><code>make</code></p>
+<p><code>sudo make install</code></p>
+<p>5.测试一下</p>
+<p><code>erl</code></p>
+<p><strong>Windows</strong></p>
+<p>1.下载安装包</p>
+<p>2.安装</p>
+<p>3.配置PATH环境变量</p>
+<h2 id="安装RabbitMQ服务器"><a href="#安装RabbitMQ服务器" class="headerlink" title="安装RabbitMQ服务器"></a>安装RabbitMQ服务器</h2><p><a target="_blank" rel="noopener" href="https://github.com/rabbitmq/rabbitmq-server/releases">https://github.com/rabbitmq/rabbitmq-server/releases</a></p>
+<p><strong>Linux</strong></p>
+<p>1.下载安装包</p>
+<p>2.解压并移动到安装目录，这里是 <em>&#x2F;opt&#x2F;</em></p>
+<p><code>tar -xvf rabbitmq-server-generic-unix-3.9.13.tar.xz</code></p>
+<p><code>mv rabbitmq_server-3.9.13/ /opt/</code></p>
+<p>3.配置PATH环境变量</p>
+<p>在 <em>~&#x2F;.bashrc</em> （或 <em>&#x2F;etc&#x2F;profile</em>） 文件中，添加以下内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">RabbitMQ</span></span><br><span class="line">RABBITMQ_HOME=/opt/rabbitmq_server-3.9.13</span><br><span class="line">PATH=$PATH:$RABBITMQ_HOME/sbin</span><br><span class="line"></span><br><span class="line">export PATH</span><br></pre></td></tr></table></figure>
+
+<p>使其生效</p>
+<p><code>source ~/.bashrc</code></p>
+<p>测试一下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yyds@ubuntu:/opt/rabbitmq_server-3.9.13$ rabbitmqctl --version</span><br><span class="line">3.9.13</span><br></pre></td></tr></table></figure>
+
+<p><strong>Windows</strong></p>
+<p>1.下载安装包</p>
+<p>2.安装</p>
+<p>3.配置PATH环境变量</p>
+<h2 id="安装Web管理界面插件"><a href="#安装Web管理界面插件" class="headerlink" title="安装Web管理界面插件"></a>安装Web管理界面插件</h2><p><code>rabbitmq-plugins enable rabbitmq_management</code></p>
+<p><code>rabbitmq-plugins list</code></p>
+<p>安装了此插件后，重新启动RabbitMQ服务器，就可以访问Web管理界面： <a href="http://localhost:15672，用户名密码都是">http://localhost:15672，用户名密码都是</a> guest。</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p><strong>rabbitmq-server</strong></p>
+<p>启动RabbitMQ服务</p>
+<p><code>rabbitmq-server -detached</code></p>
+<p><strong>rabbitmqctl</strong></p>
+<p>查看是否服务器状态</p>
+<p><code>rabbitmqctl status</code></p>
+<p>查看服务器集群状态</p>
+<p><code>rabbitmqctl cluster_status</code></p>
+<p>关闭RabbitMQ服务</p>
+<p><code>rabbitmqctl shutdown</code> 或者 <code>rabbitmqctl stop</code></p>
+<p>增加用户</p>
+<p><code>rabbitmqctl add_user root root</code></p>
+<p>给用户设置权限</p>
+<p><code>rabbitmqctl set_permissions -p / root &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</code></p>
+<p>给用户设置所属角色</p>
+<p><code>rabbitmqctl set_user_tags root administrator</code></p>
+<p><strong>rabbitmq-plugins</strong></p>
+<p>查看全部已启用的插件</p>
+<p><code>rabbitmq-plugins list</code></p>
+<p>启用插件</p>
+<p><code>rabbitmq-plugins enable rabbitmq_management</code></p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

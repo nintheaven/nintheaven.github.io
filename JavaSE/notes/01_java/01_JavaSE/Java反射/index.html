@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java反射 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>Java反射</h1>
+
+<span>JavaSE</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<p>Class类核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Class</span>&lt;T&gt; <span class="keyword">implements</span> <span class="title class_">java</span>.io.Serializable,</span><br><span class="line">                              GenericDeclaration,</span><br><span class="line">                              Type,</span><br><span class="line">                              AnnotatedElement &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用native方法，根据类全限定名创建Class对象</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String className)&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取全部的public构造器</span></span><br><span class="line">    <span class="keyword">public</span> Constructor&lt;?&gt;[] getConstructors() <span class="keyword">throws</span> SecurityException &#123;&#125;</span><br><span class="line">    <span class="comment">// 获取全部的构造器(private,protected,default,public)</span></span><br><span class="line">    <span class="keyword">public</span> Constructor&lt;?&gt;[] getDeclaredConstructors() <span class="keyword">throws</span> SecurityException &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Constructor&lt;T&gt; <span class="title function_">getConstructor</span><span class="params">(Class&lt;?&gt;... parameterTypes)</span> <span class="keyword">throws</span> NoSuchMethodException, SecurityException&#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Constructor&lt;T&gt; <span class="title function_">getDeclaredConstructor</span><span class="params">(Class&lt;?&gt;... parameterTypes)</span> <span class="keyword">throws</span> NoSuchMethodException, SecurityException&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取全部的public域(包括继承自父类或父接口中的)</span></span><br><span class="line">    <span class="keyword">public</span> Field[] getFields() <span class="keyword">throws</span> SecurityException &#123;&#125;</span><br><span class="line">    <span class="comment">// 获取全部(private,protected,default,public)的域(不包括继承自父类或付接口中的)</span></span><br><span class="line">    <span class="keyword">public</span> Field[] getDeclaredFields() <span class="keyword">throws</span> SecurityException &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Field <span class="title function_">getField</span><span class="params">(String name)</span> <span class="keyword">throws</span> NoSuchFieldException, SecurityException &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Field <span class="title function_">getDeclaredField</span><span class="params">(String name)</span> <span class="keyword">throws</span> NoSuchFieldException, SecurityException &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">public</span> Method[] getMethods() <span class="keyword">throws</span> SecurityException &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Method[] getDeclaredMethods() <span class="keyword">throws</span> SecurityException &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Method <span class="title function_">getMethod</span><span class="params">(String name, Class&lt;?&gt;... parameterTypes)</span> <span class="keyword">throws</span> NoSuchMethodException, SecurityException &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> Method <span class="title function_">getDeclaredMethod</span><span class="params">(String name, Class&lt;?&gt;... parameterTypes)</span> <span class="keyword">throws</span> NoSuchMethodException, SecurityException &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Constructor类核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Constructor</span>&lt;T&gt; <span class="keyword">extends</span> <span class="title class_">Executable</span> &#123;</span><br><span class="line">    <span class="comment">// 构造器名(类名)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 修饰符</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getModifiers</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取构造器参数列表</span></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt;[] getParameterTypes() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置是否忽略访问权限修饰符的限制</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAccessible</span><span class="params">(<span class="type">boolean</span> flag)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建对象</span></span><br><span class="line">    <span class="keyword">public</span> T <span class="title function_">newInstance</span><span class="params">(Object ... initargs)</span></span><br><span class="line">        <span class="keyword">throws</span> InstantiationException, IllegalAccessException,</span><br><span class="line">               IllegalArgumentException, InvocationTargetException &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Field类核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Field</span> <span class="keyword">extends</span> <span class="title class_">AccessibleObject</span> <span class="keyword">implements</span> <span class="title class_">Member</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 字段类型</span></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt; getType() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 字段名</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 修饰符</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getModifiers</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置是否忽略访问权限修饰符的限制</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAccessible</span><span class="params">(<span class="type">boolean</span> flag)</span> &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取字段的值</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">get</span><span class="params">(Object obj)</span> </span><br><span class="line">        <span class="keyword">throws</span> IllegalArgumentException, IllegalAccessException &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置字段的值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(Object obj, Object value)</span></span><br><span class="line">        <span class="keyword">throws</span> IllegalArgumentException, IllegalAccessException &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Method类核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Method</span> <span class="keyword">extends</span> <span class="title class_">Executable</span> &#123;</span><br><span class="line">    <span class="comment">// 修饰符</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getModifiers</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 方法名</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 参数列表</span></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt;[] getParameterTypes() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回值类型</span></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt; getReturnType() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置是否忽略访问权限修饰符的限制</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAccessible</span><span class="params">(<span class="type">boolean</span> flag)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行方法</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object obj, Object... args)</span></span><br><span class="line">        <span class="keyword">throws</span> IllegalAccessException, IllegalArgumentException, InvocationTargetException &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Modifier类核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Modifier</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPublic</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPrivate</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isProtected</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isStatic</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isFinal</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isSynchronized</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isAbstract</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isInterface</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">toString</span><span class="params">(<span class="type">int</span> mod)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

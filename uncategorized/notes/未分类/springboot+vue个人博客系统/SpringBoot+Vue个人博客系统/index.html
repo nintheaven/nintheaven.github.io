@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1></h1>
+
+<span>2022-10-11</span>
+<div><blockquote>
+<p>Demo地址</p>
+<ul>
+<li><p>后台：<a target="_blank" rel="noopener" href="http://admin.lypzz.com/">http://admin.lypzz.com/</a></p>
+</li>
+<li><p>Web：<a target="_blank" rel="noopener" href="http://blog.lypzz.com/">http://blog.lypzz.com/</a></p>
+</li>
+</ul>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>基于SpringBoot+Vue实现的前后端分离个人博客系统。</p>
+<p>实现了管理员登录、博客文章、读书笔记、个人作品集、网址收藏、以及站点信息管理等功能。</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
+<li>后端：SpringBoot, MyBatis, Swagger, MySQL, Redis, JWT</li>
+<li>前端：Vue, VueRouter, ElementUI, Axios</li>
+<li>环境：Ubuntu, Nginx, 腾讯云服务器</li>
+</ul>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><p>项目整体划分为3个子模块：</p>
+<p><strong>API服务端App</strong></p>
+<ul>
+<li><p>API服务端总体划分为后台API与前台API两个模块</p>
+</li>
+<li><p>API服务对外提供一致的REST Full风格的API接口，并使用Swagger自动生成API文档</p>
+</li>
+<li><p>使用JWT方案，结合Spring拦截器以及自定义注解实现用户身份验证功能</p>
+</li>
+<li><p>自定义验证码工具类，为以Base64字符串的形式返回给客户端</p>
+</li>
+<li><p>使用MyBatis进行数据库操作，并使用Flyway进行SQL版本管理</p>
+</li>
+</ul>
+<p><strong>Admin博客后台管理系统</strong></p>
+<ul>
+<li><p>博客后台管理系统包括博客文章管理、读书笔记管理、个人作品集管理、网址收藏管理、图片管理以及站长信息管理等功能</p>
+</li>
+<li><p>基于Vue+ElementUI实现</p>
+</li>
+<li><p>使用VueRouter实现单页应用的路由功能</p>
+</li>
+<li><p>使用Axios进行HTTP请求</p>
+</li>
+</ul>
+<p><strong>Web端App</strong></p>
+<ul>
+<li>Web端使用Vue与Axios进行开发</li>
+<li>使用浏览器媒体查询以及flex和grid布局实现移动端屏幕适配</li>
+</ul>
+<h2 id="项目截图"><a href="#项目截图" class="headerlink" title="项目截图"></a>项目截图</h2><h3 id="博客后台管理系统"><a href="#博客后台管理系统" class="headerlink" title="博客后台管理系统"></a>博客后台管理系统</h3><p>管理员登录页</p>
+<!--![](/images/blog/admin-login.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6cWFA.png"></p>
+<p>博客文章分类管理页</p>
+<!--![](/images/admin-blog-categories.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6cTOS.png"></p>
+<p>博客文章发布、编辑</p>
+<!--![](/images/admin-blog-edit.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6cIQf.png"></p>
+<p>读书笔记图书列表管理页</p>
+<!--![](/images/admin-reading-books.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6chWt.png"></p>
+<p>图片管理页</p>
+<!--![](/images/admin-images.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6c5SP.png"></p>
+<p>站点信息管理页</p>
+<!--![](/images/admin-site.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6cfJI.png"></p>
+<h3 id="博客Web端App"><a href="#博客Web端App" class="headerlink" title="博客Web端App"></a>博客Web端App</h3><p>首页</p>
+<!--![](/images/web-home.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6g3tA.png"></p>
+<p>博客文章页</p>
+<!--![](/images/web-blog.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6gnOO.png"></p>
+<p>读书笔记页</p>
+<!--![](/images/web-reading.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6gM0e.png"></p>
+<p>个人作品集页</p>
+<!--![](/images/web-projects.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6gKmD.png"></p>
+<p>网址收藏页</p>
+<!--![](/images/web-favorites.png)-->
+
+<p><img src="https://s4.ax1x.com/2021/12/07/o6gQTH.png"></p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>mysql安装-linux(unix)系统中使用二进制包安装mysql5.7 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>mysql安装-linux(unix)系统中使用二进制包安装mysql5.7</h1>
+
+<span>2022-10-11</span>
+<div><p>下载地址：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/5.7.html#downloads">https://dev.mysql.com/downloads/mysql/5.7.html#downloads</a></p>
+<p>参考文档：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/binary-installation.html">https://dev.mysql.com/doc/refman/5.7/en/binary-installation.html</a></p>
+<span id="more"></span>
+
+<p><strong>0.安装相关依赖库</strong></p>
+<blockquote>
+<p>官方文档中说需要安装以下依赖，但是这里因为找不到centos7的版本，没有安装libnuma 和 ibtinfo.so.5，并不影响mysql的安装。</p>
+</blockquote>
+<p>确保系统中安装了 以下依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libaio</span><br><span class="line">libnuma</span><br><span class="line">ibtinfo.so.5</span><br></pre></td></tr></table></figure>
+
+<p>在centos中，使用rpm进行确认</p>
+<p><code>rpm -q libaio libnuma ibtinfo.so.5</code></p>
+<p><strong>1.解压tar包</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su</span><br><span class="line">mkdir -p /usr/local/mysql</span><br><span class="line">tar -zxvf mysql-5.7.37-el7-x86_64.tar.gz -C /usr/local/mysql/</span><br><span class="line">cd /usr/local/mysql/mysql-5.7.37-el7-x86_64</span><br><span class="line">mv ./* ../</span><br><span class="line">rmdir mysql-5.7.37-el7-x86_64/</span><br></pre></td></tr></table></figure>
+
+<p>安装文件包括以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# tree ./ -L 1</span><br><span class="line">./</span><br><span class="line">├── bin</span><br><span class="line">├── docs</span><br><span class="line">├── include</span><br><span class="line">├── lib</span><br><span class="line">├── LICENSE</span><br><span class="line">├── man</span><br><span class="line">├── README</span><br><span class="line">├── share</span><br><span class="line">└── support-files</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.创建mysql用户和组</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd mysql</span><br><span class="line">useradd -r -g mysql -s /bin/false mysql</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.创建需要的目录</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir mysql-files</span><br><span class="line">chown mysql:mysql mysql-files</span><br><span class="line">chmod 750 mysql-files</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.初始化mysql</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/mysqld --initialize --user=mysql</span><br></pre></td></tr></table></figure>
+
+<p>注意，这里会生成root用户的默认密码，记好</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Note] A temporary password is generated for root@localhost: /T7pE&amp;qX3P:u</span><br></pre></td></tr></table></figure>
+
+<p>然后运行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/mysql_ssl_rsa_setup</span><br></pre></td></tr></table></figure>
+
+<p><strong>5.启动mysql服务</strong></p>
+<p>以安全模式启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/mysqld_safe --user=mysql &amp;</span><br></pre></td></tr></table></figure>
+
+<p>如果报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqld_safe error: log-error set to &#x27;/var/log/mariadb/mariadb.log&#x27;, however file don&#x27;t exists. Create writable for user &#x27;mysql&#x27;.</span><br></pre></td></tr></table></figure>
+
+<p>按照提示创建日志文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /var/log/mariadb</span><br><span class="line">touch /var/log/mariadb/mariadb.log</span><br><span class="line">chown mysql:mysql /var/log/mariadb/mariadb.log</span><br></pre></td></tr></table></figure>
+
+<p><strong>6.(可选，推荐)执行下面的命令，可以将mysql服务添加到系统服务管理中去</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp support-files/mysql.server /etc/init.d/mysql.server</span><br></pre></td></tr></table></figure>
+
+<p>这样，就可以这样使用了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/mysql.server status</span><br><span class="line">/etc/init.d/mysql.server start</span><br><span class="line">/etc/init.d/mysql.server stop</span><br><span class="line">/etc/init.d/mysql.server restart</span><br></pre></td></tr></table></figure>
+
+<p><strong>7.将bin目录添加到PATH环境变量</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/local/mysql/bin</span><br></pre></td></tr></table></figure>
+
+<p><strong>8.登录mysql，修改root密码</strong></p>
+<p>使用之前初始化mysql的时候生成的默认密码登录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<p>如果报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR 2002 (HY000): Can&#x27;t connect to local MySQL server through socket &#x27;/tmp/mysql.sock&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>说明socket连接方式有问题，可以选择使用 tcp&#x2F;ip 连接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 127.0.0.1 -u root -p</span><br></pre></td></tr></table></figure>
+
+<p>要解决socket不能连接的问题，需要修改配置文件</p>
+<p><code>vi /etc/my.cnf</code></p>
+<p>默认的配置如下，服务端配置socket</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">datadir=/var/lib/mysql</span><br><span class="line"># 服务端socket配置</span><br><span class="line">socket=/var/lib/mysql/mysql.sock</span><br><span class="line"># Disabling symbolic-links is recommended to prevent assorted security risks</span><br><span class="line">symbolic-links=0</span><br><span class="line"># Settings user and group are ignored when systemd is used.</span><br><span class="line"># If you need to run mysqld under a different user or group,</span><br><span class="line"># customize your systemd unit file for mariadb according to the</span><br><span class="line"># instructions in http://fedoraproject.org/wiki/Systemd</span><br><span class="line"></span><br><span class="line">[mysqld_safe]</span><br><span class="line">log-error=/var/log/mariadb/mariadb.log</span><br><span class="line">pid-file=/var/run/mariadb/mariadb.pid</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># include all files from the config directory</span><br><span class="line">#</span><br><span class="line">!includedir /etc/my.cnf.d</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>添加客户端socket相的配置，与服务端保持一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">port=3306</span><br><span class="line">socket=/var/lib/mysql/mysql.sock</span><br></pre></td></tr></table></figure>
+
+<p>这样，就可以使用socket的方式进行连接了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<p>修改root密码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">user</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;root&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>ES相关软件安装 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>ES相关软件安装</h1>
+
+<span>2022-10-11</span>
+<div><p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/start">https://www.elastic.co/cn/start</a></p>
+<span id="more"></span>
+
+<h1 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h1><h2 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h2><p><strong>下载安装</strong></p>
+<p>下载zip压缩包，将其解压到安装目录即可。</p>
+<p><strong>启动</strong></p>
+<p>首先确保配置了 <em>JAVA_HOME</em> 环境变量。</p>
+<p>运行 bin&#x2F;elasticsearch.bat 可执行文件。</p>
+<p>启动警告</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;warning: usage of JAVA_HOME is deprecated, use ES_JAVA_HOME&quot;</span><br></pre></td></tr></table></figure>
+
+<p>我安装的是ES7.15.0版本，<code>JAVA_HOME</code> 环境变量已过时，要求使用 <code>ES_JAVA_HOME</code> 环境变量，推荐使用ES自带的JDK。新建即可。</p>
+<p>启动报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.elasticsearch.bootstrap.StartupException: BindHttpException[Failed to bind to 127.0.0.1:[9200-9300]]; nested: BindException[Address already in use: bind];</span><br></pre></td></tr></table></figure>
+
+<p>提示 127.0.0.1:[9200-9300]] 地址已被占用(what?101个端口都被占用了?)，检查端口是否真的被占用了</p>
+<p><code>netstat -ano | findstr &quot;9200&quot;</code></p>
+<p><code>netstat -ano | findstr &quot;9300&quot;</code></p>
+<p>发现并没有进程占用9200或9300端口。</p>
+<p>百度后，按照网上说的修改 config&#x2F;elasticsearch.yml 配置文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ---------------------------------- Network -----------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># By default Elasticsearch is only accessible on localhost. Set a different</span></span><br><span class="line"><span class="comment"># address here to expose this node on the network:</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"><span class="comment">#network.host: 192.168.0.1</span></span><br></pre></td></tr></table></figure>
+
+<p>但是，按照注释所说，默认不就是locahost吗？尝试修改后重新启动，果然，还是没用。</p>
+<p>没办法，重启电脑试试？OK啦。。。</p>
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:9200/">http://localhost:9200</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DESKTOP-2VU68KU&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;cluster_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;elasticsearch&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;cluster_uuid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2bl59LH0QQG7hNVGOz4AXg&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;number&quot;</span><span class="punctuation">:</span> <span class="string">&quot;7.15.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;build_flavor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;default&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;build_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zip&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;build_hash&quot;</span><span class="punctuation">:</span> <span class="string">&quot;79d65f6e357953a5b3cbcc5e2c7c21073d89aa29&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;build_date&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2021-09-16T03:05:29.143308416Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;build_snapshot&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;lucene_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8.9.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;minimum_wire_compatibility_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;6.8.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;minimum_index_compatibility_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;6.0.0-beta1&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;tagline&quot;</span><span class="punctuation">:</span> <span class="string">&quot;You Know, for Search&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h2><p><strong>下载安装</strong></p>
+<p>下载压缩包，解压</p>
+<p><strong>启动</strong></p>
+<p>运行 bin&#x2F;kibana.bat 脚本文件</p>
+<p><strong>访问</strong></p>
+<p><a target="_blank" rel="noopener" href="http://localhost:5601/">http://localhost:5601/</a></p>
+<h2 id="elasticsearch-head"><a href="#elasticsearch-head" class="headerlink" title="elasticsearch-head"></a>elasticsearch-head</h2><p>用于管理elasticsearch集群的Web前端软件，是个开源的node项目。</p>
+<p>github：<a target="_blank" rel="noopener" href="https://github.com/mobz/elasticsearch-head">https://github.com/mobz/elasticsearch-head</a></p>
+<blockquote>
+<p>推荐直接安装chrome插件，而不用像下面这样安装运行node项目</p>
+<p>插件地址：<a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm/related">https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm/related</a></p>
+</blockquote>
+<p>下载安装</p>
+<p><code>git clone git://github.com/mobz/elasticsearch-head.git</code></p>
+<p><code>cd elasticsearch-head</code></p>
+<p><code>npm install</code></p>
+<p><code>npm run start</code></p>
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:9100/">http://localhost:9100/</a></p>
+<p>配置ES解决跨域问题</p>
+<p><em>config\elasticsearch.yml</em></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><p>下载解压。。。</p>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>spring-mvc之请求处理 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>spring-mvc之请求处理</h1>
+
+<span>SpringFramework</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<h1 id="请求映射"><a href="#请求映射" class="headerlink" title="请求映射"></a>请求映射</h1><h2 id="HTTP请求方法"><a href="#HTTP请求方法" class="headerlink" title="HTTP请求方法"></a>HTTP请求方法</h2><p>spring-mvc支持使用注解 <code>@RequestMapping</code> 处理URL请求路径的映射，它有以下几种快捷方式</p>
+<ul>
+<li><p><code>@GetMapping</code></p>
+</li>
+<li><p><code>@PostMapping</code></p>
+</li>
+<li><p><code>@PutMapping</code></p>
+</li>
+<li><p><code>@DeleteMapping</code></p>
+</li>
+<li><p><code>@PatchMapping</code></p>
+</li>
+</ul>
+<p>这些注解中可以设置以下属性</p>
+<ul>
+<li>name - 映射名称</li>
+<li>value或path - URL路径</li>
+<li>method - RequestMethod[]类型，允许的HTTP请求方法</li>
+<li>params - String[]类型，限制请求中必须具有的请求参数，例如 <code>@RequestMapping(&quot;/&quot;,params=&#123;&quot;key1&quot;，&quot;key2=value2&quot;&#125;)</code></li>
+<li>headers - String[]类型，限制请求必须携带某些请求头信息</li>
+<li>consumes - String[]类型，限制可以处理的请求体MIME，即要求请求头<code>Content-Type</code>为限制类型中的值</li>
+<li>produces - String[]类型，限制响应体的MIME，即要求响应头<code>Accept</code>为限制类型中的值</li>
+</ul>
+<p><strong>表单提交时的特殊处理</strong></p>
+<p>使用HTML表单提交时，默认只支持HTTP的GET和POST方式，spring-mvc对其它请求方式的支持使用了Filter技术。</p>
+<p>spring-boot应用默认配置了 <code>HiddenHttpMethodFilter</code> 过滤器，POST请求到来之前，会从请求体中获取 _method 隐藏字段，使用装饰者设计模式将其包装到HttpServletRequest中，进而将POST请求转换为隐藏字段设置的请求方式。</p>
+<p>核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HiddenHttpMethodFilter</span> <span class="keyword">extends</span> <span class="title class_">OncePerRequestFilter</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> List&lt;String&gt; ALLOWED_METHODS =</span><br><span class="line">			Collections.unmodifiableList(Arrays.asList(HttpMethod.PUT.name(),</span><br><span class="line">					HttpMethod.DELETE.name(), HttpMethod.PATCH.name()));</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Default method parameter: &#123;<span class="doctag">@code</span> _method&#125;. */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEFAULT_METHOD_PARAM</span> <span class="operator">=</span> <span class="string">&quot;_method&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">methodParam</span> <span class="operator">=</span> DEFAULT_METHOD_PARAM;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doFilterInternal</span><span class="params">(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span></span><br><span class="line">			<span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="type">HttpServletRequest</span> <span class="variable">requestToUse</span> <span class="operator">=</span> request;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="string">&quot;POST&quot;</span>.equals(request.getMethod()) &amp;&amp; request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE) == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="type">String</span> <span class="variable">paramValue</span> <span class="operator">=</span> request.getParameter(<span class="built_in">this</span>.methodParam);</span><br><span class="line">			<span class="keyword">if</span> (StringUtils.hasLength(paramValue)) &#123;</span><br><span class="line">				<span class="type">String</span> <span class="variable">method</span> <span class="operator">=</span> paramValue.toUpperCase(Locale.ENGLISH);</span><br><span class="line">				<span class="keyword">if</span> (ALLOWED_METHODS.contains(method)) &#123;</span><br><span class="line">					requestToUse = <span class="keyword">new</span> <span class="title class_">HttpMethodRequestWrapper</span>(request, method);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		filterChain.doFilter(requestToUse, response);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个过滤器默认是关闭的，需要在配置中手动打开它</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">mvc:</span></span><br><span class="line">    <span class="attr">hiddenmethod:</span></span><br><span class="line">      <span class="attr">filter:</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>要想使用PUT，PATCH，DELETE请求方式，需要将Form表单的method设置为POST，然后，在表单中添加一个_method隐藏字段，其值为要使用的HTTP请求方式</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/hello&quot;</span> <span class="attr">method</span>=<span class="string">&quot;get&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>get<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/hello&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>post<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/hello&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;PUT&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>put<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/hello&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;delete&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>delete<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="URL匹配模式"><a href="#URL匹配模式" class="headerlink" title="URL匹配模式"></a>URL匹配模式</h2><ul>
+<li><p>“&#x2F;resources&#x2F;ima?e.png” - 问号?匹配一个任意字符</p>
+</li>
+<li><p>“&#x2F;resources&#x2F;<em>.png” - 星号</em>匹配0或多个任意字符</p>
+</li>
+<li><p>“&#x2F;resources&#x2F;**” - 2个星号匹配多级路径</p>
+</li>
+<li><p>“&#x2F;projects&#x2F;{project}&#x2F;versions” - 匹配并捕获URL路径中的一部分</p>
+</li>
+<li><p>“&#x2F;projects&#x2F;{project:[a-z]+}&#x2F;versions” - 捕获的部分可以使用正则表达式进行匹配</p>
+</li>
+</ul>
+<p>捕获的路径变量使用注解 <code>@PathVariable</code> 进行访问</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/&#123;name:[a-z-]+&#125;-&#123;version:\\d\\.\\d\\.\\d&#125;&#123;ext:\\.[a-z]+&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name, <span class="meta">@PathVariable</span> String version, <span class="meta">@PathVariable</span> String ext)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="请求参数"><a href="#请求参数" class="headerlink" title="请求参数"></a>请求参数</h1><p>完整参数参考官方文档</p>
+<p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-arguments">https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-arguments</a></p>
+<ul>
+<li>javax.servlet.ServletRequest 与 javax.servlet.ServletResponse</li>
+<li>javax.servlet.http.HttpSession</li>
+<li>java.util.Map 与 org.springframework.ui.Model,</li>
+<li>RedirectAttributes</li>
+<li>Errors 与 BindingResult</li>
+<li><code>@PathVariable</code> - 访问URL中的捕获变量</li>
+<li><code>@MatrixVariable</code> - 访问URL中的矩阵变量(分号分割的key&#x3D;value对)，spring默认会移除矩阵变量</li>
+<li><code>@RequestParam</code> - URL请求参数</li>
+<li><code>RequestHeader</code> - HTTP请求头</li>
+<li><code>@RequestBody</code> - HTTP请求体</li>
+<li><code>@CookieValue</code> - Cookie属性</li>
+<li><code>@SessionAttribute</code> - Session属性</li>
+<li><code>@RequestAttribute</code> - 请求属性</li>
+</ul>
+</div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,42 @@
+.category-cloud {
+    margin: 0 0 2em;
+    text-align: center;
+}
+
+.category-cloud a {
+    display: inline-block;
+    margin: 0 5px 8px;
+    padding: 3px 5px;
+    text-decoration: none;
+    border-radius: 8px;
+    background-color: #eee;
+}
+
+.category-list {
+
+}
+
+.category-list ul {
+    list-style: square;
+}
+
+.category-list li {
+    line-height: 2;
+}
+
+.category-list h5::before {
+    content: '#';
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #a7a;
+    margin-right: 5px;
+}
+
+.category-list .date {
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+
+.category-list .title {
+    text-decoration: none;
+}

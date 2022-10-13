@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>Java实现观察者模式 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        
+<link rel="stylesheet" href="/css/index.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><h1>Java实现观察者模式</h1>
+
+<span>软件设计模式</span>
+
+<span>2022-10-11</span>
+<div><span id="more"></span>
+
+<blockquote>
+<p>观察者模式(Observer),也叫发布-订阅模式(Publish-Subscribe)<br>观察者模式涉及到被观察的主题(Subject)与观察者(Observer)2个角色，主题发布消息，观察者响应消息。<br>观察者可以订阅主题，也可以取消订阅。  </p>
+</blockquote>
+<p>观察者模式示例：主播与粉丝</p>
+<ul>
+<li>主题(发布者)是直播网站主播，其业务是在线直播；</li>
+<li>观察者(订阅者)是主播的粉丝，只要主播开始直播，就通知粉丝</li>
+<li>粉丝不喜欢主播了，可以取消订阅</li>
+<li>一个主播可以有多个粉丝，一个粉丝也可以订阅多个主播</li>
+</ul>
+<p><strong>观察者接口</strong></p>
+<p>update方法是每个观察者必须实现的方法，用于响应主题发送的消息，其参数是主题传递给观察者的数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Observer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 更新</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String anchorName,<span class="type">boolean</span> online)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>主题(发布者)接口</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Subject</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 注册观察者</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">registerObserver</span><span class="params">(Observer observer)</span>;</span><br><span class="line">    <span class="comment">// 移除观察者</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">removeObserver</span><span class="params">(Observer observer)</span>;</span><br><span class="line">    <span class="comment">// 通知所有观察者</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">notifyObservers</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>观察者具体实现类</strong></p>
+<p>观察者可以有任意多个，这里只写一个示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 粉丝迟汉</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ChiHan</span> <span class="keyword">implements</span> <span class="title class_">Observer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String anchorName,<span class="type">boolean</span> online)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(online)</span><br><span class="line">        &#123;</span><br><span class="line">            System.out.printf(<span class="string">&quot;主播%s上线了！快去看她！%n&quot;</span>,anchorName);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            System.out.printf(<span class="string">&quot;主播%s下线了！可以睡了！%n&quot;</span>,anchorName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>主题(发布者)具体实现类</strong></p>
+<p>主题可以有多个，这里只写一个示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主播冯提莫</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FengTimo</span> <span class="keyword">implements</span> <span class="title class_">Subject</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> online;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Observer&gt; fans;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FengTimo</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">this</span>.online=<span class="literal">false</span>;</span><br><span class="line">        <span class="built_in">this</span>.fans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerObserver</span><span class="params">(Observer fan)</span></span><br><span class="line">    &#123;</span><br><span class="line">        fans.add(fan);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeObserver</span><span class="params">(Observer fan)</span></span><br><span class="line">    &#123;</span><br><span class="line">        fans.remove(fan);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">notifyObservers</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        fans.forEach(fan-&gt;&#123;</span><br><span class="line">            fan.update(<span class="string">&quot;冯提莫&quot;</span>,online);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主题状态改变后，通知所有观察者</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOnline</span><span class="params">(<span class="type">boolean</span> online)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">this</span>.online=online;</span><br><span class="line">        onlineChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onlineChanged</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        notifyObservers();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 主播(主题)</span></span><br><span class="line">    FengTimo fengTimo=<span class="keyword">new</span> <span class="title class_">FengTimo</span>();</span><br><span class="line">    <span class="comment">// 粉丝(观察者)</span></span><br><span class="line">    Observer chiHan=<span class="keyword">new</span> <span class="title class_">ChiHan</span>();</span><br><span class="line">    <span class="comment">// 注册观察者</span></span><br><span class="line">    fengTimo.registerObserver(chiHan);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主题状态改变，自动通知观察者</span></span><br><span class="line">    fengTimo.setOnline(<span class="literal">true</span>);</span><br><span class="line">    fengTimo.setOnline(<span class="literal">false</span>);</span><br><span class="line">    <span class="comment">// 移除观察者，观察者将不再收到消息</span></span><br><span class="line">    fengTimo.removeObserver(chiHan);</span><br><span class="line">    fengTimo.setOnline(<span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主播冯提莫上线了！快去看她！</span><br><span class="line">主播冯提莫下线了！可以睡了！</span><br></pre></td></tr></table></figure></div>
+<div>END</div></main>
+
+    <footer>
+页底
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>
