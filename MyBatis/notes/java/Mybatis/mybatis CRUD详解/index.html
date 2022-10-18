@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="网站描述">
+    <meta name="keyword" content="">
+
+    <title>mybatis CRUD详解 | 九天博客</title>
+    <link rel="shortcut icon" href="/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                九天博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">项目</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">关于</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title">mybatis CRUD详解</h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#MyBatis">MyBatis</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
+    </div>
+
+    <div class="content"><p>官放文档：<a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/sqlmap-xml.html">https://mybatis.org/mybatis-3/zh/sqlmap-xml.html</a></p>
+<span id="more"></span>
+
+<h2 id="准备数据库表"><a href="#准备数据库表" class="headerlink" title="准备数据库表"></a>准备数据库表</h2><p>以一个简单的权限管理系统为例。共包括4张表：<em>角色表 role</em>、<em>权限表 permission</em>、<em>角色-权限表 role-permission</em>、<em>用户表 user</em>。</p>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> test;
+USE test;
+
+<span class="hljs-comment">/*角色表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> role
+(
+    id   <span class="hljs-type">INT</span>         <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;id&#x27;</span>,
+    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">15</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;角色名&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id)
+) ENGINE <span class="hljs-operator">=</span> InnoDB;
+
+<span class="hljs-comment">/*权限表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> permission
+(
+    id   <span class="hljs-type">INT</span>         <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;id&#x27;</span>,
+    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">31</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;权限名&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id)
+) ENGINE <span class="hljs-operator">=</span> InnoDB;
+
+<span class="hljs-comment">/*角色-权限表：多对多*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> role_permission
+(
+    role_id       <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;角色id&#x27;</span>,
+    permission_id <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;权限id&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (role_id, permission_id),
+    <span class="hljs-keyword">CONSTRAINT</span> fk_role_permission_role <span class="hljs-keyword">FOREIGN</span> KEY (role_id) <span class="hljs-keyword">REFERENCES</span> role (id),
+    <span class="hljs-keyword">CONSTRAINT</span> fk_role_permission_permission <span class="hljs-keyword">FOREIGN</span> KEY (permission_id) <span class="hljs-keyword">REFERENCES</span> permission (id)
+) ENGINE <span class="hljs-operator">=</span> InnoDB;
+
+<span class="hljs-comment">/*用户表*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-keyword">user</span>
+(
+    id       <span class="hljs-type">INT</span>                    <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;id&#x27;</span>,
+    username <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">31</span>)            <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;用户名&#x27;</span>,
+    password <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>)           <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;用户密码&#x27;</span>,
+    sex      ENUM (<span class="hljs-string">&#x27;male&#x27;</span>,<span class="hljs-string">&#x27;female&#x27;</span>) <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;male&#x27;</span> COMMENT <span class="hljs-string">&#x27;性别&#x27;</span>,
+    age      TINYINT                <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">0</span> COMMENT <span class="hljs-string">&#x27;年龄&#x27;</span>,
+    role_id  <span class="hljs-type">INT</span>                    <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;角色id&#x27;</span>,
+    <span class="hljs-keyword">PRIMARY</span> KEY (id),
+    <span class="hljs-keyword">CONSTRAINT</span> fk_user_role <span class="hljs-keyword">FOREIGN</span> KEY (role_id) <span class="hljs-keyword">REFERENCES</span> role (id)
+) ENGINE <span class="hljs-operator">=</span> InnoDB;</code></pre>
+
+<p>表关系如下：</p>
+<ul>
+<li>角色与权限是 <em>多对多</em> 关系</li>
+<li>用户与角色是 <em>多对一</em> 关系</li>
+</ul>
+<p>如下图</p>
+<p><img src="/images/mybatis.png"></p>
+<h2 id="定义实体类"><a href="#定义实体类" class="headerlink" title="定义实体类"></a>定义实体类</h2><p><em>com.lypzz.entity.Role</em></p>
+<pre><code class="hljs java"><span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@NoArgsConstructor</span>
+<span class="hljs-meta">@RequiredArgsConstructor</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Role</span> &#123;
+    <span class="hljs-keyword">private</span> Integer id;
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> String name;
+
+    <span class="hljs-keyword">private</span> List&lt;Permission&gt; permissions;
+&#125;</code></pre>
+
+<p><em>com.lypzz.entity.Permission</em></p>
+<pre><code class="hljs java"><span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@NoArgsConstructor</span>
+<span class="hljs-meta">@RequiredArgsConstructor</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Permission</span> &#123;
+    <span class="hljs-keyword">private</span> Integer id;
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> String name;
+
+    <span class="hljs-keyword">private</span> List&lt;Role&gt; roles;
+&#125;</code></pre>
+
+<p><em>com.lypzz.entity.RolePermission</em></p>
+<pre><code class="hljs java"><span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@NoArgsConstructor</span>
+<span class="hljs-meta">@RequiredArgsConstructor</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RolePermission</span> &#123;
+    <span class="hljs-keyword">private</span> Integer id;
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> Integer roleId;
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> Integer permissionId;
+&#125;</code></pre>
+
+<p><em>com.lypzz.entity.User</em></p>
+<pre><code class="hljs java"><span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@NoArgsConstructor</span>
+<span class="hljs-meta">@RequiredArgsConstructor</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> &#123;
+    <span class="hljs-keyword">private</span> Integer id;
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> String username;
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> String password;
+    <span class="hljs-keyword">private</span> String sex;
+    <span class="hljs-keyword">private</span> Integer age;
+    <span class="hljs-keyword">private</span> Integer roleId;
+
+    <span class="hljs-keyword">private</span> Role role;
+&#125;</code></pre>
+
+<h2 id="注册映射器"><a href="#注册映射器" class="headerlink" title="注册映射器"></a>注册映射器</h2><blockquote>
+<p>创建mybatis配置文件、定义Mapper接口、创建xml映射文件、获取 <code>SqlSession</code> 以及 <code>XxxMapper</code> 对象的代码请阅读文章： <a target="_blank" rel="noopener" href="https://lypzz.com/posts/mybatis%E7%B3%BB%E5%88%97/mybatis%E7%B3%BB%E5%88%97-%E5%85%A5%E9%97%A8/">mybatis系列-入门</a></p>
+</blockquote>
+<p>创建xml映射文件后，在mybatis配置文件中引入（注册）映射器的方式有下面几种：</p>
+<ul>
+<li><p><code>CLASSPATH</code> 路径下的资源</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">resource</span>=<span class="hljs-string">&quot;com/lypzz/mapper/RoleMapper.xml&quot;</span>/&gt;</span></code></pre>
+</li>
+<li><p>文件资源定位符（URL）</p>
+<blockquote>
+<p>注意：<code>file</code> 后是3个正斜线</p>
+</blockquote>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">url</span>=<span class="hljs-string">&quot;file:///E:\Projects\mybatis-demos\mybatis-crud\src\main\resources\com\lypzz\mapper\RoleMapper.xml&quot;</span>/&gt;</span></code></pre>
+</li>
+<li><p>类完全限定名</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;com.lypzz.mapper.RoleMapper&quot;</span>/&gt;</span></code></pre>
+</li>
+<li><p>包名</p>
+<p>一次性引入该包下的全部映射器，<strong>推荐使用</strong></p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">package</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;com.lypzz.mapper&quot;</span>/&gt;</span></code></pre></li>
+</ul>
+<h2 id="使用类型别名"><a href="#使用类型别名" class="headerlink" title="使用类型别名"></a>使用类型别名</h2><p>使用类型别名可以为Java类全限定名设置一个缩写名称。例如，给实体类设置一个别名，在映射文件中引用实体类的时候，就可以使用它代替全限定类名</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">typeAliases</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">typeAlias</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;com.lypzz.entity.Role&quot;</span> <span class="hljs-attr">alias</span>=<span class="hljs-string">&quot;Role&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">typeAliases</span>&gt;</span></code></pre>
+
+<p>或者使用 <code>package</code> 一次性给该包下的全部类设置类型别名，别名为非限定类名的首字母小写形式(实际上首字母大写也可以)</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">typeAliases</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">package</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;com.lypzz.entity&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">typeAliases</span>&gt;</span></code></pre>
+
+<p>需要注意的是，mybatis核心配置中，各种标签要求按照一定的顺序声明（<code>typeAliases</code> 位于 <code>environments</code> 之前）</p>
+<pre><code class="hljs plaintext">The content of element type &quot;configuration&quot; must match &quot;(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,objectWrapperFactory?,reflectorFactory?,plugins?,environments?,databaseIdProvider?,mappers?)&quot;.</code></pre>
+
+<h2 id="增删改查（CRUD）"><a href="#增删改查（CRUD）" class="headerlink" title="增删改查（CRUD）"></a>增删改查（CRUD）</h2><h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><p>mybatis的 <code>insert</code> 很简单，其支持的属性如下</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">insert</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertAuthor&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;domain.blog.Author&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">flushCache</span>=<span class="hljs-string">&quot;true&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">statementType</span>=<span class="hljs-string">&quot;PREPARED&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">keyColumn</span>=<span class="hljs-string">&quot;&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">timeout</span>=<span class="hljs-string">&quot;20&quot;</span>&gt;</span></code></pre>
+
+<p><strong>获取插入记录后，自动生成的主键id</strong></p>
+<p>有时候，在新增一条记录后，需要马上使用其 <code>id</code> 值，你可能通过会在插入成功后，紧接着进行一次查询操作来实现此目的。但是，mybatis提供了一种方便的机制来实现此功能，只需要在 <code>insert</code> 标签中使用属性 <code>useGeneratedKeys=&quot;true&quot;</code> 和 <code>keyProperty=&quot;id&quot;</code>，mybatis在插入记录成功后，会把自动生成的主键值设置给Java实体参数的id,并返回成功插入的行数(记录数)。</p>
+<p>插入1个角色，并获取其id值</p>
+<pre><code class="hljs xml">RoleMapper roleMapper = session.getMapper(RoleMapper.class);
+Role admin = new Role(&quot;admin&quot;);
+int rows = roleMapper.insertOne(admin);
+System.out.println(admin.getId()); // 输出其id值</code></pre>
+
+<p>xml映射文件中是这样写的，<code>keyProperty</code> 对应Java实体类中的id属性，<code>keyColumn</code> 对应数据表中的id列</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertOne&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;Role&quot;</span> <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">keyColumn</span>=<span class="hljs-string">&quot;id&quot;</span>&gt;</span>
+    INSERT INTO role (name) VALUES (#&#123;name&#125;);
+<span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span></code></pre>
+
+<p><strong>批量插入记录</strong></p>
+<p>使用动态sql的 <code>foreach</code> 元素，可以批量插入多行记录。</p>
+<p>批量插入多个权限，映射器方法接收一个集合参数</p>
+<pre><code class="hljs java"><span class="hljs-type">PermissionMapper</span> <span class="hljs-variable">permissionMapper</span> <span class="hljs-operator">=</span> session.getMapper(PermissionMapper.class);
+List&lt;Permission&gt; permissions = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;Permission&gt;()&#123;&#123;
+    add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>(<span class="hljs-string">&quot;user:add&quot;</span>));
+    add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>(<span class="hljs-string">&quot;user:delete&quot;</span>));
+    add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>(<span class="hljs-string">&quot;user:update&quot;</span>));
+    add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>(<span class="hljs-string">&quot;user:select&quot;</span>));
+&#125;&#125;;
+permissionMapper.insertMany(permissions);</code></pre>
+
+<p>xml映射文件中使用 <code>foreach</code> 遍历集合元素</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertMany&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">keyColumn</span>=<span class="hljs-string">&quot;id&quot;</span>&gt;</span>
+    INSERT INTO permission (name) VALUES
+    <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;index&quot;</span> <span class="hljs-attr">open</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">close</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;,&quot;</span>&gt;</span>
+        (#&#123;item.name&#125;)
+    <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span></code></pre>
+
+<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><p>mybatis的 <code>delete</code> 很简单，其支持的属性如下</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">delete</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;deleteAuthor&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;domain.blog.Author&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">flushCache</span>=<span class="hljs-string">&quot;true&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">statementType</span>=<span class="hljs-string">&quot;PREPARED&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">timeout</span>=<span class="hljs-string">&quot;20&quot;</span>&gt;</span></code></pre>
+
+<p>删除操作没什么可说的。</p>
+<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><p>mybatis的 <code>update</code> 很简单，其支持的属性如下</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">update</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateAuthor&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;domain.blog.Author&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">flushCache</span>=<span class="hljs-string">&quot;true&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">statementType</span>=<span class="hljs-string">&quot;PREPARED&quot;</span></span>
+<span class="hljs-tag">  <span class="hljs-attr">timeout</span>=<span class="hljs-string">&quot;20&quot;</span>&gt;</span></code></pre>
+
+<p><strong>更新部分列</strong></p>
+<p>更新部分列可以说是每个项目都会遇到的一个需求了。例如，用户修改资料，如果只是为了修改性别，就专门为修改性别这一需求定义一个接口和一个 <code>update</code> 元素，那也太划不来了。mybatis动态SQL的 <code>set</code> 元素就可以优雅的解决这个问题。</p>
+<p>更改用户的性别</p>
+<pre><code class="hljs java"><span class="hljs-type">UserMapper</span> <span class="hljs-variable">userMapper</span> <span class="hljs-operator">=</span> session.getMapper(UserMapper.class);
+<span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+user.setId(<span class="hljs-number">1</span>);
+user.setSex(<span class="hljs-string">&quot;female&quot;</span>);
+<span class="hljs-type">int</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.updateOne(user);</code></pre>
+
+<p>使用 <code>set</code> 更新部分列</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateOne&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;User&quot;</span>&gt;</span>
+    UPDATE user
+    <span class="hljs-tag">&lt;<span class="hljs-name">set</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;username!=null&quot;</span>&gt;</span>username = #&#123;username&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;password!=null&quot;</span>&gt;</span>password = #&#123;password&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;sex!=null&quot;</span>&gt;</span>sex = #&#123;sex&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;age!=null&quot;</span>&gt;</span>age = #&#123;age&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;roleId!=null&quot;</span>&gt;</span>role_id = #&#123;roleId&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">set</span>&gt;</span>
+    WHERE id = #&#123;id&#125;;
+<span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span></code></pre>
+
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p><code>select</code> 中最重要也是最强大的功能非结果映射集 <code>resultMap</code> 莫属。</p>
+<p><strong><code>resultMap</code>解决列名与实体属性名不一致的问题</strong></p>
+<p>对于数据表列名和Java实体类属性名一致的情况（<em>camel-case</em>），返回类型直接使用 <code>resultType</code> 属性指定即可，mybatis会自动将数据库记录按照列名映射到Java实体类的属性中去</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectOneById&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;int&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;User&quot;</span>&gt;</span>
+    SELECT * FROM user WHERE id = #&#123;id&#125;;
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></code></pre>
+
+<p>但是，当列名与实体属性名不能一一对应时，<code>resultType</code> 就无能为力了（当然，<strong>也可以使用SQL的别名语法来解决</strong>）。此时，就该 <code>resultMap</code> 出马了。</p>
+<p>使用 <code>resultMap</code> 时，首先需要定义一个 <code>resultMap</code> ，其中声明了数据表列名与Java实体属性名的对应关系</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resultMap</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;userResultMap&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;User&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;id&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;username&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;username&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;password&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;sex&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;sex&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;age&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;age&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;role_id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;roleId&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">resultMap</span>&gt;</span></code></pre>
+
+<p>然后，在 <code>select</code> 元素中，使用 <code>resultMap</code> 引用这个结果映射集</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectOneById&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;int&quot;</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">&quot;userResultMap&quot;</span>&gt;</span>
+    SELECT * FROM user WHERE id = #&#123;id&#125;;
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></code></pre>
+
+<p>现在，不管Java实体字段名与数据表列名如何的不一致，都不惧。</p>
+<p><strong><code>resultMap</code> 解决SQL关联查询的问题</strong></p>
+<p>在权限管理系统中，用户除了拥有自身的一些基本信息外，还有一个角色信息，这就需要用到关联查询。</p>
+<p><code>resultMap</code> 中的 <code>association</code> 元素，就是专门表示 <strong>有一个</strong> 的关系，<code>User</code> 有一个 <code>Role</code> ，那么 <code>userResultMap</code> 就有一个 <code>association</code>。</p>
+<p>现在，<code>userResultMap</code> 定义如下，<code>association</code> 中使用 <code>property</code> 指定属性名，使用 <code>javaType</code> 指定属性的数据类型</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resultMap</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;userResultMap&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;User&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;id&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;username&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;username&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;password&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;sex&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;sex&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;age&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;age&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;role_id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;roleId&quot;</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">association</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;role&quot;</span> <span class="hljs-attr">javaType</span>=<span class="hljs-string">&quot;Role&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;r_id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;id&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;r_name&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;name&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">association</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">resultMap</span>&gt;</span></code></pre>
+
+<p>使用关联查询，mybatis将负责把角色相关的信息封装为一个 <code>Role</code> 对象</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectOneById&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;int&quot;</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">&quot;userResultMap&quot;</span>&gt;</span>
+    SELECT U.*,
+           R.id AS r_id,
+           R.name AS r_name
+    FROM user AS U LEFT OUTER JOIN role AS R ON U.role_id = R.id
+    WHERE U.id = #&#123;id&#125;;
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></code></pre>
+
+<p>除了 <code>association</code> 用于表示<strong>有一个</strong>的关系，<code>resultMap</code> 中的 <code>collection</code> 用来表示<strong>有多个</strong>的关系。</p>
+<p>一个 <code>Role</code> 有多个 <code>Permission</code> ，那么，<code>roleResultMap</code> 就有一个 <code>collection</code>。</p>
+<p><code>roleResultMap</code> 定义如下，<code>collection</code> 中使用 <code>property</code> 指定属性名，使用 <code>ofType</code> 指定集合元素的数据类型</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resultMap</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;roleResultMap&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;Role&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;id&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;name&quot;</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">collection</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;permissions&quot;</span> <span class="hljs-attr">ofType</span>=<span class="hljs-string">&quot;Permission&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;p_id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;id&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;p_name&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;name&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">collection</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">resultMap</span>&gt;</span></code></pre>
+
+<p>使用关联查询，mybatis将负责把权限相关的信息封装为一个个 <code>Permission</code> 对象，并放到集合中</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectOneById&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;int&quot;</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">&quot;roleResultMap&quot;</span>&gt;</span>
+    SELECT R.*,
+           P.id AS p_id,
+           P.name AS p_name
+    FROM role AS R LEFT OUTER JOIN role_permission RP ON R.id = RP.role_id
+    			   LEFT OUTER JOIN permission P ON RP.permission_id = P.id
+    WHERE R.id = #&#123;id&#125;;
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></code></pre>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，对mybatis可以说是入门了。接下来需要学习的是mybatis的动态SQL，使用动态SQL，可以灵活的实现许多SQL，减少接口的数量。</p>
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
+
+    <footer>
+
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

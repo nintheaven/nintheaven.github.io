@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,17 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>myabtis报错集合</h1>
+    <h3 class="title">myabtis报错集合</h3>
 
-    <div>
-        
-        <a href="/notes/#MyBatis">MyBatis</a>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#MyBatis">MyBatis</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><span id="more"></span>
+    <div class="content"><span id="more"></span>
 
 
 <pre><code class="hljs plaintext">### Error querying database. Cause: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure The last packet successfully received from the server was 427 milliseconds ago. The last packet sent successfully to the server was 452 milliseconds ago. ### The error may exist in class path resource [com/lyp/mapper/TagMapper.xml] ### The error may involve defaultParameterMap ### The error occurred while setting parameters ### SQL: select count(`id`) from tags where name = ? or pinyin = ?; ### Cause: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure The last packet successfully received from the server was 427 milliseconds ago. The last packet sent successfully to the server was 452 milliseconds ago. ; Communications link failure The last packet successfully received from the server was 427 milliseconds ago. The last packet sent successfully to the server was 452 milliseconds ago.; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure The last packet successfully received from the server was 427 milliseconds ago. The last packet sent successfully to the server was 452 milliseconds ago.</code></pre>
@@ -116,10 +123,14 @@
             <span class="hljs-attr">initialization-fail-timeout:</span> <span class="hljs-number">2000</span></code></pre></div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

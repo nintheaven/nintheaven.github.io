@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,15 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>thymeleaf入门</h1>
+    <h3 class="title">thymeleaf入门</h3>
 
-    <div>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class"></span>
+            <span>: </span>
+            <a class="cate" href="//#HTML模板引擎">HTML模板引擎</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><span id="more"></span>
+    <div class="content"><span id="more"></span>
 
 <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在spirng-boot中引入依赖</p>
 <p><em>pom.xml</em></p>
@@ -157,10 +166,14 @@
 <pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">th:replace</span>=<span class="hljs-string">&quot;::frag&quot;</span> <span class="hljs-attr">th:with</span>=<span class="hljs-string">&quot;onevar=$&#123;value1&#125;,twovar=$&#123;value2&#125;&quot;</span>&gt;</span></code></pre></div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

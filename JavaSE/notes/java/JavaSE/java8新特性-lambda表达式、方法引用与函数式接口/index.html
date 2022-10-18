@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,17 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>java8新特性-lambda表达式、方法引用与函数式接口</h1>
+    <h3 class="title">java8新特性-lambda表达式、方法引用与函数式接口</h3>
 
-    <div>
-        
-        <a href="/notes/#JavaSE">JavaSE</a>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#JavaSE">JavaSE</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><h2 id="行为参数化"><a href="#行为参数化" class="headerlink" title="行为参数化"></a>行为参数化</h2><p>行为参数化：将行为进行抽象，作为方法参数，在方法内部使用行为。</p>
+    <div class="content"><h2 id="行为参数化"><a href="#行为参数化" class="headerlink" title="行为参数化"></a>行为参数化</h2><p>行为参数化：将行为进行抽象，作为方法参数，在方法内部使用行为。</p>
 <p>定义行为接口</p>
 <pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Predicate</span>&lt;T&gt; &#123;
     <span class="hljs-type">boolean</span> <span class="hljs-title function_">test</span><span class="hljs-params">(T t)</span>;
@@ -228,10 +235,14 @@ Supplier&lt;Integer&gt; supplier = s::length;</code></pre>
 </div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

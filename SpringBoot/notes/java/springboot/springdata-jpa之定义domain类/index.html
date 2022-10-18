@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,17 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>springdata-jpa之定义domain类</h1>
+    <h3 class="title">springdata-jpa之定义domain类</h3>
 
-    <div>
-        
-        <a href="/notes/#SpringBoot">SpringBoot</a>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#SpringBoot">SpringBoot</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><span id="more"></span>
+    <div class="content"><span id="more"></span>
 
 <p>spring-data-jpa可以根据domain类自动维护数据表(创建及更新)</p>
 <p>这里以博客应用中主要的几个实体类为例，演示定义一对一，一对多，多对多关系的domain。</p>
@@ -186,10 +193,14 @@
 <span class="hljs-keyword">private</span> Set&lt;Article&gt; articles=<span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();</code></pre></div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

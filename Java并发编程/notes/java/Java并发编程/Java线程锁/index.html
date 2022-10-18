@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,15 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>Java线程锁</h1>
+    <h3 class="title">Java线程锁</h3>
 
-    <div>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class"></span>
+            <span>: </span>
+            <a class="cate" href="//#Java并发编程">Java并发编程</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><span id="more"></span>
+    <div class="content"><span id="more"></span>
 
 <h2 id="线程安全问题"><a href="#线程安全问题" class="headerlink" title="线程安全问题"></a>线程安全问题</h2><p>当多个线程中都使用同一个临界区资源(共享资源)时，在同一时刻，只能有1个线程可以使用临界区资源，线程中非原子性的操作会导致临界区资源前后表现不一致。这就是导致线程安全问题的原因。</p>
 <p>例如，下面的代码中，使用10个线程共同操作一个int类型的成员变量（临界区资源），在每个线程中，都对其执行100次自增运算。按照正常逻辑，最终其预期结果应该是 1000。但是，由于自增运算不是原子性操作，实际结果不是1000</p>
@@ -280,10 +289,14 @@
 <h1 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h1><h2 id="Object中提供的通知，等待方法"><a href="#Object中提供的通知，等待方法" class="headerlink" title="Object中提供的通知，等待方法"></a>Object中提供的通知，等待方法</h2><h2 id="Lock中的Condition类型"><a href="#Lock中的Condition类型" class="headerlink" title="Lock中的Condition类型"></a>Lock中的Condition类型</h2></div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

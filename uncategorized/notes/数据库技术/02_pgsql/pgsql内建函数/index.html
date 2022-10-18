@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,15 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>pgsql内建函数</h1>
+    <h3 class="title">pgsql内建函数</h3>
 
-    <div>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class"></span>
+            <span>: </span>
+            <a class="cate" href="//#未分类">未分类</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><span id="more"></span>
+    <div class="content"><span id="more"></span>
 
 <h2 id="数据类型格式化函数"><a href="#数据类型格式化函数" class="headerlink" title="数据类型格式化函数"></a>数据类型格式化函数</h2><p><a target="_blank" rel="noopener" href="http://www.postgres.cn/docs/12/functions-formatting.html">http://www.postgres.cn/docs/12/functions-formatting.html</a></p>
 <pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> to_char(<span class="hljs-built_in">current_timestamp</span>, <span class="hljs-string">&#x27;HH24:MI:SS&#x27;</span>) <span class="hljs-keyword">FROM</span> dual;
@@ -97,10 +106,14 @@
 <span class="hljs-keyword">SELECT</span> generate_series(to_date(<span class="hljs-string">&#x27;20220501&#x27;</span>, <span class="hljs-string">&#x27;YYYYMMDD&#x27;</span>), to_date(<span class="hljs-string">&#x27;20220505&#x27;</span>, <span class="hljs-string">&#x27;YYYYMMDD&#x27;</span>), <span class="hljs-string">&#x27;1 day&#x27;</span>::<span class="hljs-type">interval</span>);</code></pre></div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

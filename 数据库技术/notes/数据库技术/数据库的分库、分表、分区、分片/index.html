@@ -62,10 +62,12 @@
                     
                 </ul>
 
+                <!--
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
+                -->
             </div>
         </div>
     </nav>
@@ -76,15 +78,22 @@
 </header>
 
     <main><div class="post">
-    <h1>数据库的分库、分表、分区、分片</h1>
+    <h3 class="title">数据库的分库、分表、分区、分片</h3>
 
-    <div>
-        
-
-        <span>2022-10-11</span>
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#数据库技术">数据库技术</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
     </div>
 
-    <div><h2 id="分库"><a href="#分库" class="headerlink" title="分库"></a>分库</h2><h3 id="水平切分"><a href="#水平切分" class="headerlink" title="水平切分"></a>水平切分</h3><p>每个库中的表结构相同</p>
+    <div class="content"><h2 id="分库"><a href="#分库" class="headerlink" title="分库"></a>分库</h2><h3 id="水平切分"><a href="#水平切分" class="headerlink" title="水平切分"></a>水平切分</h3><p>每个库中的表结构相同</p>
 <h3 id="垂直切分"><a href="#垂直切分" class="headerlink" title="垂直切分"></a>垂直切分</h3><p>每个库中的表结构不同</p>
 <h2 id="分表"><a href="#分表" class="headerlink" title="分表"></a>分表</h2><h3 id="水平切分-1"><a href="#水平切分-1" class="headerlink" title="水平切分"></a>水平切分</h3><p>按行切分，数据存储到具有相同表结构的多张表中。减少了每张表行数，提高sql执行效率。</p>
 <p>常见的使用场景包括：</p>
@@ -99,10 +108,14 @@
 <h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><h2 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h2></div>
 </div>
 
-<div class="post-end">END</div></main>
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div></main>
 
     <footer>
-页底
+
 </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
