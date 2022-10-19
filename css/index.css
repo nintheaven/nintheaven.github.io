@@ -1,0 +1,16 @@
+.github-card {
+    text-align: center;
+}
+
+.github-card img {
+    width: 100%;
+}
+
+.social {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.social a {
+    padding: 6px 10px;
+}
