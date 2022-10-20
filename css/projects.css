@@ -70,6 +70,6 @@
 
 @media (width < 540px) {
     .projects .item {
-        height: 45vh;
+        height: 50vh;
     }
 }
