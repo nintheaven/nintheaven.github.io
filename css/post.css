@@ -53,7 +53,7 @@ img {
 
 .content h1::before,
 .content h2::before {
-    content: '##';
+    content: '#';
     padding-right: 5px;
     font-size: 1rem;
     color: var(--green);
@@ -61,7 +61,7 @@ img {
 
 .content h3::before,
 .content h4::before {
-    content: '###';
+    content: '##';
     padding-right: 5px;
     font-size: 1rem;
     color: var(--green);

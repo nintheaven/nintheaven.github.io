@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+
+    <title>微服务理论知识 | Nintheaven</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Nintheaven
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">作品</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title">微服务理论知识</h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class"></span>
+            <span>: </span>
+            <a class="cate" href="//#未分类">未分类</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
+    </div>
+
+    <div class="content"><h2 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h2><p>单体架构</p>
+<p>SOA(Service Oriented Architecture, 面向服务的架构)</p>
+<p>微服务(Micro Service)</p>
+<h2 id="服务切分"><a href="#服务切分" class="headerlink" title="服务切分"></a>服务切分</h2><p>水平切分：同一应用的多个副本，部署到多台机器上。</p>
+<p>垂直切分：按照业务，将一个应用拆分为多个子模块。</p>
+<p>混合切分：将一个大的应用，按照业务功能垂直切分为多个子模块；对每一个子模块水平切分，进行集群部署。</p>
+<h2 id="分布式系统的设计原则"><a href="#分布式系统的设计原则" class="headerlink" title="分布式系统的设计原则"></a>分布式系统的设计原则</h2><p><strong>CAP原则</strong></p>
+<p>C（Consistency）一致性，数据一致性</p>
+<p>A（Available）可用性，保证性能</p>
+<p>P（Partition Tolerance），分区容错性，可扩展性。</p>
+<p>不可能同时满足CAP原则中的3个目标。</p>
+<p><strong>BASE原则</strong></p>
+<p>BA（Basically Available）基本可用</p>
+<p>S（Soft state）软状态，中间状态</p>
+<p>E（Enventual consitency）最终一致性</p>
+<p>BASE原则追求的是弱一致性，高可用性。</p>
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        // 表格添加滚动条
+        $('table').wrap("<div class='table-wrap' style='width: 100%; overflow: auto;'></div>");
+    });
+
+</script></main>
+
+    <footer>
+
+</footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

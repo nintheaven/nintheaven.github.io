@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+
+    <title>SpringBoot单元测试 | Nintheaven</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Nintheaven
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">作品</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title">SpringBoot单元测试</h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#SpringBoot系列">SpringBoot系列</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2021-10-01</span>
+        </div>
+    </div>
+
+    <div class="content"><h2 id="添加spring-boot-starter-test依赖"><a href="#添加spring-boot-starter-test依赖" class="headerlink" title="添加spring-boot-starter-test依赖"></a>添加spring-boot-starter-test依赖</h2><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+
+
+<h2 id="测试service层代码"><a href="#测试service层代码" class="headerlink" title="测试service层代码"></a>测试service层代码</h2><p>在测试类上使用注解<code>@SpringBootTest</code>，在测试方法上使用注解<code>@Test</code></p>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> org.junit.jupiter.api.Test;
+<span class="hljs-keyword">import</span> org.springframework.boot.test.context.SpringBootTest;
+
+<span class="hljs-keyword">import</span> javax.annotation.Resource;
+
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.junit.jupiter.api.Assertions.*;
+
+<span class="hljs-meta">@SpringBootTest</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloServiceTest</span> &#123;
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> HelloService helloService;
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testHello</span><span class="hljs-params">()</span> &#123;
+        assertEquals(helloService.hello(), <span class="hljs-string">&quot;hello world!&quot;</span>);
+    &#125;
+&#125;</code></pre>
+
+
+
+<h2 id="测试Controller层代码"><a href="#测试Controller层代码" class="headerlink" title="测试Controller层代码"></a>测试Controller层代码</h2><p>测试Controller层代码，可以使用MockMvc模拟发送Http请求。</p>
+<p>在Junit5中，测试类上除了使用<code>@SpringBootTest</code>注解外，还需要使用<code>@AutoConfigureMockMvc</code>，让容器自动配置注入MockMvc对象。</p>
+<blockquote>
+<p>在Junit4中，还需要使用<code>@RunWith(SpringRunner.class)</code></p>
+</blockquote>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> org.junit.jupiter.api.Test;
+<span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+<span class="hljs-keyword">import</span> org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+<span class="hljs-keyword">import</span> org.springframework.boot.test.context.SpringBootTest;
+<span class="hljs-keyword">import</span> org.springframework.http.MediaType;
+<span class="hljs-keyword">import</span> org.springframework.test.web.servlet.MockMvc;
+
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.hamcrest.Matchers.*;
+
+<span class="hljs-meta">@SpringBootTest</span>
+<span class="hljs-meta">@AutoConfigureMockMvc</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloControllerTest</span> &#123;
+
+    <span class="hljs-meta">@Autowired</span> MockMvc mvc;
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testHello</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;
+        mvc.perform(get(<span class="hljs-string">&quot;/hello&quot;</span>).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo(<span class="hljs-string">&quot;hello world!&quot;</span>)))
+                .andDo(print());
+    &#125;
+&#125;</code></pre>
+
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        // 表格添加滚动条
+        $('table').wrap("<div class='table-wrap' style='width: 100%; overflow: auto;'></div>");
+    });
+
+</script></main>
+
+    <footer>
+
+</footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

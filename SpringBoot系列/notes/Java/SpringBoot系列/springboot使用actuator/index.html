@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+
+    <title>springboot使用actuator | Nintheaven</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Nintheaven
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">作品</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title">springboot使用actuator</h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#SpringBoot系列">SpringBoot系列</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
+    </div>
+
+    <div class="content"><p>官方文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.5.8/reference/html/actuator.html">https://docs.spring.io/spring-boot/docs/2.5.8/reference/html/actuator.html</a></p>
+<p>Actuator公开一些Rest端点，用于监控SpringBoot应用程序运行时的内部状况。</p>
+<span id="more"></span>
+
+<h2 id="启用Actuator"><a href="#启用Actuator" class="headerlink" title="启用Actuator"></a>启用Actuator</h2><p>添加依赖</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<p>启动程序，访问 <a target="_blank" rel="noopener" href="http://localhost:8080/actuator">http://localhost:8080/actuator</a></p>
+<pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+  <span class="hljs-attr">&quot;_links&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;self&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+      <span class="hljs-attr">&quot;href&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://localhost:8080/actuator&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;templated&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span>
+    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;health&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+      <span class="hljs-attr">&quot;href&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://localhost:8080/actuator/health&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;templated&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span>
+    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;health-path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+      <span class="hljs-attr">&quot;href&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://localhost:8080/actuator/health/&#123;*path&#125;&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;templated&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+    <span class="hljs-punctuation">&#125;</span>
+  <span class="hljs-punctuation">&#125;</span>
+<span class="hljs-punctuation">&#125;</span></code></pre>
+
+<h2 id="启用端点-Endpoints"><a href="#启用端点-Endpoints" class="headerlink" title="启用端点(Endpoints)"></a>启用端点(Endpoints)</h2><p>SpringBoot内置了很多有用的端点，也可以添加自定义端点。</p>
+<p>常用的内置端点如下，完整端点列表查看Spring文档：</p>
+<ul>
+<li><em>health</em>：查看程序的健康指标</li>
+<li><em>info</em>：显示应用程序的信息，默认为空Json对象，可以在配置文件中使用 <code>info</code> 自定义 </li>
+<li><em>configprops</em>：查看通过 <code>@ConfigurationProperties</code> 注解设置的配置属性信息，包括springboot自动配置的和自己手动配置的。</li>
+<li><em>env</em>：查看环境相关的属性信息</li>
+<li><em>metrics</em>：查看JVM、CPU、服务器等运行环境相关的信息</li>
+<li><em>beans</em>：查看由Spring容器管理的全部Bean</li>
+<li><em>loggers</em>：查看日志配置信息</li>
+<li><em>mappings</em>：查看应用中通过 <code>@RequestMapping</code> 注解的全部控制器方法的相关信息（HTTP请求方式、请求头、URL路径等）</li>
+<li><em>shutdown</em>：通过此接口可以优雅的关闭应用，需要使用POST请求。</li>
+</ul>
+<p>默认情况下，只有 <em>health</em> 端点是启用的。</p>
+<p>关闭全部端点（<code>enabled-by-default</code>默认为true，只启用  <em>health</em> 端点）</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">management:</span>
+  <span class="hljs-attr">endpoints:</span>
+    <span class="hljs-attr">enabled-by-default:</span> <span class="hljs-literal">false</span></code></pre>
+
+<p>启用某个端点</p>
+<blockquote>
+<p>注意，除了要设置 <code>management.endpoint.&lt;endpoint-id&gt;.enabled = true</code> 启用端点以外，还要使用 <code>management.endpoints.web.exposure.include = &lt;endpoint-id&gt;</code> 将其暴露出去，否则端点还是无法访问，简单点说就是 **既要启用(enabled)，又要暴露(exposure)**。</p>
+<p>另外，还可以使用 <code>management.endpoints.web.exposure.exclude</code> 排除要暴露的端点。</p>
+</blockquote>
+<pre><code class="hljs yaml"><span class="hljs-attr">management:</span>
+  <span class="hljs-attr">endpoints:</span>
+    <span class="hljs-attr">enabled-by-default:</span> <span class="hljs-literal">false</span>
+    <span class="hljs-attr">web:</span>
+      <span class="hljs-attr">exposure:</span>
+        <span class="hljs-attr">include:</span> <span class="hljs-string">beans</span>
+  <span class="hljs-attr">endpoint:</span>
+    <span class="hljs-attr">beans:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span></code></pre>
+
+<p>启用多个端点只需要使用添加多个<code>management.endpoint.&lt;endpoint-id&gt;.enabled = true</code>，并在 <code>management.endpoints.web.exposure.include</code>  中暴露出去即可。一般的做法是：<strong>先禁用全部端点，再设置要启用的部分端点，然后使用通配符星号 <code>*</code> 将全部端点暴露（include）出去，最后再排除不想暴露的端点（exclude）</strong></p>
+<pre><code class="hljs yaml"><span class="hljs-attr">management:</span>
+  <span class="hljs-attr">endpoints:</span>
+    <span class="hljs-comment"># 禁用全部端点</span>
+    <span class="hljs-attr">enabled-by-default:</span> <span class="hljs-literal">false</span>
+    <span class="hljs-attr">web:</span>
+      <span class="hljs-attr">exposure:</span>
+        <span class="hljs-comment"># 暴露全部端点</span>
+        <span class="hljs-attr">include:</span> <span class="hljs-string">&#x27;*&#x27;</span>
+        <span class="hljs-comment"># 排除部分端点</span>
+        <span class="hljs-attr">exclude:</span> <span class="hljs-string">env,startup,shutdown</span>
+  <span class="hljs-comment"># 设置要启用的端点      </span>
+  <span class="hljs-attr">endpoint:</span>
+    <span class="hljs-attr">health:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">info:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">metrics:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">configprops:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">beans:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">mappings:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">env:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">startup:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">shutdown:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">loggers:</span>
+      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span></code></pre>
+
+<h2 id="自定义端点"><a href="#自定义端点" class="headerlink" title="自定义端点"></a>自定义端点</h2><h3 id="设置info信息"><a href="#设置info信息" class="headerlink" title="设置info信息"></a>设置<code>info</code>信息</h3><pre><code class="hljs yaml"><span class="hljs-attr">info:</span>
+  <span class="hljs-attr">app:</span>
+    <span class="hljs-attr">encoding:</span> <span class="hljs-string">&quot;UTF-8&quot;</span>
+    <span class="hljs-attr">java:</span>
+      <span class="hljs-attr">source:</span> <span class="hljs-string">&quot;8&quot;</span>
+      <span class="hljs-attr">target:</span> <span class="hljs-string">&quot;8&quot;</span></code></pre>
+
+<p>重启应用，访问 <em>info</em> 端点：<a target="_blank" rel="noopener" href="http://localhost:8080/actuator/info">http://localhost:8080/actuator/info</a></p>
+<pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span>
+  <span class="hljs-attr">&quot;app&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+    <span class="hljs-attr">&quot;encoding&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;UTF-8&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;java&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span>
+      <span class="hljs-attr">&quot;source&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;8&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;target&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;8&quot;</span>
+    <span class="hljs-punctuation">&#125;</span>
+  <span class="hljs-punctuation">&#125;</span>
+<span class="hljs-punctuation">&#125;</span></code></pre>
+
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        // 表格添加滚动条
+        $('table').wrap("<div class='table-wrap' style='width: 100%; overflow: auto;'></div>");
+    });
+
+</script></main>
+
+    <footer>
+
+</footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

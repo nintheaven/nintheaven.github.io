@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+
+    <title>springboot项目部署 | Nintheaven</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Nintheaven
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">作品</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title">springboot项目部署</h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#SpringBoot系列">SpringBoot系列</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-10-11</span>
+        </div>
+    </div>
+
+    <div class="content"><span id="more"></span>
+
+<h2 id="通过jar包发布项目"><a href="#通过jar包发布项目" class="headerlink" title="通过jar包发布项目"></a>通过jar包发布项目</h2><p>配置文件</p>
+<pre><code class="hljs yml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span>
+  <span class="hljs-attr">servlet:</span>
+    <span class="hljs-attr">context-path:</span> <span class="hljs-string">/</span></code></pre>
+
+<p><strong>maven构建jar包</strong></p>
+<p><code>mvn clean package</code></p>
+<p><strong>gradle构建jar包</strong></p>
+<p>在build.gradle中，配置启动类</p>
+<pre><code class="hljs groovy">apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;java&#x27;</span>
+
+jar &#123;
+    manifest &#123;
+        attributes <span class="hljs-string">&#x27;Main-Class&#x27;</span>: <span class="hljs-string">&#x27;com.zxywb.comtop.SpringBootStarter&#x27;</span>
+    &#125;
+&#125;</code></pre>
+
+<p>打包</p>
+<p><code>gradle bootjar</code></p>
+<p>将安装包上传到服务器</p>
+<p>启动相关服务</p>
+<p><code>sudo systemctl start mysql</code></p>
+<p><code>sudo /usr/local/nginx/sbin/nginx</code></p>
+<p><code>nohup redis-server &amp;</code></p>
+<p>启动java项目</p>
+<p><code>nohup java -jar blog.jar &amp;</code></p>
+<p>使用nginx代理转发，实现访问服务器80端口，转发请求到8080</p>
+<pre><code class="hljs plaintext">server &#123;
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+
+    #access_log  logs/host.access.log  main;
+
+    location / &#123;
+        #root   html;
+        #index index.html index.htm;
+        proxy_pass    http://127.0.0.1:8080;          
+    &#125;
+&#125;
+</code></pre>
+
+<p>查看端口占用情况</p>
+<p><code>lsof -i:8080</code></p>
+<p>查看进程</p>
+<p><code>ps -aux | grep blog.jar</code></p>
+<p>终止进程</p>
+<p><code>kill -9 进程号</code></p>
+<h2 id="通过war包发布项目"><a href="#通过war包发布项目" class="headerlink" title="通过war包发布项目"></a>通过war包发布项目</h2><h3 id="maven构建war包"><a href="#maven构建war包" class="headerlink" title="maven构建war包"></a>maven构建war包</h3><p>首先，在pom.xml中，将maven的打包方式设置为war(默认为jar)</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">packaging</span>&gt;</span>war<span class="hljs-tag">&lt;/<span class="hljs-name">packaging</span>&gt;</span></code></pre>
+
+<p>然后，创建一个继承自 <code>SpringBootServletInitializer</code> 的类，重写其中的 <code>configure</code> 方法</p>
+<pre><code class="hljs java"><span class="hljs-keyword">package</span> com.lypzz.config;
+
+<span class="hljs-keyword">import</span> com.lypzz.BlogApplication;
+<span class="hljs-keyword">import</span> org.springframework.boot.builder.SpringApplicationBuilder;
+<span class="hljs-keyword">import</span> org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BlogServletInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">SpringBootServletInitializer</span>
+&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">protected</span> SpringApplicationBuilder <span class="hljs-title function_">configure</span><span class="hljs-params">(SpringApplicationBuilder builder)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> builder.sources(BlogApplication.class);
+    &#125;
+&#125;</code></pre>
+
+<p>其中，<code>SpringBootServletInitializer</code>是 <code>WebApplicationInitializer</code>接口的实现类，它可以配置Spring MVC中的 <code>DispatcherServlet</code>，还会在Spring应用程序上下文中查找Filter,Servlet或ServletInitializer类型的Bean，把他们绑定到容器中。</p>
+<p>接下来，运行maven的打包命令，构建war文件</p>
+<p><code>mvn clean package</code></p>
+<p>如果构建成功，将会在target目录下(idea项目)生成 blog-0.0.1-SNAPSHOT.war 文件。</p>
+<h2 id="在服务器中部署war文件"><a href="#在服务器中部署war文件" class="headerlink" title="在服务器中部署war文件"></a>在服务器中部署war文件</h2><p>将war包重命名为blog.war，然后按照常规的部署方式进行即可。</p>
+<p>略</p>
+<h4 id="解决404问题"><a href="#解决404问题" class="headerlink" title="解决404问题"></a>解决404问题</h4><p>因为Tomcat中，用应用上下文路径区分服务器中的多个项目，所以，在访问localhost:8080之前，需要加上上下文路径，例如 localhost:8080&#x2F;blog。<br>而在项目开发过程中，默认项目上下文路径为根路劲 &#x2F;，这就导致所有访问都报404错误。</p>
+<p>spring-boot提供了配置选项，用于配置Context Path</p>
+<pre><code class="hljs yml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span>
+  <span class="hljs-attr">servlet:</span>
+    <span class="hljs-attr">context-path:</span> <span class="hljs-string">/blog</span></code></pre>
+
+<p>然后，一些访问本地静态文件的地方，都需要使用 &#x2F;blog 前缀。</p>
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        // 表格添加滚动条
+        $('table').wrap("<div class='table-wrap' style='width: 100%; overflow: auto;'></div>");
+    });
+
+</script></main>
+
+    <footer>
+
+</footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>
