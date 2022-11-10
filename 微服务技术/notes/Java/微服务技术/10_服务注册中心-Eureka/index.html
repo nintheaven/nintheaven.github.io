@@ -86,7 +86,7 @@
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-01-01</span>
+            <span>2022-01-08</span>
         </div>
     </div>
 
@@ -220,7 +220,7 @@ java -jar eureka-server-1.0-SNAPSHOT.jar --spring.profiles.active=pair-b</code><
 <h2 id="将应用注册到Eureka集群"><a href="#将应用注册到Eureka集群" class="headerlink" title="将应用注册到Eureka集群"></a>将应用注册到Eureka集群</h2><p>将Eureka客户端应用注册到单机版Eureka服务器中时，配置项 <code>eureka.client.service-url.defaultZone</code> 如下</p>
 <pre><code class="hljs yaml"><span class="hljs-string">eureka.client.service-url.defaultZone</span> <span class="hljs-string">=</span> <span class="hljs-string">http://localhost:8761/eureka/</span></code></pre>
 
-<p>注册到Eureka集群时，只需要声明多个Eureka服务地址即可</p>
+<p>注册到Eureka集群时，只需要声明多个Eureka服务地址即可，用逗号隔开</p>
 <pre><code class="hljs yaml"><span class="hljs-string">eureka.client.service-url.defaultZone</span> <span class="hljs-string">=</span> <span class="hljs-string">http://a.local:8761/eureka/,http://b.local:8762/eureka/</span></code></pre>
 
 
