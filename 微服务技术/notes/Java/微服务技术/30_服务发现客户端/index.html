@@ -125,7 +125,7 @@
 
 
 
-<h2 id="使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务"><a href="#使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务" class="headerlink" title="使用 @LoadBalanced 注解增强了的 RestTemplate 调用远程服务"></a>使用 <code>@LoadBalanced</code> 注解增强了的 <code>RestTemplate</code> 调用远程服务</h2><p>1.向Spring容器中注入 <code>RestTemplate</code> Bean，并使用注解 <code>LoadBalanced</code> 进行增强</p>
+<h2 id="使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务"><a href="#使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务" class="headerlink" title="使用 @LoadBalanced 注解增强了的 RestTemplate 调用远程服务"></a>使用 <code>@LoadBalanced</code> 注解增强了的 <code>RestTemplate</code> 调用远程服务</h2><p>1.向Spring容器中注入 <code>RestTemplate</code> Bean，并使用注解 <code>@LoadBalanced</code> 进行增强</p>
 <pre><code class="hljs java"><span class="hljs-meta">@LoadBalanced</span>
 <span class="hljs-meta">@Bean</span>
 <span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">getRestTemplate</span><span class="hljs-params">()</span>&#123;
