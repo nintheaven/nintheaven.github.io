@@ -92,7 +92,88 @@
 
     <div class="content"><span id="more"></span>
 
-<h2 id="直接使用-DiscoveryClient-获取服务信息，结合原始-RestTemplate-调用远程服务"><a href="#直接使用-DiscoveryClient-获取服务信息，结合原始-RestTemplate-调用远程服务" class="headerlink" title="直接使用 DiscoveryClient 获取服务信息，结合原始 RestTemplate 调用远程服务"></a>直接使用 <code>DiscoveryClient</code> 获取服务信息，结合原始 <code>RestTemplate</code> 调用远程服务</h2><h2 id="使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务"><a href="#使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务" class="headerlink" title="使用 @LoadBalanced 注解增强了的 RestTemplate 调用远程服务"></a>使用 <code>@LoadBalanced</code> 注解增强了的 <code>RestTemplate</code> 调用远程服务</h2><h2 id="使用-Feign-的方式调用远程服务"><a href="#使用-Feign-的方式调用远程服务" class="headerlink" title="使用 Feign 的方式调用远程服务"></a>使用 <code>Feign</code> 的方式调用远程服务</h2></div>
+<h2 id="直接使用-DiscoveryClient-获取服务信息，结合基础的-RestTemplate-调用远程服务"><a href="#直接使用-DiscoveryClient-获取服务信息，结合基础的-RestTemplate-调用远程服务" class="headerlink" title="直接使用 DiscoveryClient 获取服务信息，结合基础的 RestTemplate 调用远程服务"></a>直接使用 <code>DiscoveryClient</code> 获取服务信息，结合基础的 <code>RestTemplate</code> 调用远程服务</h2><p>服务A（服务消费者）中调用服务B（服务提供者）中的接口。</p>
+<p>1.在服务A的引导类上添加注解 <code>@EnableDiscoveryClient</code></p>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-meta">@EnableEurekaClient</span>
+<span class="hljs-meta">@RefreshScope</span>
+<span class="hljs-meta">@EnableDiscoveryClient</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceAApp</span> &#123;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(ServiceAApp.class, args);
+    &#125;
+&#125;</code></pre>
+
+<p>2.从Spring容器中获取一个 <code>DiscoveryClient</code> 对象</p>
+<blockquote>
+<p>注意：应该使用 <code>org.springframework.cloud.client.discovery.DiscoveryClient</code> ,而不是 <code>com.netflix.discovery.DiscoveryClient</code>。如果报错 <em>Could not autowire. No beans of ‘DiscoveryClient’ type found.</em> 很可能是导错包了。</p>
+</blockquote>
+<pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">private</span> DiscoveryClient discoveryClient;</code></pre>
+
+<p>3.使用 <code>DiscoveryClient</code> 从Eureka服务器获取注册到其中的微服务实例，进而获取到微服务的物理地址（ip,port等）。然后使用基础的 <code>RestTemplate</code> 调用远程服务接口</p>
+<pre><code class="hljs java">List&lt;ServiceInstance&gt; instances = discoveryClient.getInstances(<span class="hljs-string">&quot;service-b&quot;</span>);
+<span class="hljs-keyword">if</span>(instances.size() &gt; <span class="hljs-number">0</span>)&#123;
+    <span class="hljs-type">ServiceInstance</span> <span class="hljs-variable">instance</span> <span class="hljs-operator">=</span> instances.get(<span class="hljs-number">0</span>);
+    <span class="hljs-type">String</span> <span class="hljs-variable">uri</span> <span class="hljs-operator">=</span> instance.getUri().toString();
+    <span class="hljs-type">RestTemplate</span> <span class="hljs-variable">restTemplate</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplate</span>();
+    <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> String.format(<span class="hljs-string">&quot;%s/%s&quot;</span>, uri, <span class="hljs-string">&quot;test/foo&quot;</span>);
+    ResponseEntity&lt;String&gt; responseEntity = restTemplate.exchange(url, HttpMethod.GET, <span class="hljs-literal">null</span>, String.class);
+    <span class="hljs-type">String</span> <span class="hljs-variable">responseBody</span> <span class="hljs-operator">=</span> responseEntity.getBody();
+&#125;</code></pre>
+
+
+
+<h2 id="使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务"><a href="#使用-LoadBalanced-注解增强了的-RestTemplate-调用远程服务" class="headerlink" title="使用 @LoadBalanced 注解增强了的 RestTemplate 调用远程服务"></a>使用 <code>@LoadBalanced</code> 注解增强了的 <code>RestTemplate</code> 调用远程服务</h2><p>1.向Spring容器中注入 <code>RestTemplate</code> Bean，并使用注解 <code>LoadBalanced</code> 进行增强</p>
+<pre><code class="hljs java"><span class="hljs-meta">@LoadBalanced</span>
+<span class="hljs-meta">@Bean</span>
+<span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">getRestTemplate</span><span class="hljs-params">()</span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplate</span>();
+&#125;</code></pre>
+
+<p>2.使用被 <code>@LoadBalanced</code> 注解的 <code>RestTemplate</code> 调用远程服务。不需要手动获取远程服务的物理位置，只需要知道服务ID即可。并且自动启用了负载均衡机制，默认是Ribbon，采用轮询策略。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">private</span> RestTemplate restTemplate;
+
+<span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> String.format(<span class="hljs-string">&quot;%s/%s&quot;</span>, <span class="hljs-string">&quot;http://service-b&quot;</span>, <span class="hljs-string">&quot;test/foo&quot;</span>);
+ResponseEntity&lt;String&gt; responseEntity = restTemplate.exchange(url, HttpMethod.GET, <span class="hljs-literal">null</span>, String.class);
+<span class="hljs-type">String</span> <span class="hljs-variable">responseBody</span> <span class="hljs-operator">=</span> responseEntity.getBody();</code></pre>
+
+
+
+<h2 id="使用-Feign-的方式调用远程服务"><a href="#使用-Feign-的方式调用远程服务" class="headerlink" title="使用 Feign 的方式调用远程服务"></a>使用 <code>Feign</code> 的方式调用远程服务</h2><p>0.添加 <code>openfeign</code> 依赖</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<p>1.使用注解 <code>@EnableFeignClients</code> 启用Feign客户端</p>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-meta">@EnableEurekaClient</span>
+<span class="hljs-meta">@RefreshScope</span>
+<span class="hljs-meta">@EnableFeignClients</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceAApp</span> &#123;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(ServiceAApp.class, args);
+    &#125;
+&#125;</code></pre>
+
+<p>2.定义接口以及抽象方法，映射远程服务的Rest端点，Spring会自动生成用于调用远程服务的代理类。</p>
+<p>按照惯例，在 <em>service&#x2F;client</em> 目录下，创建 <code>ServiceBFeignClient</code> 接口。用 <code>FeignClient</code> 注解，并声明其映射的服务ID</p>
+<pre><code class="hljs java"><span class="hljs-meta">@FeignClient(name = &quot;service-b&quot;)</span>
+<span class="hljs-meta">@RequestMapping(&quot;/test&quot;)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ServiceBFeignClient</span> &#123;
+
+    <span class="hljs-meta">@GetMapping(&quot;foo&quot;)</span>
+    String <span class="hljs-title function_">foo</span><span class="hljs-params">()</span>;
+&#125;</code></pre>
+
+<p>3.客户端只需要调用接口中的方法即可</p>
+<pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">responseBody</span> <span class="hljs-operator">=</span> serviceBFeignClient.foo();</code></pre>
+
+</div>
 </div>
 
 <div class="post-end">
