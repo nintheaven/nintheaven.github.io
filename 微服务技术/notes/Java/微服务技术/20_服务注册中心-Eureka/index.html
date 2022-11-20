@@ -131,7 +131,11 @@
     <span class="hljs-attr">register-with-eureka:</span> <span class="hljs-literal">false</span>
     <span class="hljs-attr">fetch-registry:</span> <span class="hljs-literal">false</span></code></pre>
 
-<p>4.启动应用，访问 <a target="_blank" rel="noopener" href="http://localhost:8761/">http://localhost:8761</a> ，即可看到eureka控制台页面</p>
+<p>4.启动应用</p>
+<ul>
+<li>查看仪表盘页面 <a target="_blank" rel="noopener" href="http://localhost:8761/">http://localhost:8761</a></li>
+<li>访问Rest API端点 <a target="_blank" rel="noopener" href="http://localhost:8761/eureka/apps/">http://localhost:8761/eureka/apps/</a><app_id> 。默认使用xml返回注册到服务器的应用实例，修改Accept请求头微<em>application&#x2F;json</em>将以Json格式返回。</li>
+</ul>
 <h2 id="将应用作为客户端注册到Eureka服务器"><a href="#将应用作为客户端注册到Eureka服务器" class="headerlink" title="将应用作为客户端注册到Eureka服务器"></a>将应用作为客户端注册到Eureka服务器</h2><p>0.添加依赖</p>
 <pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
@@ -231,6 +235,20 @@ java -jar eureka-server-1.0-SNAPSHOT.jar --spring.profiles.active=pair-b</code><
 java -jar service-a-1.0-SNAPSHOT.jar --spring.profiles.active=pair-b</code></pre>
 
 <p>启动完成后，刷新Eureka服务器控制台页面，在当前已注册实例列表栏中，可以看到微服务A有2个实例注册进来。</p>
+<h2 id="Eureka常用配置"><a href="#Eureka常用配置" class="headerlink" title="Eureka常用配置"></a>Eureka常用配置</h2><ul>
+<li><p><code>eureka.instance.hostname</code> Eureka实例主机名</p>
+</li>
+<li><p><code>eureka.instance.prefer-ip-address</code> 是否将服务的ip注册到Eureka服务器（默认注册主机名）</p>
+</li>
+<li><p><code>eureka.client.register-with-eureka</code> 是否注册到Eureka服务器</p>
+</li>
+<li><p><code>eureka.client.fetch-registry</code> 是否从Eureka服务器拉取其注册表信息，并缓存到客户端本地</p>
+</li>
+<li><p><code>eureka.client.service-url.defaultZone</code> 查找Eureka服务的地址</p>
+</li>
+<li><p><code>eureka.server.wait-time-in-ms-when-sync-empty</code> Eureka服务器在接收请求之前等待的时间，单位：ms</p>
+</li>
+</ul>
 </div>
 </div>
 

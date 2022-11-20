@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="keyword" content="">
 
-    <title>服务注册中心-Zookeeper | Nintheaven</title>
+    <title>客户端负载均衡 | Nintheaven</title>
     <link rel="shortcut icon" href="/images/favicon.ico">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -75,7 +75,7 @@
 </header>
 
     <main><div class="post">
-    <h3 class="title">服务注册中心-Zookeeper</h3>
+    <h3 class="title">客户端负载均衡</h3>
 
     <div class="meta">
         <div>
@@ -86,25 +86,43 @@
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-10-11</span>
+            <span>2022-02-01</span>
         </div>
     </div>
 
     <div class="content"><span id="more"></span>
 
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p><a target="_blank" rel="noopener" href="https://archive.apache.org/dist/zookeeper/">https://archive.apache.org/dist/zookeeper/</a></p>
-<p><code>zkServer.sh start</code></p>
-<p><code>zkServer.sh stop</code></p>
-<p><code>zkServer.sh restart</code></p>
-<p><code>zkServer.sh status</code></p>
-<p><code>zkCli.sh status</code></p>
-<h1 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jkin/p/14778342.html">https://www.cnblogs.com/jkin/p/14778342.html</a></p>
-<p>查看当前身份认证</p>
-<p><code>getAcl /</code></p>
-<p>增加一个认证用户</p>
-<p><code>addauth digest SuperAdmin:hello</code></p>
-<p>设置权限</p>
-<p><code>setAcl / auth:SuperAdmin:hello:cdrwa</code></p>
+<h2 id="Ribbon"><a href="#Ribbon" class="headerlink" title="Ribbon"></a>Ribbon</h2><h4 id="引入Ribbon"><a href="#引入Ribbon" class="headerlink" title="引入Ribbon"></a>引入Ribbon</h4><p>0.添加依赖</p>
+<p>ribbon是eureka-server默认的客户端负载均衡库，添加了 <code>spring-cloud-starter-netflix-eureka-server</code> 依赖后，会自动引入</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-server<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+
+
+<h2 id="LoadBalancer"><a href="#LoadBalancer" class="headerlink" title="LoadBalancer"></a>LoadBalancer</h2><h4 id="引入loadbalancer"><a href="#引入loadbalancer" class="headerlink" title="引入loadbalancer"></a>引入loadbalancer</h4><p>0.添加依赖</p>
+<p>除了添加 &#96;&#96; 依赖外，还需要排除eureka-server默认的ribbon库</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-server<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span>
+        <span class="hljs-comment">&lt;!--排除默认的ribbon--&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-ribbon<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+<span class="hljs-comment">&lt;!--引入loadbalancer--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-loadbalancer<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<p>1.在配置文件中，禁用ribbon。</p>
+<pre><code class="hljs properties"><span class="hljs-attr">spring.cloud.loadbalancer.ribbon.enabled</span> = <span class="hljs-string">false</span></code></pre>
+
 </div>
 </div>
 
