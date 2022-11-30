@@ -182,9 +182,7 @@
 
 <p>1.创建bootstrap配置文件，设置应用名(服务ID)、配置服务器uri。</p>
 <p>当客户端应用启动时，会使用 <code>spring.cloud-config.uri</code> 配置的URI，<code>spring.application.name</code> 配置的应用名，以及 <code>spring.profiles.active</code> 激活的环境名（默认使用default环境），从配置服务器读取配置信息。例如，下面的配置对应的请求地址为：<a target="_blank" rel="noopener" href="http://localhost:8800/service-a/dev">http://localhost:8800/service-a/dev</a></p>
-<pre><code class="hljs yaml"><span class="hljs-attr">server:</span>
-  <span class="hljs-attr">port:</span> <span class="hljs-number">9000</span>
-<span class="hljs-attr">spring:</span>
+<pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
   <span class="hljs-attr">application:</span>
     <span class="hljs-attr">name:</span> <span class="hljs-string">service-a</span>
   <span class="hljs-attr">cloud:</span>

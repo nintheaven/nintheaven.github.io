@@ -171,7 +171,10 @@ ResponseEntity&lt;String&gt; responseEntity = restTemplate.exchange(url, HttpMet
 &#125;</code></pre>
 
 <p>3.客户端只需要调用接口中的方法即可</p>
-<pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">responseBody</span> <span class="hljs-operator">=</span> serviceBFeignClient.foo();</code></pre>
+<pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">private</span> ServiceBFeignClient serviceBFeignClient;
+
+<span class="hljs-type">String</span> <span class="hljs-variable">responseBody</span> <span class="hljs-operator">=</span> serviceBFeignClient.foo();</code></pre>
 
 </div>
 </div>

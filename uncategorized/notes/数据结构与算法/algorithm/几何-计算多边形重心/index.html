@@ -86,11 +86,46 @@
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-11-03</span>
+            <span>2022-11-30</span>
         </div>
     </div>
 
-    <div class="content"></div>
+    <div class="content"><span id="more"></span>
+
+
+
+<pre><code class="hljs java"><span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * 计算多边形重心</span>
+<span class="hljs-comment"> * 以第一个点为起点,将多边形分为n-2个三角形,分别计算每个三角形的重心和面积.最后计算得出多边形的重心</span>
+<span class="hljs-comment"> * &lt;em&gt;points为多边形坐标集,首尾相连&lt;/em&gt;</span>
+<span class="hljs-comment"> * */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Point2D.Double <span class="hljs-title function_">calcCenterOfGravity</span><span class="hljs-params">(List&lt;Point2D.Double&gt; polygonPoints)</span>&#123;
+    <span class="hljs-comment">// 留头去尾</span>
+    List&lt;Point2D.Double&gt; points = polygonPoints.subList(<span class="hljs-number">0</span>, polygonPoints.size() - <span class="hljs-number">1</span>);
+
+    <span class="hljs-type">double</span> <span class="hljs-variable">sumXArea</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+    <span class="hljs-type">double</span> <span class="hljs-variable">sumYArea</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+    <span class="hljs-type">double</span> <span class="hljs-variable">sumArea</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+
+    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> points.size();
+    Point2D.Double A,B,C;
+    A = points.get(<span class="hljs-number">0</span>);
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; N-<span class="hljs-number">1</span>; i++) &#123;
+        B = points.get(i);
+        C = points.get(i + <span class="hljs-number">1</span>);
+        <span class="hljs-type">double</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> (A.x + B.x + C.x) / <span class="hljs-number">3.</span>;
+        <span class="hljs-type">double</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> (A.y + B.y + C.y) / <span class="hljs-number">3.</span>;
+        <span class="hljs-type">double</span> <span class="hljs-variable">area</span> <span class="hljs-operator">=</span> ((B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y)) / <span class="hljs-number">2.</span>;
+
+        sumXArea += x * area;
+        sumYArea += y * area;
+        sumArea += area;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point2D</span>.Double(sumXArea / sumArea, sumYArea / sumArea);
+&#125;</code></pre>
+
+</div>
 </div>
 
 <div class="post-end">

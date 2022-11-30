@@ -86,11 +86,182 @@
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-11-03</span>
+            <span>2022-11-30</span>
         </div>
     </div>
 
-    <div class="content"></div>
+    <div class="content"><span id="more"></span>
+
+<pre><code class="hljs java"><span class="hljs-keyword">package</span> com.syy.zxywb.dlkjj.pse.common.utils;
+
+<span class="hljs-keyword">import</span> java.awt.geom.*;
+<span class="hljs-keyword">import</span> java.util.*;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * 计算凸包</span>
+<span class="hljs-comment"> * */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConvexHull</span> &#123;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Graham scan: 扫描法</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;Point2D.Double&gt; grahamScan(List&lt;Point2D.Double&gt; points)&#123;
+        <span class="hljs-comment">// 0.去除点集中重复的点</span>
+        points = removeDuplicatePoints(points);
+
+        <span class="hljs-comment">// 1.找出最底的点P0(y值最小),如果有多个这样的点,取最左边(x值最小)的一个</span>
+        Point2D.<span class="hljs-type">Double</span> <span class="hljs-variable">p0</span> <span class="hljs-operator">=</span> findBottommostPoint(points);
+        points.remove(p0);
+
+        <span class="hljs-comment">// 2.找出余下的点P1-Pn(按照每个点与P0的极角从小到大排序,即逆时针顺序,极角相同的点,只保留距离P0最远的点)</span>
+        points = removeCollinearPoints(points, p0);
+        points = sortByPolarAngle(points, p0);
+
+        <span class="hljs-comment">// 如果除P0外剩余的点不足2个,则构不成多边形</span>
+        <span class="hljs-keyword">if</span>(points.size() &lt; <span class="hljs-number">2</span>)&#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(<span class="hljs-number">0</span>);
+        &#125;
+
+        <span class="hljs-comment">// 3.逆时针遍历点集,移除不向左转的点(非凸点)</span>
+        points.add(<span class="hljs-number">0</span>, p0);
+        List&lt;Point2D.Double&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
+        stack.add(<span class="hljs-number">0</span>, points.get(<span class="hljs-number">0</span>));
+        stack.add(<span class="hljs-number">0</span>, points.get(<span class="hljs-number">1</span>));
+        stack.add(<span class="hljs-number">0</span>, points.get(<span class="hljs-number">2</span>));
+
+        <span class="hljs-type">int</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> points.size() - <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">3</span>; i &lt;= m; i++) &#123;
+            Point2D.<span class="hljs-type">Double</span> <span class="hljs-variable">pi</span> <span class="hljs-operator">=</span> points.get(i);
+            Point2D.<span class="hljs-type">Double</span> <span class="hljs-variable">top</span> <span class="hljs-operator">=</span> stack.get(<span class="hljs-number">0</span>);
+            Point2D.<span class="hljs-type">Double</span> <span class="hljs-variable">nextTop</span> <span class="hljs-operator">=</span> stack.get(<span class="hljs-number">1</span>);
+
+            <span class="hljs-keyword">while</span>(!isTurnLeft(nextTop, top, pi))&#123;
+                stack.remove(<span class="hljs-number">0</span>);
+                top = stack.get(<span class="hljs-number">0</span>);
+                nextTop = stack.get(<span class="hljs-number">1</span>);
+            &#125;
+            stack.add(<span class="hljs-number">0</span>, points.get(i));
+        &#125;
+
+        <span class="hljs-comment">// 首尾相连</span>
+        stack.add(<span class="hljs-number">0</span>, stack.get(stack.size() - <span class="hljs-number">1</span>));
+        <span class="hljs-keyword">return</span> stack;
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Jarvis march: 步进法</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;Point2D.Double&gt; jarvisMarch(List&lt;Point2D.Double&gt; points)&#123;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 去除点集中重复的点</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> List&lt;Point2D.Double&gt; removeDuplicatePoints(List&lt;Point2D.Double&gt; points)&#123;
+        List&lt;Point2D.Double&gt; ret = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
+        <span class="hljs-keyword">for</span>(Point2D.Double point : points) &#123;
+            <span class="hljs-keyword">if</span>(!ret.contains(point))&#123;
+                ret.add(point);
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> ret;
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 寻找最低的点,如果有多个,取最左边的一个</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Point2D.Double <span class="hljs-title function_">findBottommostPoint</span><span class="hljs-params">(List&lt;Point2D.Double&gt; points)</span> &#123;
+        Point2D.<span class="hljs-type">Double</span> <span class="hljs-variable">p0</span> <span class="hljs-operator">=</span> points.get(<span class="hljs-number">0</span>);
+        Point2D.Double pTemp;
+        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; points.size(); i++) &#123;
+            pTemp = points.get(i);
+            <span class="hljs-keyword">if</span>(pTemp.y &lt; p0.y || (pTemp.y == p0.y &amp;&amp; pTemp.x &lt; p0.x))&#123;
+                p0 = pTemp;
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> p0;
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 计算2个点的极角(相对于P0)</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">calcPolarAngle</span><span class="hljs-params">(Point2D.Double p0, Point2D.Double p1, Point2D.Double p2)</span>&#123;
+        <span class="hljs-keyword">return</span> (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 计算2点间距</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">calcDistance</span><span class="hljs-params">(Point2D.Double p1, Point2D.Double p2)</span>&#123;
+        <span class="hljs-keyword">return</span> Math.sqrt(Math.pow(p1.x - p2.x, <span class="hljs-number">2</span>) + Math.pow(p1.y - p2.y, <span class="hljs-number">2</span>));
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 移除共线(极角相同)的点: 共线的点,只保留距离P0最远的点</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> List&lt;Point2D.Double&gt; removeCollinearPoints(List&lt;Point2D.Double&gt; points, Point2D.Double p0)&#123;
+        List&lt;Point2D.Double&gt; destPoints = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(points);
+
+        Point2D.Double p1;
+        Point2D.Double p2;
+        <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> destPoints.size();
+        List&lt;Point2D.Double&gt; removedPoints = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
+        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; N - <span class="hljs-number">1</span>; i++) &#123;
+            p1 = destPoints.get(i);
+            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>; j &lt; N; j++) &#123;
+                p2 = destPoints.get(j);
+
+                <span class="hljs-type">double</span> <span class="hljs-variable">angle</span> <span class="hljs-operator">=</span> calcPolarAngle(p0, p1, p2);
+                <span class="hljs-keyword">if</span>(angle == <span class="hljs-number">0.</span>) &#123;
+                    <span class="hljs-keyword">if</span>(calcDistance(p0, p1) &lt;= calcDistance(p0, p2)) &#123;
+                        removedPoints.add(p1);
+                    &#125; <span class="hljs-keyword">else</span> &#123;
+                        removedPoints.add(p2);
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+        destPoints.removeAll(removedPoints);
+        <span class="hljs-keyword">return</span> destPoints;
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 按照极角大小,将点集进行排序(相对于P0的逆时针方向进行排序)</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> List&lt;Point2D.Double&gt; sortByPolarAngle(List&lt;Point2D.Double&gt; points, Point2D.Double p0) &#123;
+        List&lt;Point2D.Double&gt; destPoints = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(points);
+
+        Comparator&lt;Point2D.Double&gt; comparator = (p1, p2) -&gt; &#123;
+            <span class="hljs-type">double</span> <span class="hljs-variable">angle</span> <span class="hljs-operator">=</span> calcPolarAngle(p0, p1, p2);
+            <span class="hljs-comment">// System.out.printf(&quot;%s * %s = %s%n&quot;, p1, p2, angle);</span>
+            <span class="hljs-keyword">return</span> angle == <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : angle &gt; <span class="hljs-number">.0</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
+        &#125;;
+
+        destPoints.sort(comparator);
+        <span class="hljs-keyword">return</span> destPoints;
+    &#125;
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 判断线段p0-&gt;p1和p1-&gt;p2是否在p1处左转</span>
+<span class="hljs-comment">     * */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isTurnLeft</span><span class="hljs-params">(Point2D.Double p0, Point2D.Double p1, Point2D.Double p2)</span>&#123;
+        <span class="hljs-keyword">return</span> calcPolarAngle(p0, p2, p1) &lt; <span class="hljs-number">0</span>;
+    &#125;
+&#125;
+</code></pre>
+
+</div>
 </div>
 
 <div class="post-end">
