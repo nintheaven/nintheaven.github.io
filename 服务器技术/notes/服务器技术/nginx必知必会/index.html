@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="keyword" content="">
 
-    <title>nginx配置入门 | Nintheaven</title>
+    <title>nginx必知必会 | Nintheaven</title>
     <link rel="shortcut icon" href="/images/favicon.ico">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -75,7 +75,7 @@
 </header>
 
     <main><div class="post">
-    <h3 class="title">nginx配置入门</h3>
+    <h3 class="title">nginx必知必会</h3>
 
     <div class="meta">
         <div>
@@ -86,14 +86,13 @@
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-10-11</span>
+            <span>2022-12-10</span>
         </div>
     </div>
 
     <div class="content"><span id="more"></span>
 
-<p>nginx默认配置</p>
-<pre><code class="hljs plaintext">#user  nobody;
+<h2 id="nginx默认配置"><a href="#nginx默认配置" class="headerlink" title="nginx默认配置"></a>nginx默认配置</h2><pre><code class="hljs plaintext">#user  nobody;
 worker_processes  1;
 
 #error_log  logs/error.log;
@@ -213,14 +212,15 @@ http &#123;
 
 <!--more-->
 
-<h2 id="Nginx配置文件的语法"><a href="#Nginx配置文件的语法" class="headerlink" title="Nginx配置文件的语法"></a>Nginx配置文件的语法</h2><p>语法：使用<strong>键值对</strong>，一个键可以对应多个值，用空格分割，用分号结尾。</p>
+<h2 id="Nginx配置文件的语法"><a href="#Nginx配置文件的语法" class="headerlink" title="Nginx配置文件的语法"></a>Nginx配置文件的语法</h2><p><strong>注释</strong>，使用#</p>
+<p><strong>键值对</strong>，一个键可以对应多个值，用空格分割，用分号结尾。</p>
 <blockquote>
 <p>注意：如果值中包含空格等特殊字符，需要将值用单(双)引号包围。</p>
 </blockquote>
 <pre><code class="hljs plaintext">worker_processes  1;
 error_log  logs/error.log  notice;</code></pre>
 
-<p><strong>块配置项</strong>,使用大括号{}，可以嵌套</p>
+<p><strong>块配置项</strong>,使用名称和大括号{}，可以嵌套，内层块继承外层块中的配置，当内外层配置发生冲突时，哪个配置生效与具体的配置项有关。</p>
 <pre><code class="hljs plaintext">events &#123;
 
 &#125;
@@ -233,30 +233,33 @@ http &#123;
     &#125;
 &#125;</code></pre>
 
-<p><strong>注释</strong>：使用井号#注释</p>
 <p><strong>单位</strong>：空间大小单位(K或k，M或m)，时间单位（ms,s,m,h,d,w,M,y）</p>
 <p><strong>变量</strong>：前面加上美元符号$</p>
-<h2 id="基础-通用-配置"><a href="#基础-通用-配置" class="headerlink" title="基础(通用)配置"></a>基础(通用)配置</h2><p><strong>Nginx是否以守护进程方式运行</strong></p>
+<h2 id="nginx基础配置"><a href="#nginx基础配置" class="headerlink" title="nginx基础配置"></a>nginx基础配置</h2><p><strong>Nginx是否以守护进程方式运行</strong></p>
 <pre><code class="hljs plaintext">daemon on|off;</code></pre>
 
-<p>默认on</p>
+<p>默认on。</p>
 <p><strong>是否以master&#x2F;worker方式工作</strong></p>
 <pre><code class="hljs plaintext">master_process on|off;</code></pre>
 
-<p>默认on,一个master进程只负责管理多个worker进程，worker进程处理具体的请求。</p>
+<p>默认on,一个master进程只负责管理多个worker进程，worker进程处理具体的请求。如果off，就只用master来处理请求。</p>
 <p><strong>error日志设置</strong></p>
 <pre><code class="hljs plaintext">error_log  /path/file level;</code></pre>
 
 <p>level可取debug,info,notice,warn,error,crit,alert,emerg,日志级别依次增强。</p>
-<pre><code class="hljs plaintext">error_log  logs/error.log error;</code></pre>
+<pre><code class="hljs plaintext">error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;</code></pre>
 
 <p><strong>定义环境变量</strong></p>
 <pre><code class="hljs plaintext">env VAR;
 env VAR=VALUE;</code></pre>
 
 <p><strong>嵌入其它配置文件</strong></p>
+<p>可以是绝对路径和相对路径，相对路径以conf目录为参照路径</p>
 <pre><code class="hljs plaintext">#include /path/file;
-include       mime.types;</code></pre>
+include       mime.types;
+include       server/*.conf</code></pre>
 
 <p><strong>pid文件路径</strong></p>
 <pre><code class="hljs plaintext">pid        logs/nginx.pid;</code></pre>
@@ -279,57 +282,68 @@ worker_cpu_affinity 1000 0100 0010 0001;</code></pre>
 <pre><code class="hljs plaintext">worker_priority 0;</code></pre>
 
 <p>默认0。取值范围为-20~19,值越小，优先级越高，但不建议比内核进程的值(-5)还要小。</p>
-<p><strong>是否打开accept锁</strong></p>
-<pre><code class="hljs plaintext">accept_mutex on|off;</code></pre>
-
-<p>默认on。如果关闭，那么建立TCP连接的耗时会更短，但是worker进程之间的负载会非常不均衡。</p>
-<p><code>accept_mutex</code>是负载均衡锁。这把锁可以让多个worker进程轮流的，序列化的与新的客户建立TCP连接。当某个worker进程建立的连接数量达到 <code>worker_connections</code> 配置的最大连接数的 7&#x2F;8 时，nginx会大大的减小该worker进行试图建立新连接的机会，以此实现所有worker进程之上处理的客户请求数尽量接近。</p>
-<pre><code class="hljs plaintext">events &#123;
+<p><strong>event块配置项</strong></p>
+<p>每个worker进程的最大连接数</p>
+<pre><code class="hljs plaintext">events&#123;
     worker_connections  1024;
-    accept_mutex        on;
 &#125;</code></pre>
 
-<p><strong>worker进程获取accept锁失败后,允许再次试图获取锁的延迟时间</strong></p>
-<pre><code class="hljs plaintext">events &#123;
-    worker_connections  1024;
-    accept_mutex        on;
-    accept_mutext_delay 500ms;
-&#125;</code></pre>
-
-<p>默认500ms。</p>
-<p><strong>选择事件模型</strong></p>
+<p>选择事件模型。默认情况下，Nginx会自动使用最合适的的事件模型。</p>
+<p>对于linux系统来说，可供选择的事件驱动模型有 poll,select和epoll3种，epoll是性能最强的。</p>
 <pre><code class="hljs plaintext">events &#123;
     worker_connections  1024;
     use epoll;
 &#125;</code></pre>
 
-<p>默认情况下，Nginx会自动使用最合适的的事件模型。</p>
-<p>对于linux系统来说，可供选择的事件驱动模型有 poll,select和epoll3种，epoll时性能最强的。</p>
-<p><strong>每个worker进程的最大连接数</strong></p>
-<pre><code class="hljs plaintext">events&#123;
+<p>是否打开accept锁。默认on。如果关闭，那么建立TCP连接的耗时会更短，但是worker进程之间的负载会非常不均衡。</p>
+<p><code>accept_mutex</code>是负载均衡锁。这把锁可以让多个worker进程轮流的、序列化的与新的客户建立TCP连接。当某个worker进程建立的连接数量达到 <code>worker_connections</code> 配置的最大连接数的 7&#x2F;8 时，nginx会大大的减小该worker进行试图建立新连接的机会，以此实现所有worker进程之上处理的客户请求数尽量接近。</p>
+<pre><code class="hljs plaintext">events &#123;
     worker_connections  1024;
+    use epoll;
+    accept_mutex        on;
 &#125;</code></pre>
 
+<p>worker进程获取accept锁失败后,允许再次试图获取锁的延迟时间，默认500ms。</p>
+<pre><code class="hljs plaintext">events &#123;
+    worker_connections  1024;
+    use epoll;
+    accept_mutex        on;
+    accept_mutext_delay 500ms;
+&#125;</code></pre>
 
-<h2 id="静态Web内容服务器"><a href="#静态Web内容服务器" class="headerlink" title="静态Web内容服务器"></a>静态Web内容服务器</h2><p>配置静态Web服务器时，常用的模块</p>
-<ul>
-<li>ngx_http_core_module</li>
-<li>ngx_http_index_module</li>
-<li>ngx_http_gzip_filter_module</li>
-<li>ngx_http_image_filter_module</li>
-</ul>
-<p>HTTP配置项位于http,server,location,upstream,if等配置块下。</p>
-<h3 id="虚拟主机与请求的分发"><a href="#虚拟主机与请求的分发" class="headerlink" title="虚拟主机与请求的分发"></a>虚拟主机与请求的分发</h3><p>对于多个主机域名共用同一个IP地址的情况，可以在Nginx配置中，为每个域名配置一个server块，通过 <code>server_name</code>配置其域名。这样，每个server块就代表一个虚拟主机，它只处理与之对应的主机的请求。一台服务器上的Nginx以不同的方式处理访问不同主机域名的HTTP请求。</p>
-<p><strong>监听端口与主机名称</strong></p>
+<p><strong>黑名单和白名单</strong></p>
+<pre><code class="hljs plaintext">deny 172.16.8.248;
+deny all;
+allow 10.150.41.207;
+allow all;</code></pre>
+
+
+
+<h2 id="http模块配置项"><a href="#http模块配置项" class="headerlink" title="http模块配置项"></a>http模块配置项</h2><p>在nginx中，Web服务器相关的功能主要由 <em>ngx_http_core_module</em> 核心模块实现，包括http,server,location,upstream,if等配置块。</p>
+<h3 id="监听端口"><a href="#监听端口" class="headerlink" title="监听端口"></a>监听端口</h3><p>listen监听端口，可以使用ip,端口,主机名</p>
 <pre><code class="hljs plaintext">http&#123;
     server&#123;
         listen 80;
-        # listen       443 ssl;
-        server_name localhost;
+        #listen 127.0.0.1;
+        #listen 127.0.0.1:80;
+        #listen *:80;
+        #listen localhost:80;   # 使用域名
+        #listen 80 default;     # 或default_server，设置当前server为默认
+        # listen       443 ssl; # 基于ssl协议
     &#125;
 &#125;</code></pre>
 
-<p><strong>location匹配URL</strong></p>
+<h3 id="主机名称"><a href="#主机名称" class="headerlink" title="主机名称"></a>主机名称</h3><pre><code class="hljs plaintext">http&#123;
+    server&#123;
+		server_name localhost;
+		server_name www.baidu.com;
+		server_name *.baidu.com;
+		server_name www.baidu.*;
+		server_name 
+	&#125;
+&#125;</code></pre>
+
+<h3 id="location匹配URL"><a href="#location匹配URL" class="headerlink" title="location匹配URL"></a>location匹配URL</h3><p><strong>语法</strong></p>
 <pre><code class="hljs plaintext">http&#123;
     server&#123;
         location [=|~|~*|^~|@]/uri &#123;
@@ -352,14 +366,14 @@ worker_cpu_affinity 1000 0100 0010 0001;</code></pre>
 </li>
 <li><p>uri参数支持使用正则表达式</p>
 </li>
-<li><p>uri为 &#x2F; 可以匹配所有请求</p>
-  <pre><code class="hljs plaintext">location / &#123;
-
-&#125;</code></pre></li>
+<li><p>uri为 &#x2F; 可以匹配所有请求，当有多个location时，优先级最低</p>
+  <pre><code class="hljs plaintext">location / &#123;&#125;
+location = /index
+location ~* \.(gif|jpg|jpeg)$ &#123;&#125;</code></pre></li>
 </ul>
 <p><strong>文件路径的定义</strong></p>
-<p><code>root</code>: 资源文件最终路径为 root+location+资源剩余路径</p>
-<p><code>alias</code>: 资源文件最终路径为 alias+资源剩余路径</p>
+<p><code>root</code>: 资源文件最终路径为 root+location+资源剩余路径。root可以定义在http,server,location,if配置块中。</p>
+<p><code>alias</code>: 资源文件最终路径为 alias+资源剩余路径，支持正则表达式。alias只能用在location配置块中。</p>
 <pre><code class="hljs plaintext">http&#123;
     server&#123;
         location /conf &#123;
@@ -411,38 +425,70 @@ worker_cpu_affinity 1000 0100 0010 0001;</code></pre>
     &#125;
 &#125;</code></pre>
 
-<h3 id="内存及磁盘资源的分配"><a href="#内存及磁盘资源的分配" class="headerlink" title="内存及磁盘资源的分配"></a>内存及磁盘资源的分配</h3><h3 id="网络连接的设置"><a href="#网络连接的设置" class="headerlink" title="网络连接的设置"></a>网络连接的设置</h3><h3 id="MEME类型的设置"><a href="#MEME类型的设置" class="headerlink" title="MEME类型的设置"></a>MEME类型的设置</h3><h3 id="对客户端请求的限制"><a href="#对客户端请求的限制" class="headerlink" title="对客户端请求的限制"></a>对客户端请求的限制</h3><h3 id="优化文件操作"><a href="#优化文件操作" class="headerlink" title="优化文件操作"></a>优化文件操作</h3><h3 id="对客户端请求的特殊处理"><a href="#对客户端请求的特殊处理" class="headerlink" title="对客户端请求的特殊处理"></a>对客户端请求的特殊处理</h3><h2 id="反向代理服务器"><a href="#反向代理服务器" class="headerlink" title="反向代理服务器"></a>反向代理服务器</h2><p>配置反向代理服务器时，常用的Nginx模块：</p>
-<ul>
-<li>proxy</li>
-</ul>
-<p>Nginx可以作为对于<strong>静态Web文件服务器</strong>，直接向用户提供服务。</p>
-<p>但是对于动态内容，则不能做出处理，需要做为<strong>代理服务器</strong>，将客户请求缓存到内存或者硬盘中，然后再向上游服务器发起连接，将缓存的客户端请求转发到上游服务器。</p>
-<h3 id="负载均衡的基本配置"><a href="#负载均衡的基本配置" class="headerlink" title="负载均衡的基本配置"></a>负载均衡的基本配置</h3><p><code>upstream</code>块定义一个<strong>上游服务器集群</strong>，以便于反向代理中的<code>proxy_pass</code>使用</p>
-<pre><code class="hljs plaintext">http&#123;
-    upstream backend&#123;
-        server backend1.example.com;
-        server backend2.example.com;
-        server backend3.example.com;
-    &#125;
+<p><strong>使用rewrite指令改写url</strong></p>
+<pre><code class="hljs plaintext">server &#123;
+    listen       80;
+    server_name  localhost;
 
-    server&#123;
-        location / &#123;
-            proxy_pass http://backend;
-        &#125;
+    #charset koi8-r;
+
+    #access_log  logs/host.access.log  main;
+
+    location / &#123;
+        root   html;
+        index  index.html index.htm;
+    &#125;
+&#125;
+
+server &#123;
+    listen 8080;
+    server_name localhost;
+
+    location / &#123;
+        # 将8080端口的请求转发到80端口
+    	rewrite ^/(.*)$ http://$host:80/$1 permanent;
     &#125;
 &#125;</code></pre>
 
-<p>其中,<code>server</code>配置项指定一个上游服务器，可以用域名或IP地址加端口，Unix句柄等。</p>
-<h3 id="反向代理的基本配置"><a href="#反向代理的基本配置" class="headerlink" title="反向代理的基本配置"></a>反向代理的基本配置</h3><p><code>proxy_pass</code>配置项将当前的请求<strong>反向代理</strong>到URL参数指定的上游服务器上。</p>
-<p>URL支持主机名或IP加端口的形式，或者unix句柄，或者直接使用负载均衡中的upstream配置块</p>
-<pre><code class="hljs plaintext">proxy_pass http://localhost:8000/uri/;
-proxy_pass http://backend;</code></pre>
+<p><strong>使用try_files设置备用的资源</strong></p>
+<pre><code class="hljs plaintext">location / &#123;
+  try_files $uri $uri/ /index.html;
+&#125;</code></pre>
 
-<p>可以把HTTP转换为HTTPS</p>
-<pre><code class="hljs plaintext">proxy_pass https://backend;</code></pre>
+<p><strong>nginx反向代理</strong></p>
+<p>nginx会将客户端发来的请求完整的缓存到内存或硬盘中，之后才会向上游服务器进行转发；</p>
+<p>对于接收到上游服务器的响应数据，不会进行完整的缓存，而是边接收边转发到客户端</p>
+<pre><code class="hljs plaintext">location /api/xxx &#123;
+	proxy_pass http://127.0.0.1:8080/api;
+&#125;</code></pre>
 
-<p>默认情况下，反向代理是不会转发请求中的Host头部的，如需转发，加上以下配置</p>
-<pre><code class="hljs plaintext">proxy_set_header Host $host;</code></pre></div>
+<p><strong>nginx负载均衡</strong></p>
+<pre><code class="hljs plaintext">http &#123;
+    upstream backend &#123;
+        server 10.10.12.1:8080;
+        server 10.10.12.2:8080;
+        server 10.10.12.3:8080;
+    &#125;
+    
+	server &#123;
+		listen       80;
+		server_name  localhost;
+		
+		location /api &#123;
+		    http://backend/api;
+		&#125;
+	&#125;
+&#125;</code></pre>
+
+<p>在upstream中</p>
+<p><strong>设置代理缓存大小</strong></p>
+<p>当响应体数据过大时，会被nginx截断处理。解决办法就是设置代理缓存的大小</p>
+<pre><code class="hljs plaintext">location / &#123;
+    proxy_buffer_size  1024k;
+    proxy_buffers      16 1024k;
+&#125;</code></pre>
+
+</div>
 </div>
 
 <div class="post-end">

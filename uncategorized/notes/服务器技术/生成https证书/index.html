@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+
+    <title>Nintheaven</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Nintheaven
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">作品</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title"></h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class"></span>
+            <span>: </span>
+            <a class="cate" href="//#未分类">未分类</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-12-10</span>
+        </div>
+    </div>
+
+    <div class="content"><h2 id="keytool"><a href="#keytool" class="headerlink" title="keytool"></a>keytool</h2><p>生成证书</p>
+<p><code>keytool -genkey -alias demo -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore demo.keystore -validity 365</code></p>
+<p>导出证书</p>
+<p><code>keytool</code></p>
+<h2 id="openssl"><a href="#openssl" class="headerlink" title="openssl"></a>openssl</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dagongzhe/p/16870426.html">https://www.cnblogs.com/dagongzhe/p/16870426.html</a></p>
+<p>0.前提条件</p>
+<p>安装openssl</p>
+<h3 id="1-SSL-服务器-x2F-客户端双向验证证书的生成"><a href="#1-SSL-服务器-x2F-客户端双向验证证书的生成" class="headerlink" title="1.SSL 服务器 &#x2F; 客户端双向验证证书的生成"></a>1.SSL 服务器 &#x2F; 客户端双向验证证书的生成</h3><p>在 nginx 安装目录下新建 ca 文件夹，进入 ca，创建几个子文件夹</p>
+<pre><code class="hljs plaintext">mkdir ca &amp;&amp; cd ca  
+mkdir newcerts private conf server
+
+# newcerts 子目录将用于存放 CA 签署过的数字证书(证书备份目录)；
+# private  用于存放 CA 的私钥；
+# conf     目录用于存放一些简化参数用的配置文件；
+# server   存放服务器证书文件。</code></pre>
+
+<p>conf 目录新建 openssl.conf 文件</p>
+<pre><code class="hljs plaintext">[ ca ] 
+default_ca      = foo                   # The default ca section 
+
+[ foo ] 
+dir            = ./         # top dir  
+database       = ./index.txt          # index file.  
+new_certs_dir  = ./newcerts           # new certs dir 
+
+certificate    = ./private/ca.crt         # The CA cert  
+serial         = ./serial             # serial no file  
+private_key    = ./private/ca.key  # CA private key  
+RANDFILE       = ./private/.rand      # random number file 
+
+default_days   = 3650                     # how long to certify for  
+default_crl_days= 30                     # how long before next CRL  
+default_md     = sha256                     # message digest method to use  
+unique_subject = no                      # Set to &#x27;no&#x27; to allow creation of  
+                                         # several ctificates with same subject. 
+policy         = policy_any              # default policy 
+
+[ policy_any ] 
+countryName = match  
+stateOrProvinceName = match  
+organizationName = match  
+organizationalUnitName = match  
+localityName            = optional  
+commonName              = supplied  
+emailAddress            = optional</code></pre>
+
+<p>生成私钥 key 文件</p>
+<pre><code class="hljs plaintext">openssl genrsa -out private/ca.key 2048</code></pre>
+
+<p>生成证书请求 csr 文件</p>
+<pre><code class="hljs plaintext">openssl req -new -key private/ca.key -out private/ca.csr</code></pre>
+
+<p>生成凭证 crt 文件</p>
+<pre><code class="hljs plaintext">openssl x509 -req -days 365 -in private/ca.csr -signkey private/ca.key -out private/ca.crt</code></pre>
+
+<p>private 目录下有 ca.crt 文件生成。<br>为我们的 key 设置起始序列号和创建 CA 键库</p>
+<pre><code class="hljs plaintext">echo FACE &gt; serial  
+#可以是任意四个字符
+touch index.txt</code></pre>
+
+<p>为 “用户证书” 的移除创建一个证书撤销列表</p>
+<pre><code class="hljs plaintext">openssl ca -gencrl -out ./private/ca.crl -crldays 7 -config &quot;./conf/openssl.conf&quot;</code></pre>
+
+
+
+<h3 id="2-服务器证书的生成"><a href="#2-服务器证书的生成" class="headerlink" title="2.服务器证书的生成"></a>2.服务器证书的生成</h3><p>创建一个 key</p>
+<pre><code class="hljs plaintext">openssl genrsa -out server/server.key 2048</code></pre>
+
+<p>为我们的 key 创建一个证书签名请求 csr 文件</p>
+<pre><code class="hljs plaintext">openssl req -new -key server/server.key -out server/server.csr</code></pre>
+
+<p>使用我们私有的 CA key 为刚才的 key 签名</p>
+<pre><code class="hljs plaintext">openssl ca -in server/server.csr -cert private/ca.crt -keyfile private/ca.key -out server/server.crt -config &quot;./conf/openssl.conf&quot;</code></pre>
+
+
+
+<h3 id="3-客户端证书的生成"><a href="#3-客户端证书的生成" class="headerlink" title="3.客户端证书的生成"></a>3.客户端证书的生成</h3><p>创建存放 key 的目录 users</p>
+<pre><code class="hljs plaintext">mkdir users</code></pre>
+
+<p>为用户创建一个 key</p>
+<pre><code class="hljs plaintext">openssl genrsa -des3 -out ./users/client.key 2048</code></pre>
+
+<p>为 key 创建一个证书签名请求 csr 文件</p>
+<pre><code class="hljs plaintext">openssl req -new -key ./users/client.key -out ./users/client.csr</code></pre>
+
+<p>使用我们私有的 CA key 为刚才的 key 签名</p>
+<pre><code class="hljs plaintext">openssl ca -in ./users/client.csr -cert ./private/ca.crt -keyfile ./private/ca.key -out ./users/client.crt -config &quot;./conf/openssl.conf&quot;</code></pre>
+
+<p>将证书转换为大多数浏览器都能识别的 PKCS12 文件(client.p12)</p>
+<pre><code class="hljs plaintext">openssl pkcs12 -export -clcerts -in ./users/client.crt -inkey ./users/client.key -out ./users/client.p12</code></pre>
+
+<h3 id="4-浏览器导入客户端证书"><a href="#4-浏览器导入客户端证书" class="headerlink" title="4.浏览器导入客户端证书"></a>4.浏览器导入客户端证书</h3><p>浏览器导入client.p12，重启电脑。</p>
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        // 表格添加滚动条
+        $('table').wrap("<div class='table-wrap' style='width: 100%; overflow: auto;'></div>");
+    });
+
+</script></main>
+
+    <footer>
+
+</footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

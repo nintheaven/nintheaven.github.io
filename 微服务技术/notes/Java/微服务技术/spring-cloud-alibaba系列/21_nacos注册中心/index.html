@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+
+    <title>spring-cloud-alibaba系列-nacos注册中心 | Nintheaven</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        
+<link rel="stylesheet" href="/css/highlight/github.css">
+
+        
+<link rel="stylesheet" href="/css/post.css">
+
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <header>
+    
+    <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Nintheaven
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 35vh;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notes">笔记</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/essays">随笔</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">作品</a>
+                    </li>
+                    
+                </ul>
+
+                <!--
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">搜索</button>
+                </form>
+                -->
+            </div>
+        </div>
+    </nav>
+</div>
+
+    
+    
+</header>
+
+    <main><div class="post">
+    <h3 class="title">spring-cloud-alibaba系列-nacos注册中心</h3>
+
+    <div class="meta">
+        <div>
+            <span class="page-class">笔记</span>
+            <span>: </span>
+            <a class="cate" href="/notes/#微服务技术">微服务技术</a>
+        </div>
+        <div class="date">
+            <span>发布于</span>
+            <span>: </span>
+            <span>2022-03-02</span>
+        </div>
+    </div>
+
+    <div class="content"><span id="more"></span>
+
+<h2 id="注册服务到nacos"><a href="#注册服务到nacos" class="headerlink" title="注册服务到nacos"></a>注册服务到nacos</h2><p>0.添加依赖</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<p>1.配置</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">9000</span>
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">service-a</span>
+  <span class="hljs-attr">cloud:</span>
+    <span class="hljs-attr">nacos:</span>
+      <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span>
+      <span class="hljs-attr">discovery:</span>
+        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">$&#123;spring.cloud.nacos.server-addr&#125;</span>
+<span class="hljs-attr">management:</span>
+  <span class="hljs-attr">endpoints:</span>
+    <span class="hljs-attr">web:</span>
+      <span class="hljs-attr">exposure:</span>
+        <span class="hljs-attr">include:</span> <span class="hljs-string">&#x27;*&#x27;</span></code></pre>
+
+<p>2.创建springboot启动引导类，使用springcloud原生注解 <code>@EnableDiscoveryClient</code> </p>
+<pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-meta">@EnableDiscoveryClient</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceAApp</span> &#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        SpringApplication.run(ServiceAApp.class, args);
+    &#125;
+&#125;</code></pre>
+
+
+
+<h2 id="使用被-LoadBalanced-增强了的-RestTemplate-调用远程服务"><a href="#使用被-LoadBalanced-增强了的-RestTemplate-调用远程服务" class="headerlink" title="使用被 @LoadBalanced 增强了的 RestTemplate 调用远程服务"></a>使用被 <code>@LoadBalanced</code> 增强了的 <code>RestTemplate</code> 调用远程服务</h2><p>微服务B（service-b）提供了一个端点 <em>&#x2F;sayHi</em></p>
+<pre><code class="hljs java"><span class="hljs-comment">// service-b</span>
+<span class="hljs-meta">@GetMapping(&quot;/sayHi&quot;)</span>
+<span class="hljs-keyword">public</span> String <span class="hljs-title function_">sayHi</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> String name)</span>&#123;
+    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Hi,%s&quot;</span>, name);
+&#125;</code></pre>
+
+<p>现在，微服务A要远程调用这个服务接口。</p>
+<p>使用 <code>@LoadBalanced</code> 注解增强RestTemplate</p>
+<pre><code class="hljs java"><span class="hljs-comment">// service-a</span>
+<span class="hljs-meta">@Bean</span>
+<span class="hljs-meta">@LoadBalanced</span>
+<span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">restTemplate</span><span class="hljs-params">()</span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplate</span>();
+&#125;</code></pre>
+
+<p>使用RestTemplate调用远程服务</p>
+<pre><code class="hljs java"><span class="hljs-comment">// service-a</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> RestTemplate restTemplate;
+
+<span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">public</span> <span class="hljs-title function_">HelloController</span><span class="hljs-params">(RestTemplate restTemplate)</span> &#123;
+    <span class="hljs-built_in">this</span>.restTemplate = restTemplate;
+&#125;
+
+<span class="hljs-meta">@GetMapping(&quot;/sayHi&quot;)</span>
+<span class="hljs-keyword">public</span> String <span class="hljs-title function_">sayHi</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> String name)</span>&#123;
+    <span class="hljs-type">String</span> <span class="hljs-variable">serviceAUrl</span> <span class="hljs-operator">=</span> String.format(<span class="hljs-string">&quot;http://%s/sayHi?name=%s&quot;</span>, <span class="hljs-string">&quot;service-b&quot;</span>, name);
+    <span class="hljs-keyword">return</span> restTemplate.getForObject(serviceAUrl, String.class);
+&#125;</code></pre>
+
+
+
+</div>
+</div>
+
+<div class="post-end">
+    <span>----- </span>
+    <span>THE END</span>
+    <span> -----</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        // 表格添加滚动条
+        $('table').wrap("<div class='table-wrap' style='width: 100%; overflow: auto;'></div>");
+    });
+
+</script></main>
+
+    <footer>
+
+</footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    
+</body>
+</html>

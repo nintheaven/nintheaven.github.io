@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="keyword" content="">
 
-    <title>Linux常用命令 | Nintheaven</title>
+    <title>Nintheaven</title>
     <link rel="shortcut icon" href="/images/favicon.ico">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -75,13 +75,13 @@
 </header>
 
     <main><div class="post">
-    <h3 class="title">Linux常用命令</h3>
+    <h3 class="title"></h3>
 
     <div class="meta">
         <div>
-            <span class="page-class">笔记</span>
+            <span class="page-class"></span>
             <span>: </span>
-            <a class="cate" href="/notes/#Linux">Linux</a>
+            <a class="cate" href="//#未分类">未分类</a>
         </div>
         <div class="date">
             <span>发布于</span>
@@ -90,11 +90,67 @@
         </div>
     </div>
 
-    <div class="content"><span id="more"></span>
+    <div class="content"><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ambition26/p/14077773.html">https://www.cnblogs.com/ambition26/p/14077773.html</a></p>
+<h2 id="安装ssl模块"><a href="#安装ssl模块" class="headerlink" title="安装ssl模块"></a>安装ssl模块</h2><p>查询是否已安装</p>
+<p><code>nginx -V</code></p>
+<p>添加ssl模块</p>
+<p>进入nginx源码包</p>
+<p><code>./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module</code></p>
+<p>报错</p>
+<pre><code class="hljs plaintext">./configure: error: SSL modules require the OpenSSL library.</code></pre>
 
-<p>查询CPU核心数</p>
-<p>CPU信息在&#x2F;proc&#x2F;cpuinfo文件中</p>
-<p><code>cat /proc/cpuinfo | grep &quot;cpu cores&quot;</code></p>
+<p>需要安装OpenSSL库。</p>
+<p>下载openssl源码：<a target="_blank" rel="noopener" href="https://www.openssl.org/source/openssl-1.1.1m.tar.gz">https://www.openssl.org/source/openssl-1.1.1m.tar.gz</a></p>
+<p>解压到指定目录，这里是 <em>&#x2F;opt&#x2F;openssl-1.1.1m</em></p>
+<p>在 <code>configure</code> 命令后添加参数 <code>--with-openssl=/opt/openssl-1.1.1m</code></p>
+<p>然后 <code>make</code> （！不要 <code>make install</code> ，否则会重新安装nginx）</p>
+<p>会在nginx源码目录下的 objs 目录下生成 <em>nginx</em> 可执行文件，用这个文件替换nginx安装目录下sbin中的nginx文件（注意停掉之前的nginx，并备份）。</p>
+<p>执行 <code>nginx -V</code></p>
+<pre><code class="hljs plaintext">nginx version: nginx/1.20.2
+built by gcc 4.8.5 20150623 (Red Hat 4.8.5-44) (GCC) 
+built with OpenSSL 1.1.1m  14 Dec 2021
+TLS SNI support enabled
+configure arguments: --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-openssl=/opt/openssl-1.1.1m</code></pre>
+
+
+
+<h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>略。</p>
+<h2 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h2><blockquote>
+<p>防火墙放开443端口</p>
+</blockquote>
+<pre><code class="hljs plaintext">server &#123;
+    listen       80;
+    server_name  localhost;
+    # http80端口的请求全部重写为https443
+    rewrite ^(.*)$ https://$host$1 permanent;
+&#125;
+
+server &#123;
+    listen       443 ssl;
+    server_name  localhost;
+    ssi on;
+    ssi_silent_errors on;
+    ssi_types text/shtml; 
+
+    #ssl                  on;
+    # https证书配置
+    ssl_certificate      /usr/local/nginx/ca/server/server.crt; 
+    ssl_certificate_key  /usr/local/nginx/ca/server/server.key; 
+    ssl_client_certificate /usr/local/nginx/ca/private/ca.crt; 
+
+    ssl_session_timeout  5m;
+    ssl_verify_client on;  #开户客户端证书验证 
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDH:AES:HIGH:!aNULL:!MD5:!ADH:!DH;
+
+    ssl_prefer_server_ciphers   on;
+
+    location /https-demo &#123;
+    	proxy_pass http://10.88.25.15:7778/https-demo;
+    &#125;
+&#125;
+</code></pre>
+
 </div>
 </div>
 

@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="keyword" content="">
 
-    <title>Linux常用命令 | Nintheaven</title>
+    <title>中间件技术-zookeeper安装与部署 | Nintheaven</title>
     <link rel="shortcut icon" href="/images/favicon.ico">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -75,26 +75,56 @@
 </header>
 
     <main><div class="post">
-    <h3 class="title">Linux常用命令</h3>
+    <h3 class="title">中间件技术-zookeeper安装与部署</h3>
 
     <div class="meta">
         <div>
             <span class="page-class">笔记</span>
             <span>: </span>
-            <a class="cate" href="/notes/#Linux">Linux</a>
+            <a class="cate" href="/notes/#中间件技术">中间件技术</a>
         </div>
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-12-10</span>
+            <span>2022-06-01</span>
         </div>
     </div>
 
-    <div class="content"><span id="more"></span>
+    <div class="content"><p>Zookeeper： A Distributed Coordination Service for Distributed Applications（分布式应用程序中的分布式协调服务）。</p>
+<span id="more"></span>
 
-<p>查询CPU核心数</p>
-<p>CPU信息在&#x2F;proc&#x2F;cpuinfo文件中</p>
-<p><code>cat /proc/cpuinfo | grep &quot;cpu cores&quot;</code></p>
+
+
+<h2 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h2><p>下载：<a target="_blank" rel="noopener" href="https://zookeeper.apache.org/releases.html">https://zookeeper.apache.org/releases.html</a></p>
+<p>安装：解压压缩包。</p>
+<h2 id="单机模式启动"><a href="#单机模式启动" class="headerlink" title="单机模式启动"></a>单机模式启动</h2><p>0.修改配置文件 <em>zoo.cfg</em></p>
+<ul>
+<li>tickTime：心跳间隔时间，单位ms。session超时时间是2倍的心跳间隔时间</li>
+<li>dataDir：内存数据库存储位置</li>
+<li>clientPort：客户端连接端口</li>
+</ul>
+<pre><code class="hljs plaintext">tickTime=2000
+dataDir=D:/Projects/study/apps/temp/zookeeper
+clientPort=2181</code></pre>
+
+<p>1.启动zookeeper服务器</p>
+<pre><code class="hljs sh">./bin/zkServer.sh start   <span class="hljs-comment"># linux</span>
+.\bin\zkServer.cmd        <span class="hljs-comment"># windows</span></code></pre>
+
+<p>2.启动客户端，并连接到服务器</p>
+<pre><code class="hljs sh">./bin/zkCli.sh -server 127.0.0.1:2181   <span class="hljs-comment"># linux</span>
+.\bin\zkCli.cmd -server 127.0.0.1:2181  <span class="hljs-comment"># windows</span></code></pre>
+
+
+
+<h2 id="集群模式启动"><a href="#集群模式启动" class="headerlink" title="集群模式启动"></a>集群模式启动</h2><h2 id="单机启动多个独立的（非集群）"><a href="#单机启动多个独立的（非集群）" class="headerlink" title="单机启动多个独立的（非集群）"></a>单机启动多个独立的（非集群）</h2><p>分别配置 <code>clientPort</code> 和 <code>admin.serverPort</code>，以及data与log目录</p>
+<pre><code class="hljs plaintext">dataDir=path/to/data
+dataLogDir=path/to/log
+clientPort=2181
+admin.serverPort=8080</code></pre>
+
+
+
 </div>
 </div>
 

@@ -86,7 +86,7 @@
         <div class="date">
             <span>发布于</span>
             <span>: </span>
-            <span>2022-10-11</span>
+            <span>2022-12-10</span>
         </div>
     </div>
 
@@ -136,6 +136,14 @@ or
 or
 $CATALINA_HOME/bin/catalina.sh stop
 </code></pre>
+<p>需要注意的是，在Linux中，停止服务的命令，并不能真正杀死tomcat进程，需要手动kill</p>
+<pre><code class="hljs plaintext">ps -ef | grep 服务关键字
+kill -9 服务进程号</code></pre>
+
+
+
+
+
 <h2 id="部署web项目"><a href="#部署web项目" class="headerlink" title="部署web项目"></a>部署web项目</h2><p>首先熟悉一下Tomcat安装目录下都有些什么</p>
 <pre><code class="hljs plaintext">apache-tomcat-9.0.36/
 ├── BUILDING.txt
@@ -228,8 +236,8 @@ $CATALINA_HOME/bin/catalina.sh stop
 <p>部署Web项目有几种不同的方式</p>
 <p>1.直接将项目文件夹复制到webapps目录下</p>
 <p>2.通过war包的方式，将项目文件打包为war包，复制到webapps目录下。  </p>
-<p>这种方式的好处是，Tomcat可以在不重启的情况下，自动管理war包</p>
-<p>3.在conf&#x2F;server.xml中的Host标签中配置</p>
+<p>这种方式的好处是，Tomcat可以在不重启的情况下，自动解压war包，实现热更新。</p>
+<p>3.在conf&#x2F;server.xml中的Host标签中配置服务位置和上下文路径</p>
 <pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Host</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">Context</span> <span class="hljs-attr">docBase</span>=<span class="hljs-string">&quot;/home/ubuntu/Projects/blog&quot;</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/blog&quot;</span> /&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">Host</span>&gt;</span></code></pre>
@@ -237,6 +245,21 @@ $CATALINA_HOME/bin/catalina.sh stop
 <p>4.在conf&#x2F;Catalina&#x2F;localhost目录下，为每个项目创建单独的配置文件</p>
 <p>文件名为blog.xml，文件名blog就是项目的上下文路径。配置内容如下</p>
 <pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Context</span> <span class="hljs-attr">docBase</span>=<span class="hljs-string">&quot;/home/ubuntu/Projects/blog&quot;</span> /&gt;</span></code></pre>
+
+
+
+<h2 id="修改tomcat端口号"><a href="#修改tomcat端口号" class="headerlink" title="修改tomcat端口号"></a>修改tomcat端口号</h2><p>修改conf&#x2F;server.xml文件（省略其它配置项）</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Server</span> <span class="hljs-attr">port</span>=<span class="hljs-string">&quot;8005&quot;</span> <span class="hljs-attr">shutdown</span>=<span class="hljs-string">&quot;SHUTDOWN&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">Service</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;Catalina&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Connector</span> <span class="hljs-attr">port</span>=<span class="hljs-string">&quot;8080&quot;</span> <span class="hljs-attr">protocol</span>=<span class="hljs-string">&quot;HTTP/1.1&quot;</span></span>
+<span class="hljs-tag">                 <span class="hljs-attr">connectionTimeout</span>=<span class="hljs-string">&quot;20000&quot;</span></span>
+<span class="hljs-tag">                 <span class="hljs-attr">redirectPort</span>=<span class="hljs-string">&quot;8443&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Service</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Server</span>&gt;</span></code></pre>
+
+
+
+
 
 <h2 id="警告和报错"><a href="#警告和报错" class="headerlink" title="警告和报错"></a>警告和报错</h2><p>tomcat启动日志中文乱码，修改 <em>conf</em> 目录下的 <em>logging.properties</em> 配置文件，修改控制台编码为GBK</p>
 <pre><code class="hljs properties"><span class="hljs-attr">java.util.logging.ConsoleHandler.level</span> = <span class="hljs-string">FINE</span>
